@@ -1,0 +1,55 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Gallery from "../../components/Gallery.astro";
+import { destinations } from "../../data/destinations";
+import { getPhotos } from "../../lib/gallery";
+
+export function getStaticPaths() {
+  return destinations.map((d) => ({
+    params: { slug: d.slug },
+    props: { destination: d },
+  }));
+}
+
+const { destination } = Astro.props;
+const photos = getPhotos(destination.slug);
+---
+
+<Layout
+  title={`${destination.name} — Travel Diary`}
+  description={destination.blurb}
+>
+  <section class="mx-auto max-w-6xl px-6 pb-10 pt-16 sm:px-10 sm:pt-24">
+    <a
+      href="/"
+      class="text-xs uppercase tracking-[0.25em] text-paper-dim transition-colors hover:text-accent"
+    >
+      &larr; All destinations
+    </a>
+    <p class="mt-6 text-xs uppercase tracking-[0.3em] text-accent">
+      {destination.country} &middot; {destination.year}
+    </p>
+    <h1 class="mt-4 font-serif text-4xl text-paper sm:text-6xl">
+      {destination.name}
+    </h1>
+    <p class="mt-4 max-w-md text-sm leading-relaxed text-paper-dim">
+      {destination.blurb}
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+    {
+      photos.length > 0 ? (
+        <Gallery photos={photos} alt={destination.name} />
+      ) : (
+        <p class="text-sm text-paper-dim">
+          No photos yet — add some to{" "}
+          <code class="text-accent">
+            src/assets/photos/{destination.slug}/
+          </code>
+          .
+        </p>
+      )
+    }
+  </section>
+</Layout>

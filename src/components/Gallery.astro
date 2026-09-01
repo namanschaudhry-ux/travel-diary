@@ -1,0 +1,29 @@
+---
+import { Image } from "astro:assets";
+import type { Photo } from "../lib/gallery";
+
+interface Props {
+  photos: Photo[];
+  alt: string;
+}
+
+const { photos, alt } = Astro.props;
+---
+
+<div class="columns-1 gap-6 sm:columns-2 sm:gap-8">
+  {
+    photos.map((photo, i) => (
+      <figure class="group relative mb-6 break-inside-avoid overflow-hidden bg-ink-soft sm:mb-8">
+        <Image
+          src={photo.image}
+          alt={`${alt} — photo ${i + 1}`}
+          widths={[400, 800, 1200]}
+          sizes="(min-width: 640px) 50vw, 100vw"
+          loading={i < 4 ? "eager" : "lazy"}
+          class="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+        />
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      </figure>
+    ))
+  }
+</div>

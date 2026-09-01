@@ -1,0 +1,43 @@
+---
+import { destinations } from "../data/destinations";
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<header class="sticky top-0 z-50 border-b border-line/70 bg-ink/90 backdrop-blur-sm">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-10">
+    <a
+      href="/"
+      class="font-serif text-xl tracking-wide text-paper transition-colors hover:text-accent"
+    >
+      Travel Diary
+    </a>
+
+    <input type="checkbox" id="nav-toggle" class="peer hidden" />
+    <label
+      for="nav-toggle"
+      class="cursor-pointer text-sm uppercase tracking-widest text-paper sm:hidden"
+      aria-label="Toggle navigation"
+    >
+      Menu
+    </label>
+
+    <nav
+      class="hidden gap-8 text-xs uppercase tracking-[0.2em] text-paper-dim peer-checked:flex peer-checked:flex-col peer-checked:gap-4 peer-checked:absolute peer-checked:left-0 peer-checked:right-0 peer-checked:top-full peer-checked:border-b peer-checked:border-line/70 peer-checked:bg-ink peer-checked:px-6 peer-checked:py-6 sm:static sm:flex sm:flex-row sm:border-none sm:bg-transparent sm:px-0 sm:py-0"
+    >
+      {
+        destinations.map((d) => (
+          <a
+            href={`/destinations/${d.slug}/`}
+            class:list={[
+              "transition-colors hover:text-accent",
+              path === `/destinations/${d.slug}` && "text-accent",
+            ]}
+          >
+            {d.name}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
