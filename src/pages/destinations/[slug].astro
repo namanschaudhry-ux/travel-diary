@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Gallery from "../../components/Gallery.astro";
+import PageHeading from "../../components/PageHeading.astro";
 import { destinations } from "../../data/destinations";
 import { getPhotos } from "../../lib/gallery";
 
@@ -19,30 +20,28 @@ const photos = getPhotos(destination.slug);
   title={`${destination.name} — Travel Diary`}
   description={destination.blurb}
 >
-  <section class="mx-auto max-w-6xl px-6 pb-10 pt-16 sm:px-10 sm:pt-24">
+  <section class="mx-auto max-w-3xl px-6 pt-16 text-center sm:px-10 sm:pt-24">
     <a
       href="/"
-      class="text-xs uppercase tracking-[0.25em] text-paper-dim transition-colors hover:text-accent"
+      class="text-sm lowercase text-paper-dim transition-colors hover:text-accent"
     >
-      &larr; All destinations
+      &larr; all destinations
     </a>
-    <p class="mt-6 text-xs uppercase tracking-[0.3em] text-accent">
-      {destination.country} &middot; {destination.year}
-    </p>
-    <h1 class="mt-4 font-serif text-4xl text-paper sm:text-6xl">
-      {destination.name}
-    </h1>
-    <p class="mt-4 max-w-md text-sm leading-relaxed text-paper-dim">
+    <PageHeading
+      title={destination.name}
+      subtitle={`${destination.country} · ${destination.year}`}
+    />
+    <p class="mx-auto max-w-md text-[16px] leading-[1.7] text-white/75">
       {destination.blurb}
     </p>
   </section>
 
-  <section class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+  <section class="mx-auto max-w-6xl px-6 py-24 sm:px-10">
     {
       photos.length > 0 ? (
         <Gallery photos={photos} alt={destination.name} />
       ) : (
-        <p class="text-sm text-paper-dim">
+        <p class="text-[16px] leading-[1.7] text-white/75">
           No photos yet — add some to{" "}
           <code class="text-accent">
             src/assets/photos/{destination.slug}/

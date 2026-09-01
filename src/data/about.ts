@@ -7,6 +7,29 @@ export const about = {
     "I'm based in [Your City], and I've always had a keen eye for detail and a love for exploring our world. This site is where I keep the photos worth remembering.",
   bioLong:
     "It started as a way to hold onto trips I didn't want to forget — a folder of photos turned into an actual habit of documenting where I'd been. Since then it's grown into a running diary of the places, people, and light that stuck with me most.",
+  bioThird:
+    "Outside of travel, I work in [your field] — but most of my time off is spent planning the next trip, or going through the photos from the last one.",
+  // Job/career history — company logo is optional (path to an image import).
+  experience: [
+    {
+      company: "Company Name",
+      dateRange: "2025 – Present",
+      title: "Job Title",
+      description: "A line or two about what you do here.",
+    },
+    {
+      company: "Previous Company",
+      dateRange: "2023 – 2025",
+      title: "Previous Job Title",
+      description: "A line or two about what you did here.",
+    },
+    {
+      company: "Travel Diary",
+      dateRange: "2022 – Present",
+      title: "Founder & Photographer",
+      description: "Documenting trips, one gallery at a time.",
+    },
+  ],
   timeline: [
     {
       year: "2024",
