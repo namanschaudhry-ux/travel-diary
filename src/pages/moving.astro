@@ -1,15 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { cityActivity, untaggedActivity } from "../data/activity-summary";
-
-const totals = cityActivity.reduce(
-  (acc, c) => ({
-    run: acc.run + c.run,
-    cycle: acc.cycle + c.cycle,
-    swim: acc.swim + c.swim,
-  }),
-  { ...untaggedActivity },
-);
+import { cityActivity, activityTotals as totals } from "../data/activity-summary";
 
 const cities = [...cityActivity]
   .map((c) => ({ ...c, total: c.run + c.cycle + c.swim }))
@@ -22,13 +13,13 @@ const typeRows = (c: (typeof cities)[number]) =>
     { label: "run", value: c.run },
     { label: "cycle", value: c.cycle },
     { label: "swim", value: c.swim },
-  ].filter((row) => row.value > 0);
+  ].filter((row) => row.value >= 10);
 
 const filters = ["run", "cycle", "swim"];
 ---
 
 <Layout title="On the move — Naman Chaudhry" description="Kilometres logged by city, pulled from Strava.">
-  <section class="mx-auto flex max-w-4xl justify-center gap-2 px-6 pt-16 pb-10 sm:px-10 sm:pt-24">
+  <section class="mx-auto flex max-w-2xl justify-center gap-2 px-6 pt-16 pb-10 sm:px-10 sm:pt-24">
     {
       filters.map((f) => (
         <button
@@ -48,56 +39,50 @@ const filters = ["run", "cycle", "swim"];
     }
   </section>
 
-  <section class="mx-auto max-w-4xl px-6 pb-8 sm:px-10">
+  <section class="mx-auto max-w-2xl px-6 pb-8 sm:px-10">
     <div
       id="top-strip"
-      class="flex flex-wrap divide-x divide-[var(--color-card-border)] rounded-[12px] border border-[var(--color-card-border)] overflow-hidden"
+      class="relative isolate flex flex-wrap rounded-[12px] border border-[var(--color-card-border)] overflow-hidden"
     >
+      <div id="city-fill" aria-hidden="true"></div>
       {
         [
           { label: "run", value: totals.run },
           { label: "cycle", value: totals.cycle },
           { label: "swim", value: totals.swim },
         ].map((t) => (
-          <div class="flex-1 p-6 text-center" data-sport={t.label} hidden={t.label !== "run"}>
+          <div class="relative flex-1 p-6 text-center" data-total={t.value} data-sport={t.label} hidden={t.label !== "run"}>
             <p class="font-sans font-medium tracking-tight text-4xl text-paper">
               {fmt(t.value)}<span class="font-sans font-normal text-base text-[var(--color-muted-40)]"> km</span>
             </p>
-            <p class="mt-1 font-sans text-xs uppercase tracking-[0.2em] text-[var(--color-muted-40)]">{t.label}</p>
           </div>
         ))
       }
     </div>
-    <p class="mt-4 text-center font-sans text-xs uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
-      Jan 1 – Sep 15, 2026
-    </p>
   </section>
 
-  <section class="mx-auto max-w-4xl px-6 pb-16 sm:px-10">
-    <h2 class="mb-6 font-heading text-[32px] lowercase text-paper">by city</h2>
+  <section class="mx-auto max-w-2xl px-6 pb-16 sm:px-10">
     <div class="grid gap-5 sm:grid-cols-2">
       {
         cities.map((c) => (
           <div
-            class="rounded-[12px] border border-[var(--color-card-border)] p-7"
+            class="city-card rounded-[12px] border border-[var(--color-card-border)] p-6 text-center"
             data-city-card
+            tabindex="0"
             data-sports={typeRows(c)
               .map((r) => r.label)
               .join(" ")}
             hidden={!typeRows(c).some((r) => r.label === "run")}
           >
-            <div class="flex items-start justify-between gap-4">
-              <span class="font-sans text-sm font-semibold uppercase tracking-[0.15em] text-accent">{c.city}</span>
-              <span class="shrink-0 font-sans text-sm text-[var(--color-muted-40)]">{c.country}</span>
+            <div class="flex flex-col items-center gap-1">
+              <span class="city-name font-sans text-xs font-semibold uppercase tracking-[0.12em] text-accent">{c.city}</span>
+              <span class="font-sans text-xs text-[var(--color-muted-40)]">{c.country}</span>
             </div>
-            <div class="mt-4 flex flex-wrap gap-6">
+            <div class="mt-4 flex flex-wrap justify-center gap-6">
               {typeRows(c).map((row) => (
-                <div data-sport={row.label} hidden={row.label !== "run"}>
+                <div data-distance={row.value} data-sport={row.label} hidden={row.label !== "run"}>
                   <p class="font-sans font-medium tracking-tight text-2xl text-paper">
                     {fmt(row.value)}<span class="font-sans font-normal text-sm text-[var(--color-muted-40)]"> km</span>
-                  </p>
-                  <p class="mt-0.5 font-sans text-xs uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
-                    {row.label}
                   </p>
                 </div>
               ))}
@@ -118,7 +103,38 @@ const filters = ["run", "cycle", "swim"];
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter-btn]");
   const cityCards = document.querySelectorAll<HTMLElement>("[data-city-card]");
 
+  const fill = document.querySelector<HTMLElement>("#city-fill");
+  let selectedSport = "run";
+  let hoveredCity: HTMLElement | null = null;
+  let focusedCity: HTMLElement | null = null;
+
+  function updateFill() {
+    const card = hoveredCity ?? focusedCity;
+    const distance = Number(card?.querySelector<HTMLElement>(`[data-sport="${selectedSport}"]`)?.dataset.distance ?? 0);
+    const total = Number(document.querySelector<HTMLElement>(`#top-strip [data-sport="${selectedSport}"]`)?.dataset.total ?? 0);
+    const share = total > 0 ? Math.min(1, Math.max(0, distance / total)) : 0;
+    fill?.style.setProperty("--city-share", String(share));
+  }
+
+  cityCards.forEach((card) => {
+    card.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "touch") return;
+      hoveredCity = card;
+      updateFill();
+    });
+    card.addEventListener("pointerleave", () => {
+      if (hoveredCity === card) hoveredCity = null;
+      updateFill();
+    });
+    card.addEventListener("focus", () => { focusedCity = card; updateFill(); });
+    card.addEventListener("blur", () => { focusedCity = null; updateFill(); });
+  });
+
   function applyFilter(filter: string) {
+    selectedSport = filter;
+    hoveredCity = null;
+    focusedCity = null;
+    updateFill();
     buttons.forEach((btn) => {
       const isActive = btn.dataset.filterBtn === filter;
       btn.className = isActive ? ACTIVE : INACTIVE;
@@ -142,3 +158,52 @@ const filters = ["run", "cycle", "swim"];
     btn.addEventListener("click", () => applyFilter(btn.dataset.filterBtn ?? "run"));
   });
 </script>
+
+<style>
+  #city-fill {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transform-origin: left center;
+    transform: scaleX(var(--city-share, 0));
+    background: color-mix(in srgb, var(--color-accent) 48%, transparent);
+    border-right: 1px solid color-mix(in srgb, var(--color-accent) 50%, transparent);
+    transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .city-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  .city-card {
+    transition: transform 240ms ease, border-color 240ms ease, background-color 240ms ease, box-shadow 240ms ease;
+  }
+
+  .city-name {
+    transition: transform 240ms ease, font-weight 240ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .city-card:hover {
+      transform: translateY(-4px) scale(1.035);
+      border-color: var(--color-accent);
+      background-color: color-mix(in srgb, var(--color-accent) 7%, var(--color-ink));
+      box-shadow: 0 14px 32px rgb(0 0 0 / 12%);
+    }
+
+    .city-card:hover .city-name {
+      transform: scale(1.06);
+      font-weight: 800;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .city-card, .city-name, #city-fill {
+      transition: none;
+    }
+    .city-card:hover, .city-card:hover .city-name {
+      transform: none;
+    }
+  }
+</style>

@@ -2,13 +2,14 @@
 interface Props {
   title: string;
   subtitle?: string;
+  lowercase?: boolean;
 }
 
-const { title, subtitle } = Astro.props;
+const { title, subtitle, lowercase = true } = Astro.props;
 ---
 
 <div class="py-20 text-center">
-  <h1 class="font-heading text-[72px] leading-none lowercase text-paper sm:text-[80px]">
+  <h1 class:list={["font-heading text-[72px] leading-none text-paper sm:text-[80px]", { lowercase }]}>
     {title}
   </h1>
   {

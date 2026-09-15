@@ -24,7 +24,7 @@ export const about = {
       description: "A line or two about what you did here.",
     },
     {
-      company: "Travel Diary",
+      company: "Naman",
       dateRange: "2022 – Present",
       title: "Founder & Photographer",
       description: "Documenting trips, one gallery at a time.",

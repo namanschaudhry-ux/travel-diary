@@ -1,0 +1,449 @@
+{
+  "source": "User-supplied Strava location summary, confirmed to cover 2023 onwards. Exact end date not supplied. US state labels normalized to USA.",
+  "reportedTotals": {
+    "run": 5472.6,
+    "walk": 42.9,
+    "cycle": 2022.0,
+    "swim": 125.0,
+    "total": 7662.6
+  },
+  "locations": [
+    {
+      "city": "Melbourne",
+      "country": "Australia",
+      "run": 3445.5,
+      "walk": 9.4,
+      "cycle": 1775.9,
+      "swim": 17.6
+    },
+    {
+      "city": "Manhattan",
+      "country": "USA",
+      "run": 337.8,
+      "walk": 15.7,
+      "cycle": 24.9,
+      "swim": 0.0
+    },
+    {
+      "city": "Brooklyn",
+      "country": "USA",
+      "run": 239.7,
+      "walk": 0.0,
+      "cycle": 58.9,
+      "swim": 0.0
+    },
+    {
+      "city": "San Francisco",
+      "country": "USA",
+      "run": 235.9,
+      "walk": 10.8,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Sydney",
+      "country": "Australia",
+      "run": 239.5,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.2
+    },
+    {
+      "city": "Alpine Shire",
+      "country": "Australia",
+      "run": 105.1,
+      "walk": 0.0,
+      "cycle": 52.6,
+      "swim": 0.0
+    },
+    {
+      "city": "Linwood-Central-Heathcote Community",
+      "country": "New Zealand",
+      "run": 128.3,
+      "walk": 3.4,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Lake Forest",
+      "country": "USA",
+      "run": 123.5,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.6
+    },
+    {
+      "city": "Greater London",
+      "country": "United Kingdom",
+      "run": 52.1,
+      "walk": 0.0,
+      "cycle": 9.9,
+      "swim": 0.0
+    },
+    {
+      "city": "Municipality of Naxos and the Lesser Cyclades",
+      "country": "Greece",
+      "run": 41.9,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 1.1
+    },
+    {
+      "city": "Staten Island",
+      "country": "USA",
+      "run": 42.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Friedrichshain-Kreuzberg",
+      "country": "Germany",
+      "run": 37.2,
+      "walk": 0.0,
+      "cycle": 4.4,
+      "swim": 0.0
+    },
+    {
+      "city": "Madrid",
+      "country": "Spain",
+      "run": 26.8,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Kaikōura District",
+      "country": "New Zealand",
+      "run": 25.1,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Ludwigsvorstadt-Isarvorstadt",
+      "country": "Germany",
+      "run": 25.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Gold Coast City",
+      "country": "Australia",
+      "run": 24.1,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Golden Gate National Recreation Area",
+      "country": "USA",
+      "run": 23.2,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Mitte",
+      "country": "Germany",
+      "run": 0.0,
+      "walk": 0.0,
+      "cycle": 23.2,
+      "swim": 0.0
+    },
+    {
+      "city": "Shire of Colac Otway",
+      "country": "Australia",
+      "run": 23.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Fujikawaguchiko",
+      "country": "Japan",
+      "run": 7.0,
+      "walk": 0.0,
+      "cycle": 15.6,
+      "swim": 0.0
+    },
+    {
+      "city": "City of Greater Geelong",
+      "country": "Australia",
+      "run": 22.4,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Salt Lake City",
+      "country": "USA",
+      "run": 21.8,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Surf Coast Shire",
+      "country": "Australia",
+      "run": 21.1,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Chuo",
+      "country": "Japan",
+      "run": 16.3,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Shire of Macedon Ranges",
+      "country": "Australia",
+      "run": 13.8,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Chicago",
+      "country": "USA",
+      "run": 13.8,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "City of Port Phillip",
+      "country": "Australia",
+      "run": 12.1,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 1.0
+    },
+    {
+      "city": "Shibuya",
+      "country": "Japan",
+      "run": 10.7,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Shinjuku",
+      "country": "Japan",
+      "run": 9.4,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Noosa National Park",
+      "country": "Australia",
+      "run": 7.7,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Pollença",
+      "country": "Spain",
+      "run": 7.5,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Minato",
+      "country": "Japan",
+      "run": 7.3,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Meguro",
+      "country": "Japan",
+      "run": 7.1,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Sunshine Coast Regional",
+      "country": "Australia",
+      "run": 7.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Mount Cook National Park",
+      "country": "New Zealand",
+      "run": 6.6,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Thuy Khue Ward",
+      "country": "Vietnam",
+      "run": 6.4,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Uông Bí",
+      "country": "Vietnam",
+      "run": 5.9,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Bass Coast Shire",
+      "country": "Australia",
+      "run": 5.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Phường Hàng Trống",
+      "country": "Vietnam",
+      "run": 5.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Hoa Lư District",
+      "country": "Vietnam",
+      "run": 4.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Rural City of Ararat",
+      "country": "Australia",
+      "run": 3.7,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Coastal-Burwood Community",
+      "country": "New Zealand",
+      "run": 0.0,
+      "walk": 3.5,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Wilsons Promontory National Park",
+      "country": "Australia",
+      "run": 3.3,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Irvine",
+      "country": "USA",
+      "run": 3.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "Victoria",
+      "country": "Australia",
+      "run": 0.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 2.4
+    },
+    {
+      "city": "Naxos Regional Unit",
+      "country": "Greece",
+      "run": 0.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 1.8
+    },
+    {
+      "city": "Lorne - Queenscliff Coastal Reserve",
+      "country": "Australia",
+      "run": 0.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.7
+    },
+    {
+      "city": "Noosa Shire",
+      "country": "Australia",
+      "run": 0.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.4
+    },
+    {
+      "city": "Queensland",
+      "country": "Australia",
+      "run": 0.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.1
+    },
+    {
+      "city": "Laguna Beach",
+      "country": "USA",
+      "run": 0.0,
+      "walk": 0.0,
+      "cycle": 0.0,
+      "swim": 0.0
+    },
+    {
+      "city": "No location tag",
+      "country": "",
+      "run": 68.6,
+      "walk": 0.0,
+      "cycle": 56.6,
+      "swim": 99.1
+    }
+  ],
+  "cityGroups": {
+    "Manhattan": "New York",
+    "Brooklyn": "New York",
+    "Staten Island": "New York",
+    "City of Port Phillip": "Melbourne",
+    "Lorne - Queenscliff Coastal Reserve": "Melbourne",
+    "Golden Gate National Recreation Area": "San Francisco",
+    "Friedrichshain-Kreuzberg": "Berlin",
+    "Mitte": "Berlin",
+    "Linwood-Central-Heathcote Community": "Christchurch",
+    "Coastal-Burwood Community": "Christchurch",
+    "Shibuya": "Tokyo",
+    "Shinjuku": "Tokyo",
+    "Minato": "Tokyo",
+    "Meguro": "Tokyo",
+    "Municipality of Naxos and the Lesser Cyclades": "Naxos",
+    "Naxos Regional Unit": "Naxos",
+    "Noosa National Park": "Noosa",
+    "Noosa Shire": "Noosa",
+    "Greater London": "London",
+    "Ludwigsvorstadt-Isarvorstadt": "Munich",
+    "Gold Coast City": "Gold Coast",
+    "Kaikōura District": "South Island",
+    "City of Greater Geelong": "Melbourne",
+    "Mount Cook National Park": "South Island",
+    "Surf Coast Shire": "Great Ocean Road",
+    "Shire of Colac Otway": "Great Ocean Road",
+    "Chuo": "Tokyo"
+  }
+}
