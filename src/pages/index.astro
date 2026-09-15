@@ -1,56 +1,15 @@
 ---
-import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
-import { destinations } from "../data/destinations";
-import { getCover } from "../lib/gallery";
-
-const cards = destinations.map((d) => ({ ...d, cover: getCover(d.slug) }));
 ---
 
-<Layout>
-  <section class="mx-auto max-w-3xl px-6 pt-16 sm:px-10 sm:pt-24">
-    <PageHeading
-      title="Naman"
-      lowercase={false}
-      subtitle="notes and photographs from the places I've been"
-    />
-    <p class="mx-auto max-w-md text-center text-[16px] leading-[1.7] text-[var(--color-body)]">
-      Every trip gets its own gallery. Pick a destination below to see the
-      photos.
-    </p>
-  </section>
-
-  <section class="mx-auto max-w-6xl px-6 py-24 sm:px-10">
-    <div class="columns-1 gap-6 sm:columns-2 sm:gap-8">
-      {
-        cards.map((d) => (
-          <a
-            href={`/destinations/${d.slug}/`}
-            class="group relative mb-6 block break-inside-avoid overflow-hidden rounded-[12px] border border-[var(--color-card-border)] bg-ink-soft sm:mb-8"
-          >
-            {d.cover && (
-              <Image
-                src={d.cover}
-                alt={d.name}
-                widths={[400, 800, 1200]}
-                sizes="(min-width: 640px) 50vw, 100vw"
-                class="w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-              />
-            )}
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/10 to-transparent" />
-            <div class="pointer-events-none absolute inset-x-0 bottom-0 p-8 sm:p-10">
-              <p class="font-sans text-xs uppercase tracking-[0.25em] text-accent">
-                {d.country} &middot; {d.year}
-              </p>
-              <h2 class="mt-2 font-heading text-4xl text-paper">{d.name}</h2>
-              <p class="mt-1 text-[16px] leading-[1.7] text-[var(--color-body)]">
-                {d.blurb}
-              </p>
-            </div>
-          </a>
-        ))
-      }
+<Layout description="Naman — photos, movement and work.">
+  <section class="mx-auto max-w-3xl px-6 pt-16 pb-24 sm:px-10 sm:pt-24">
+    <PageHeading title="Naman" lowercase={false} />
+    <div class="flex justify-center gap-8 text-sm text-paper-dim">
+      <a href="/photos/" class="transition-colors hover:text-accent">photos</a>
+      <a href="/moving/" class="transition-colors hover:text-accent">moving</a>
+      <a href="/about/" class="transition-colors hover:text-accent">working</a>
     </div>
   </section>
 </Layout>

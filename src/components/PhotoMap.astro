@@ -1,0 +1,115 @@
+---
+import "leaflet/dist/leaflet.css";
+---
+<div class="view-selector">
+  <span class="gallery-word">gallery</span>
+  <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-label="Map view" aria-controls="photo-gallery map-panel"><span></span></button>
+  <span class="map-word">map</span>
+</div>
+<section id="map-panel" class="map-panel" hidden aria-label="New York photo map">
+  <div class="atlas-heading"><span>FIELD NOTES / NYC</span><span>01—07</span></div>
+  <div id="photo-map" aria-label="Interactive map of photo locations"></div>
+  <p class="atlas-note">Seven frames from New York · Pins show GPS positions or approximate caption locations.</p>
+  <p id="map-error" hidden>Map tiles could not load. You can still select a photo pin or return to the gallery.</p>
+</section>
+<script>
+  import L from "leaflet";
+  const toggle = document.querySelector<HTMLButtonElement>("#map-toggle")!;
+  const panel = document.querySelector<HTMLElement>("#map-panel")!;
+  const gallery = document.querySelector<HTMLElement>("#photo-gallery")!;
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-expand-portrait]"));
+  // GPS for the two iPhone photos; other points approximate the caption location.
+  const positions: [number, number, string][] = [
+    [40.73123, -73.99710, "Approximate location"],
+    [40.737056, -73.986664, "Photo GPS"],
+    [40.742308, -73.979386, "Photo GPS"],
+    [40.7471, -73.9450, "Approximate location"],
+    [40.7125, -73.9878, "Approximate location"],
+    [40.7208, -73.9983, "Approximate location"],
+    [40.7323, -73.9866, "Approximate location"],
+  ];
+  let map: L.Map | undefined;
+  function showGallery() {
+    toggle.setAttribute("aria-checked", "false");
+    panel.hidden = true;
+    gallery.hidden = false;
+  }
+  function createMap() {
+    map = L.map("photo-map", { scrollWheelZoom: false });
+    const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+    tiles.on("tileerror", () => { document.querySelector<HTMLElement>("#map-error")!.hidden = false; });
+    positions.forEach(([lat, lng, precision], index) => {
+      const card = cards[index];
+      if (!card) return;
+      const source = card.querySelector("img")!;
+      const popup = document.createElement("div");
+      popup.className = "photo-postcard";
+      const image = document.createElement("img");
+      image.src = source.currentSrc || source.src;
+      image.alt = source.alt;
+      const title = document.createElement("strong");
+      title.textContent = card.dataset.caption ?? "New York";
+      const note = document.createElement("small");
+      note.textContent = precision;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = "View photograph ↗";
+      button.addEventListener("click", () => {
+        showGallery();
+        card.scrollIntoView({ block: "center", behavior: "instant" });
+        card.click();
+        document.querySelector("#portrait-view")?.addEventListener("close", () => {
+          toggle.setAttribute("aria-checked", "true");
+          gallery.hidden = true;
+          panel.hidden = false;
+          map?.invalidateSize();
+          toggle.focus({ preventScroll: true });
+        }, { once: true });
+      });
+      popup.append(image, title, note, button);
+      L.marker([lat, lng], {
+        title: card.dataset.caption,
+        icon: L.divIcon({ className: "atlas-pin", html: `<span><b>${String(index + 1).padStart(2, "0")}</b></span>`, iconSize: [34, 42], iconAnchor: [17, 42], popupAnchor: [0, -40] }),
+      }).addTo(map!).bindPopup(popup, { maxWidth: 240 });
+    });
+    map.fitBounds(positions.map(([lat, lng]) => [lat, lng] as [number, number]), { padding: [48, 48] });
+  }
+  toggle.addEventListener("click", () => {
+    if (toggle.getAttribute("aria-checked") === "true") { showGallery(); return; }
+    toggle.setAttribute("aria-checked", "true");
+    gallery.hidden = true;
+    panel.hidden = false;
+    if (!map) createMap();
+    map?.invalidateSize();
+  });
+</script>
+<style is:global>
+  .view-selector { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 auto 32px; font: 14px monospace; letter-spacing: .06em; }
+  .gallery-word { color: #83af8b; }
+  .map-word { color: #83a9cb; visibility: hidden; }
+  .view-selector:has(#map-toggle[aria-checked="true"]) .gallery-word { visibility: hidden; }
+  .view-selector:has(#map-toggle[aria-checked="true"]) .map-word { visibility: visible; }
+  #map-toggle { width: 72px; height: 34px; border: 1px solid #a3a594; border-radius: 24px; padding: 4px; cursor: pointer; background: linear-gradient(90deg, #527c59 0 50%, #527b9c 50%); box-shadow: inset 0 2px 5px #0005; }
+  #map-toggle span { display: block; width: 24px; height: 24px; background: #f5edda; border-radius: 50%; box-shadow: 0 2px 4px #0005; transition: transform 220ms ease; }
+  #map-toggle[aria-checked="true"] span { transform: translateX(36px); }
+  #map-toggle:focus-visible { outline: 2px solid #eee0b7; outline-offset: 5px; }
+  .map-panel { max-width: 1072px; margin: 0 auto 96px; padding: 18px; background: #e8dfc5; color: #403e31; border: 1px solid #b0a587; border-radius: 4px; box-shadow: 0 8px 28px #0003; }
+  .map-panel[hidden] { display: none; }
+  .atlas-heading { display: flex; justify-content: space-between; padding: 0 2px 14px; font: 12px monospace; letter-spacing: .18em; }
+  #photo-map { height: min(64vh, 640px); min-height: 390px; z-index: 0; border: 1px solid #b2a98b; background: #e4ddc5; }
+  #photo-map .leaflet-tile-pane { filter: sepia(.65) saturate(.45) contrast(.92); }
+  .atlas-note, #map-error { margin: 14px 0 0; font: 11px/1.6 monospace; }
+  .atlas-pin span { display: grid; place-items: center; width: 32px; height: 32px; border: 2px solid #f5eed9; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #9a4939; color: #fff5df; box-shadow: -2px 3px 5px #0005; font: bold 11px monospace; }
+  .atlas-pin b { transform: rotate(45deg); }
+  .atlas-pin { filter: drop-shadow(0 1px 1px #403e3140); }
+  #photo-map .leaflet-popup-content-wrapper, #photo-map .leaflet-popup-tip { background: #f4edda; color: #34362c; }
+  .photo-postcard img { display: block; width: 210px; max-height: 160px; object-fit: cover; margin-bottom: 10px; }
+  .photo-postcard strong { display: block; font: 14px/1.4 Georgia, serif; }
+  .photo-postcard small { display: block; margin-top: 4px; font: 10px monospace; color: #74705f; }
+  .photo-postcard button { margin-top: 12px; font: 11px monospace; color: #355d4c; cursor: pointer; text-decoration: underline; }
+  @media (max-width: 640px) { .map-panel { margin-inline: 24px; padding: 12px; } }
+  @media (prefers-reduced-motion: reduce) { #map-toggle span { transition: none; } }
+</style>

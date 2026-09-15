@@ -1,0 +1,226 @@
+---
+import PhotoMap from "../../components/PhotoMap.astro";
+import { Image } from "astro:assets";
+import Layout from "../../layouts/Layout.astro";
+import photo0 from "../../assets/photos/new-york/park-arch.jpg";
+import photo1 from "../../assets/photos/new-york/street-corner.jpg";
+import photo2 from "../../assets/photos/new-york/window-view.jpg";
+
+import photo3 from "../../assets/photos/new-york/court-square.jpg";
+import photo4 from "../../assets/photos/new-york/brick-facade.jpg";
+import photo5 from "../../assets/photos/new-york/city-street.jpg";
+import photo6 from "../../assets/photos/new-york/rooftops.jpg";
+
+const photos = [
+  { image: photo0, alt: "A person walking beside a stone arch in a leafy New York park.", caption: "Washington Square Park" },
+  { image: photo1, alt: "An ivy-covered brick building and traffic lights on a sunny New York street.", caption: "E 19th & Irving Place" },
+  { image: photo2, alt: "A view through a window of a fire escape, leafy trees and brick apartment buildings.", caption: "E 29th & 3rd Av" },
+  { image: photo3, alt: "A passenger seated on the Court Square station platform beneath surrounding city buildings.", caption: "Court Square Station, Queens" },
+  { image: photo4, alt: "An ornate red and cream brick apartment building with fire escapes and storefronts.", caption: "219 Madison Street, Lower East Side" },
+  { image: photo5, alt: "Brick buildings with metal fire escapes beside taller towers on a New York street.", caption: "Lafayette Street, SoHo" },
+  { image: photo6, alt: "A view over New York rooftops, water towers and terraces beneath a blue sky.", caption: "E14th & 2nd Av" },
+];
+---
+
+<Layout title="New York — Naman">
+  <section class="mx-auto max-w-3xl px-6 pt-8 pb-8 text-center sm:px-10 sm:pt-10 sm:pb-10">
+    <h1 class="font-heading text-[56px] leading-none text-paper sm:text-[80px]">new york</h1>
+  </section>
+
+  <PhotoMap />
+  <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+    <div class="columns-1 gap-6 sm:columns-2 sm:gap-8">
+      {photos.map((photo, index) => (
+        <figure data-expand-portrait="true" data-caption={photo.caption} role="button" aria-label={`Enlarge ${photo.caption} photo`} aria-haspopup="dialog" tabindex={photo.caption ? 0 : undefined} class="photo-card relative mb-6 break-inside-avoid overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+          <Image
+            src={photo.image}
+            alt={photo.alt}
+            widths={[480, 800, 1200, 1600]}
+            sizes="(min-width: 1152px) 520px, (min-width: 640px) 50vw, 100vw"
+            format="webp"
+            loading={index < 2 ? "eager" : "lazy"}
+            class="block h-auto w-full"
+          />
+          {photo.caption && (
+            <figcaption class="photo-caption pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-black/60 to-transparent px-6 pt-5 pb-14 text-center font-sans text-sm font-light text-white/90">
+              {photo.caption}
+            </figcaption>
+          )}
+        </figure>
+      ))}
+    </div>
+  </section>
+  <dialog id="portrait-view" aria-label="Washington Square Park photograph">
+    <div class="portrait-stage">
+      <Image src={photo0} alt={photos[0].alt} widths={[800, 1200, 1600]} sizes="90vw" format="webp" class="portrait-large" />
+      <p class="portrait-label">Washington Square Park</p>
+      <button type="button" class="portrait-close" aria-label="Close enlarged photo" autofocus>×</button>
+    </div>
+  </dialog>
+</Layout>
+
+<script>
+  const triggers = document.querySelectorAll<HTMLElement>("[data-expand-portrait]");
+  let trigger: HTMLElement | undefined;
+  const viewer = document.querySelector<HTMLDialogElement>("#portrait-view");
+  const stage = viewer?.querySelector<HTMLElement>(".portrait-stage");
+  let oldOverflow = "";
+  let closing = false;
+  let openedWithKeyboard = false;
+  let motion: Animation | undefined;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function thumbnailTransform() {
+    const source = trigger?.querySelector("img")?.getBoundingClientRect();
+    const target = viewer?.querySelector(".portrait-large")?.getBoundingClientRect();
+    if (!source || !target) return "none";
+    return `translate(${source.left - target.left}px, ${source.top - target.top}px) scale(${source.width / target.width}, ${source.height / target.height})`;
+  }
+  function closePortrait() {
+    if (!viewer?.open || !stage || closing) return;
+    closing = true;
+    motion?.finish();
+    const destination = thumbnailTransform();
+    viewer.classList.add("is-closing");
+    motion = stage.animate([{ transform: "none" }, { transform: destination }], {
+      duration: reducedMotion.matches ? 0 : 300,
+      easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards",
+    });
+    motion.onfinish = () => {
+      viewer.close();
+      motion?.cancel();
+    };
+  }
+  function openPortrait(card: HTMLElement) {
+    if (!viewer || viewer.open || !stage) return;
+    const thumbnail = card.querySelector("img");
+    const enlarged = viewer.querySelector<HTMLImageElement>(".portrait-large");
+    if (!thumbnail || !enlarged) return;
+    trigger = card;
+    enlarged.srcset = thumbnail.srcset;
+    enlarged.sizes = "90vw";
+    enlarged.src = thumbnail.src;
+    enlarged.alt = thumbnail.alt;
+    enlarged.width = thumbnail.width;
+    enlarged.height = thumbnail.height;
+    const ratio = Number(thumbnail.getAttribute("width")) / Number(thumbnail.getAttribute("height"));
+    stage.style.width = `min(90vw, ${88 * ratio}dvh)`;
+    const label = viewer.querySelector<HTMLElement>(".portrait-label");
+    if (label) label.textContent = card.dataset.caption ?? "";
+    viewer.setAttribute("aria-label", `${card.dataset.caption ?? "Enlarged"} photograph`);
+    closing = false;
+    viewer.classList.remove("is-closing");
+    oldOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    viewer.showModal();
+    if (stage && trigger) {
+      const origin = thumbnailTransform();
+      trigger.style.visibility = "hidden";
+      motion = stage.animate([{ transform: origin }, { transform: "none" }], {
+        duration: reducedMotion.matches ? 0 : 420,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "both",
+      });
+    }
+  }
+  triggers.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      openedWithKeyboard = event.detail === 0;
+      openPortrait(card);
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openedWithKeyboard = true;
+        openPortrait(card);
+      }
+    });
+  });
+  viewer?.querySelector("button")?.addEventListener("click", () => closePortrait());
+  viewer?.addEventListener("click", (event) => {
+    if (event.target === viewer) closePortrait();
+  });
+  viewer?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closePortrait();
+  });
+  viewer?.addEventListener("close", () => {
+    if (trigger) trigger.style.visibility = "";
+    document.body.style.overflow = oldOverflow;
+    if (openedWithKeyboard) trigger?.focus({ preventScroll: true });
+    else trigger?.blur();
+  });
+</script>
+
+<style is:inline>
+  [data-expand-portrait] { cursor: zoom-in; }
+  #portrait-view {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+  #portrait-view[open] { display: grid; place-items: center; }
+  #portrait-view::backdrop {
+    background: rgb(0 0 0 / 88%);
+    backdrop-filter: blur(6px);
+    animation: backdrop-in 200ms ease both;
+  }
+  .portrait-stage {
+    position: relative;
+    width: min(90vw, 49.5dvh);
+    transform-origin: top left;
+  }
+  .portrait-large { display: block; width: 100%; height: auto; max-height: 88dvh; object-fit: contain; border-radius: 12px; }
+  .portrait-label { position: absolute; bottom: 0; inset-inline: 0; padding: 48px 24px 20px; background: linear-gradient(transparent, rgb(0 0 0 / 60%)); color: rgb(255 255 255 / 90%); font-size: 14px; font-weight: 300; border-radius: 0 0 12px 12px; }
+  .portrait-close { position: absolute; right: 12px; top: 12px; width: 36px; height: 36px; border-radius: 50%; background: rgb(0 0 0 / 45%); color: white; font-size: 24px; cursor: pointer; }
+  #portrait-view.is-closing::backdrop { animation: backdrop-out 300ms ease both; }
+  #portrait-view.is-closing .portrait-close { opacity: 0; }
+  @keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .portrait-stage, #portrait-view::backdrop { animation: none; }
+  }
+
+  .photo-caption {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 240ms ease, transform 240ms ease;
+  }
+  .photo-card:hover .photo-caption,
+  .photo-card:focus-visible .photo-caption {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (hover: none) {
+    .photo-caption { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-caption { transition: none; transform: none; }
+  }
+
+  .photo-card {
+    transition: transform 240ms ease, box-shadow 240ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .photo-card:hover {
+      transform: translateY(-8px) scale(1.025);
+      box-shadow: 0 14px 32px rgb(0 0 0 / 12%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-card {
+      transition: none;
+    }
+    .photo-card:hover {
+      transform: none;
+    }
+  }
+</style>
