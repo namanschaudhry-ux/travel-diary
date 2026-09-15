@@ -1,0 +1,144 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { cityActivity, untaggedActivity } from "../data/activity-summary";
+
+const totals = cityActivity.reduce(
+  (acc, c) => ({
+    run: acc.run + c.run,
+    cycle: acc.cycle + c.cycle,
+    swim: acc.swim + c.swim,
+  }),
+  { ...untaggedActivity },
+);
+
+const cities = [...cityActivity]
+  .map((c) => ({ ...c, total: c.run + c.cycle + c.swim }))
+  .sort((a, b) => b.total - a.total);
+
+const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
+
+const typeRows = (c: (typeof cities)[number]) =>
+  [
+    { label: "run", value: c.run },
+    { label: "cycle", value: c.cycle },
+    { label: "swim", value: c.swim },
+  ].filter((row) => row.value > 0);
+
+const filters = ["run", "cycle", "swim"];
+---
+
+<Layout title="On the move — Naman Chaudhry" description="Kilometres logged by city, pulled from Strava.">
+  <section class="mx-auto flex max-w-4xl justify-center gap-2 px-6 pt-16 pb-10 sm:px-10 sm:pt-24">
+    {
+      filters.map((f) => (
+        <button
+          type="button"
+          data-filter-btn={f}
+          aria-pressed={f === "run" ? "true" : "false"}
+          class:list={[
+            "rounded-[8px] border px-4 py-1.5 font-sans text-xs uppercase tracking-[0.15em] transition-colors",
+            f === "run"
+              ? "border-accent text-accent"
+              : "border-[var(--color-card-border)] text-[var(--color-muted-60)] hover:border-[var(--color-muted-40)] hover:text-paper",
+          ]}
+        >
+          {f}
+        </button>
+      ))
+    }
+  </section>
+
+  <section class="mx-auto max-w-4xl px-6 pb-8 sm:px-10">
+    <div
+      id="top-strip"
+      class="flex flex-wrap divide-x divide-[var(--color-card-border)] rounded-[12px] border border-[var(--color-card-border)] overflow-hidden"
+    >
+      {
+        [
+          { label: "run", value: totals.run },
+          { label: "cycle", value: totals.cycle },
+          { label: "swim", value: totals.swim },
+        ].map((t) => (
+          <div class="flex-1 p-6 text-center" data-sport={t.label} hidden={t.label !== "run"}>
+            <p class="font-sans font-medium tracking-tight text-4xl text-paper">
+              {fmt(t.value)}<span class="font-sans font-normal text-base text-[var(--color-muted-40)]"> km</span>
+            </p>
+            <p class="mt-1 font-sans text-xs uppercase tracking-[0.2em] text-[var(--color-muted-40)]">{t.label}</p>
+          </div>
+        ))
+      }
+    </div>
+    <p class="mt-4 text-center font-sans text-xs uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
+      Jan 1 – Sep 15, 2026
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-6 pb-16 sm:px-10">
+    <h2 class="mb-6 font-heading text-[32px] lowercase text-paper">by city</h2>
+    <div class="grid gap-5 sm:grid-cols-2">
+      {
+        cities.map((c) => (
+          <div
+            class="rounded-[12px] border border-[var(--color-card-border)] p-7"
+            data-city-card
+            data-sports={typeRows(c)
+              .map((r) => r.label)
+              .join(" ")}
+            hidden={!typeRows(c).some((r) => r.label === "run")}
+          >
+            <div class="flex items-start justify-between gap-4">
+              <span class="font-sans text-sm font-semibold uppercase tracking-[0.15em] text-accent">{c.city}</span>
+              <span class="shrink-0 font-sans text-sm text-[var(--color-muted-40)]">{c.country}</span>
+            </div>
+            <div class="mt-4 flex flex-wrap gap-6">
+              {typeRows(c).map((row) => (
+                <div data-sport={row.label} hidden={row.label !== "run"}>
+                  <p class="font-sans font-medium tracking-tight text-2xl text-paper">
+                    {fmt(row.value)}<span class="font-sans font-normal text-sm text-[var(--color-muted-40)]"> km</span>
+                  </p>
+                  <p class="mt-0.5 font-sans text-xs uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
+                    {row.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const ACTIVE =
+    "rounded-[8px] border px-4 py-1.5 font-sans text-xs uppercase tracking-[0.15em] transition-colors border-accent text-accent";
+  const INACTIVE =
+    "rounded-[8px] border px-4 py-1.5 font-sans text-xs uppercase tracking-[0.15em] transition-colors border-[var(--color-card-border)] text-[var(--color-muted-60)] hover:border-[var(--color-muted-40)] hover:text-paper";
+
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter-btn]");
+  const cityCards = document.querySelectorAll<HTMLElement>("[data-city-card]");
+
+  function applyFilter(filter: string) {
+    buttons.forEach((btn) => {
+      const isActive = btn.dataset.filterBtn === filter;
+      btn.className = isActive ? ACTIVE : INACTIVE;
+      btn.setAttribute("aria-pressed", String(isActive));
+    });
+
+    document.querySelectorAll<HTMLElement>("#top-strip [data-sport]").forEach((el) => {
+      el.hidden = el.dataset.sport !== filter;
+    });
+
+    cityCards.forEach((card) => {
+      const sports = (card.dataset.sports ?? "").split(" ");
+      card.hidden = !sports.includes(filter);
+      card.querySelectorAll<HTMLElement>("[data-sport]").forEach((el) => {
+        el.hidden = el.dataset.sport !== filter;
+      });
+    });
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => applyFilter(btn.dataset.filterBtn ?? "run"));
+  });
+</script>

@@ -1,128 +1,69 @@
 ---
-import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import PageHeading from "../components/PageHeading.astro";
-import { about } from "../data/about";
-import profile from "../assets/profile.jpg";
 ---
 
-<Layout title="About — Travel Diary" description={about.bioShort}>
-  <!-- Hero -->
-  <section class="px-6 pt-16 sm:px-10 sm:pt-24">
-    <PageHeading title="about me" subtitle={about.tagline} />
+<Layout title="About — Naman Chaudhry" description="A bit about me.">
+  <section class="mx-auto max-w-3xl px-6 pt-16 sm:px-10 sm:pt-24">
+    <PageHeading
+      title="about me"
+      subtitle="operator, builder, occasional traveller"
+    />
   </section>
 
-  <!-- Two-column bio -->
-  <section class="mx-auto max-w-5xl px-6 py-24 sm:px-10">
-    <div class="grid gap-10 sm:grid-cols-2 sm:items-center sm:gap-16">
-      <div class="overflow-hidden rounded-[16px]">
-        <Image
-          src={profile}
-          alt={about.name}
-          width={800}
-          class="aspect-[4/5] w-full object-cover"
-        />
-      </div>
-      <div class="space-y-5">
-        <p class="text-[17px] leading-[1.7] text-white/75">
-          {about.bioShort}
-        </p>
-        <p class="text-[17px] leading-[1.7] text-white/75">
-          {about.bioLong}
-        </p>
-        <p class="text-[17px] leading-[1.7] text-white/75">
-          {about.bioThird}
+  <section class="mx-auto max-w-3xl px-6 pb-24 sm:px-10">
+    <h2 class="mb-8 font-heading text-[36px] lowercase text-paper">my experience</h2>
+
+    <div class="flex flex-col gap-5">
+
+      <!-- VXT -->
+      <div class="rounded-[12px] border border-[var(--color-card-border)] p-7">
+        <div class="flex items-start justify-between gap-4">
+          <span class="font-sans text-sm font-semibold uppercase tracking-[0.15em] text-accent">VXT</span>
+          <span class="shrink-0 font-sans text-sm text-[var(--color-muted-40)]">Mar 2025 – Present</span>
+        </div>
+        <p class="mt-2 font-sans text-[15px] font-semibold text-paper">Head of Finance</p>
+        <p class="mt-3 text-[15px] leading-[1.7] text-[var(--color-muted-60)]">
+          Employee #19 and first ops hire at a Series A legal-tech startup. Led a $10m+ debt and equity raise from institutional VCs, and built internal finance and people ops systems from scratch — accounts receivable, payable, treasury, employee spend, and ESOP — as the company scaled from $1m to $7m ARR.
         </p>
       </div>
-    </div>
-  </section>
 
-  <!-- Experience -->
-  <section class="border-t border-line/70">
-    <div class="mx-auto max-w-3xl px-6 py-24 sm:px-10">
-      <h2 class="font-heading text-3xl text-paper sm:text-4xl">
-        my experience
-      </h2>
-      <div class="mt-10 space-y-6">
-        {
-          about.experience.map((job) => (
-            <div class="rounded-[12px] border border-white/10 p-7">
-              <div class="flex items-start justify-between gap-4">
-                <p class="font-medium text-white/90">{job.company}</p>
-                <p class="shrink-0 text-[14px] text-white/50">
-                  {job.dateRange}
-                </p>
-              </div>
-              <h3 class="mt-3 text-lg font-bold text-paper">{job.title}</h3>
-              <p class="mt-2 text-[15px] leading-[1.7] text-white/60">
-                {job.description}
-              </p>
-            </div>
-          ))
-        }
+      <!-- coffeepass -->
+      <div class="rounded-[12px] border border-[var(--color-card-border)] p-7">
+        <div class="flex items-start justify-between gap-4">
+          <span class="font-sans text-sm font-semibold uppercase tracking-[0.15em] text-accent">coffeepass</span>
+          <span class="shrink-0 font-sans text-sm text-[var(--color-muted-40)]">Dec 2023 – Feb 2025</span>
+        </div>
+        <p class="mt-2 font-sans text-[15px] font-semibold text-paper">Co-Founder</p>
+        <p class="mt-3 text-[15px] leading-[1.7] text-[var(--color-muted-60)]">
+          Built a subscription network for barista coffee in New York City. Grew to $100k ARR and 100+ partner cafes, increasing individual cafe sales by up to 48%. Led the sales motion with a team of four interns and shipped an Apple Wallet coffee subscription card using no-code tools.
+        </p>
       </div>
-    </div>
-  </section>
 
-  <!-- Timeline -->
-  <section class="border-t border-line/70">
-    <div class="mx-auto max-w-2xl px-6 py-24 sm:px-10">
-      <h2 class="font-heading text-3xl text-paper sm:text-4xl">
-        where I've been
-      </h2>
-      <ol class="mt-10 space-y-8">
-        {
-          about.timeline.map((stop) => (
-            <li class="flex flex-col gap-1 border-b border-line/50 pb-8 last:border-none last:pb-0 sm:flex-row sm:gap-8">
-              <span class="font-heading text-2xl text-accent sm:w-20 sm:shrink-0">
-                {stop.year}
-              </span>
-              <div>
-                <h3 class="font-heading text-2xl text-paper">{stop.title}</h3>
-                <p class="mt-1 text-[16px] leading-[1.7] text-white/75">
-                  {stop.description}
-                </p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
+      <!-- Airwallex -->
+      <div class="rounded-[12px] border border-[var(--color-card-border)] p-7">
+        <div class="flex items-start justify-between gap-4">
+          <span class="font-sans text-sm font-semibold uppercase tracking-[0.15em] text-accent">Airwallex</span>
+          <span class="shrink-0 font-sans text-sm text-[var(--color-muted-40)]">Mar 2022 – Nov 2023</span>
+        </div>
+        <p class="mt-2 font-sans text-[15px] font-semibold text-paper">Sales Strategy & Operations Lead</p>
+        <p class="mt-3 text-[15px] leading-[1.7] text-[var(--color-muted-60)]">
+          First ops hire in the US at a $10b+ fintech. Delivered 280% gross profit growth in six months by removing operational bottlenecks across onboarding, pricing, and territory. Spearheaded the Canada GTM launch and advised the executive team on US go-to-market strategy using advanced SQL analyses.
+        </p>
+      </div>
 
-  <!-- Featured -->
-  <section class="border-t border-line/70">
-    <div class="mx-auto max-w-2xl px-6 py-24 sm:px-10">
-      <h2 class="font-heading text-3xl text-paper sm:text-4xl">featured</h2>
-      <ul class="mt-10 space-y-4">
-        {
-          about.featured.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class="group flex items-center justify-between border-b border-line/50 pb-4 text-lg text-paper transition-colors hover:text-accent"
-              >
-                <span>{item.label}</span>
-                <span class="transition-transform group-hover:translate-x-1">
-                  &rarr;
-                </span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
+      <!-- Blackbird Ventures -->
+      <div class="rounded-[12px] border border-[var(--color-card-border)] p-7">
+        <div class="flex items-start justify-between gap-4">
+          <span class="font-sans text-sm font-semibold uppercase tracking-[0.15em] text-accent">Blackbird Ventures</span>
+          <span class="shrink-0 font-sans text-sm text-[var(--color-muted-40)]">Aug 2021 – Dec 2021</span>
+        </div>
+        <p class="mt-2 font-sans text-[15px] font-semibold text-paper">Portfolio Analyst</p>
+        <p class="mt-3 text-[15px] leading-[1.7] text-[var(--color-muted-60)]">
+          Analysed financial and operational data across a portfolio of 85+ early-stage startups at one of Australia's largest VC funds (US$4b+ FUM). Scaled and automated internal data collection and built portfolio visualisations in Tableau.
+        </p>
+      </div>
 
-  <!-- CTA -->
-  <section class="border-t border-line/70">
-    <div class="mx-auto max-w-2xl px-6 py-24 text-center sm:px-10">
-      <a
-        href={about.contactHref}
-        class="font-heading text-3xl text-paper transition-colors hover:text-accent"
-      >
-        get in touch &rarr;
-      </a>
     </div>
   </section>
 </Layout>

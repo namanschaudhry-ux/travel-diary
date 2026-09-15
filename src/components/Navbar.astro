@@ -1,5 +1,6 @@
 ---
 import { destinations } from "../data/destinations";
+import SocialLinks from "./SocialLinks.astro";
 
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
@@ -39,6 +40,15 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
         ))
       }
       <a
+        href="/moving/"
+        class:list={[
+          "transition-colors hover:text-accent",
+          path === "/moving" && "text-accent",
+        ]}
+      >
+        Moving
+      </a>
+      <a
         href="/about/"
         class:list={[
           "transition-colors hover:text-accent",
@@ -47,6 +57,8 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
       >
         About
       </a>
+
+      <SocialLinks class="sm:ml-4" />
     </nav>
   </div>
 </header>

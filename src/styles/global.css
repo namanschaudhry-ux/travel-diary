@@ -10,15 +10,41 @@
   --color-paper: #f4f1ea;
   --color-paper-dim: #b9b3a6;
   --color-line: #2a2825;
-  --color-accent: #c9a05b;
+  --color-accent: #b08968;
+
+  /* Semantic tokens that flip per-theme without touching markup. */
+  --color-body: rgba(255, 255, 255, 0.75);
+  --color-card-border: rgba(255, 255, 255, 0.08);
+  --color-muted-40: rgba(255, 255, 255, 0.4);
+  --color-muted-60: rgba(255, 255, 255, 0.6);
 }
 
 html {
   color-scheme: dark;
 }
 
+/* Light mode — toggled by ThemeToggle.astro via [data-theme="light"] on <html>. */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-ink: #faf9f6;
+  --color-ink-soft: #f1efe9;
+  --color-paper: #18150f;
+  --color-paper-dim: #6b6559;
+  --color-line: #e3ddd0;
+  --color-accent: #8a6642;
+
+  --color-body: rgba(15, 13, 10, 0.75);
+  --color-card-border: rgba(15, 13, 10, 0.08);
+  --color-muted-40: rgba(15, 13, 10, 0.45);
+  --color-muted-60: rgba(15, 13, 10, 0.62);
+}
+
 body {
   background-color: var(--color-ink);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 ::selection {

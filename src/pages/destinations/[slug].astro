@@ -31,7 +31,7 @@ const photos = getPhotos(destination.slug);
       title={destination.name}
       subtitle={`${destination.country} · ${destination.year}`}
     />
-    <p class="mx-auto max-w-md text-[16px] leading-[1.7] text-white/75">
+    <p class="mx-auto max-w-md text-[16px] leading-[1.7] text-[var(--color-body)]">
       {destination.blurb}
     </p>
   </section>
@@ -41,7 +41,7 @@ const photos = getPhotos(destination.slug);
       photos.length > 0 ? (
         <Gallery photos={photos} alt={destination.name} />
       ) : (
-        <p class="text-[16px] leading-[1.7] text-white/75">
+        <p class="text-[16px] leading-[1.7] text-[var(--color-body)]">
           No photos yet — add some to{" "}
           <code class="text-accent">
             src/assets/photos/{destination.slug}/
