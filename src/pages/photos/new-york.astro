@@ -336,7 +336,41 @@ const splitCaption = (caption: string) => {
       glideFrame = requestAnimationFrame(step);
     };
 
+    // Guards against rapid successive filter clicks: applyFilter reads each card's
+    // current `hidden` state to decide what needs to change, but mid-transition a card
+    // is briefly in a "not hidden yet" or "not faded in yet" limbo state. Without
+    // flushing the previous transition straight to its end state first, a new click
+    // reads that limbo state, misclassifies the card, and it can end up stuck invisible.
+    let version = 0;
+    let pendingToHide: HTMLElement[] = [];
+    let pendingToShow: HTMLElement[] = [];
+    let pendingStaying: HTMLElement[] = [];
+    const finalizePending = () => {
+      pendingToHide.forEach((card) => {
+        card.hidden = true;
+        card.style.opacity = "";
+        card.style.transition = "";
+        card.style.transform = "";
+      });
+      pendingToShow.forEach((card) => {
+        card.style.opacity = "";
+        card.style.transition = "";
+        card.style.transform = "";
+      });
+      pendingStaying.forEach((card) => {
+        card.style.transition = "";
+        card.style.transform = "";
+      });
+      pendingToHide = [];
+      pendingToShow = [];
+      pendingStaying = [];
+    };
+
     const applyFilter = (tag: string | undefined) => {
+      version += 1;
+      const myVersion = version;
+      finalizePending();
+
       const toHide: HTMLElement[] = [];
       const toShow: HTMLElement[] = [];
       cards.forEach((card) => {
@@ -347,65 +381,78 @@ const splitCaption = (caption: string) => {
       });
       if (toHide.length === 0 && toShow.length === 0) return;
 
+      if (reducedMotionFilter.matches) {
+        toHide.forEach((card) => { card.hidden = true; });
+        toShow.forEach((card) => { card.hidden = false; });
+        return;
+      }
+
       // Cards that stay visible still shift position, because hiding/showing others
       // rebalances the CSS-columns masonry. Record where they are now (FLIP's "First")
       // so that shift can be animated instead of snapping instantly.
       const staying = cards.filter(
         (card) => !card.hidden && !toHide.includes(card) && !toShow.includes(card)
       );
+      const first = new Map(staying.map((card) => [card, card.getBoundingClientRect()]));
 
-      const reveal = () => {
-        const first = reducedMotionFilter.matches
-          ? null
-          : new Map(staying.map((card) => [card, card.getBoundingClientRect()]));
+      // Start the outgoing cards fading out and bring the incoming ones into the layout
+      // right away, in their pre-fade-in pose, so the two crossfade. Previously the
+      // incoming cards stayed hidden until the outgoing ones had fully faded out, so the
+      // whole gallery briefly went blank in between.
+      toHide.forEach((card) => {
+        card.style.opacity = "0";
+      });
+      toShow.forEach((card) => {
+        card.hidden = false;
+        card.style.transition = "none";
+        card.style.opacity = "0";
+        card.style.transform = "translateY(8px)";
+      });
 
-        toHide.forEach((card) => {
-          card.hidden = true;
-          card.style.opacity = "";
+      // FLIP's "Last" + "Invert": jump each staying card back to its old spot with
+      // no transition, then "Play": release the transform so it glides to its real,
+      // reflowed position instead of the layout snapping there instantly.
+      first.forEach((before, card) => {
+        const after = card.getBoundingClientRect();
+        const dx = before.left - after.left;
+        const dy = before.top - after.top;
+        if (!dx && !dy) return;
+        card.style.transition = "none";
+        card.style.transform = `translate(${dx}px, ${dy}px)`;
+      });
+
+      pendingToHide = toHide;
+      pendingToShow = toShow;
+      pendingStaying = staying;
+
+      requestAnimationFrame(() => {
+        if (myVersion !== version) return;
+        first.forEach((_, card) => {
+          card.style.transition = "transform 320ms cubic-bezier(0.4, 0, 0.2, 1)";
+          card.style.transform = "";
+          card.addEventListener("transitionend", () => { card.style.transition = ""; }, { once: true });
         });
-        toShow.forEach((card) => {
-          card.hidden = false;
-          card.style.opacity = "0";
-          card.style.transform = "translateY(8px)";
-        });
-
-        // FLIP's "Last" + "Invert": jump each staying card back to its old spot with
-        // no transition, then "Play": release the transform so it glides to its real,
-        // reflowed position instead of the layout snapping there instantly.
-        first?.forEach((before, card) => {
-          const after = card.getBoundingClientRect();
-          const dx = before.left - after.left;
-          const dy = before.top - after.top;
-          if (!dx && !dy) return;
-          card.style.transition = "none";
-          card.style.transform = `translate(${dx}px, ${dy}px)`;
-          requestAnimationFrame(() => {
-            card.style.transition = "transform 320ms cubic-bezier(0.4, 0, 0.2, 1)";
+        requestAnimationFrame(() => {
+          if (myVersion !== version) return;
+          toShow.forEach((card) => {
+            card.style.transition = "opacity 280ms ease, transform 280ms ease";
+            card.style.opacity = "";
             card.style.transform = "";
             card.addEventListener("transitionend", () => { card.style.transition = ""; }, { once: true });
           });
         });
+      });
 
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            toShow.forEach((card) => {
-              card.style.transition = "opacity 280ms ease, transform 280ms ease";
-              card.style.opacity = "";
-              card.style.transform = "";
-              card.addEventListener("transitionend", () => { card.style.transition = ""; }, { once: true });
-            });
-          });
-        });
-      };
-
-      if (toHide.length > 0 && !reducedMotionFilter.matches) {
+      window.setTimeout(() => {
+        if (myVersion !== version) return;
         toHide.forEach((card) => {
-          card.style.opacity = "0";
+          card.hidden = true;
+          card.style.opacity = "";
         });
-        window.setTimeout(reveal, 180);
-      } else {
-        reveal();
-      }
+        pendingToHide = [];
+        pendingToShow = [];
+        pendingStaying = [];
+      }, 180);
     };
 
     const updateActive = () => {
@@ -535,6 +582,14 @@ const splitCaption = (caption: string) => {
   }
   .filter-item[aria-selected="true"] {
     color: var(--color-accent);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    /* JS sets opacity/transform inline per scroll position; !important lets hover win over that. */
+    .filter-item:hover {
+      opacity: 1 !important;
+      transform: scale(1.15) !important;
+      color: var(--color-accent) !important;
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     .filter-wheel {
