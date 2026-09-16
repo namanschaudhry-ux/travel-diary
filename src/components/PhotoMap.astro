@@ -1,17 +1,14 @@
 ---
 import "leaflet/dist/leaflet.css";
 ---
-<div class="view-selector">
-  <span class="gallery-word">gallery</span>
-  <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-label="Map view" aria-controls="photo-gallery map-panel"><span></span></button>
-  <span class="map-word">map</span>
+<div class="mx-auto max-w-6xl px-6 sm:px-10">
+  <section id="map-panel" class="map-panel" hidden aria-label="New York photo map">
+    <div class="atlas-heading"><span>FIELD NOTES / NYC</span><span>01—15</span></div>
+    <div id="photo-map" aria-label="Interactive map of photo locations"></div>
+    <p class="atlas-note">Fifteen frames from New York · Pins show GPS positions or approximate caption locations.</p>
+    <p id="map-error" hidden>Map tiles could not load. You can still select a photo pin or return to the gallery.</p>
+  </section>
 </div>
-<section id="map-panel" class="map-panel" hidden aria-label="New York photo map">
-  <div class="atlas-heading"><span>FIELD NOTES / NYC</span><span>01—07</span></div>
-  <div id="photo-map" aria-label="Interactive map of photo locations"></div>
-  <p class="atlas-note">Seven frames from New York · Pins show GPS positions or approximate caption locations.</p>
-  <p id="map-error" hidden>Map tiles could not load. You can still select a photo pin or return to the gallery.</p>
-</section>
 <script>
   import L from "leaflet";
   const toggle = document.querySelector<HTMLButtonElement>("#map-toggle")!;
@@ -19,14 +16,23 @@ import "leaflet/dist/leaflet.css";
   const gallery = document.querySelector<HTMLElement>("#photo-gallery")!;
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-expand-portrait]"));
   // GPS for the two iPhone photos; other points approximate the caption location.
+  // Order matches the `photos` array in new-york.astro — index-matched to the gallery cards.
   const positions: [number, number, string][] = [
-    [40.73123, -73.99710, "Approximate location"],
-    [40.737056, -73.986664, "Photo GPS"],
-    [40.742308, -73.979386, "Photo GPS"],
-    [40.7471, -73.9450, "Approximate location"],
-    [40.7125, -73.9878, "Approximate location"],
-    [40.7208, -73.9983, "Approximate location"],
-    [40.7323, -73.9866, "Approximate location"],
+    [40.73123, -73.99710, "Approximate location"], // Washington Square Park
+    [40.737056, -73.986664, "Photo GPS"], // E 19th & Irving Place
+    [40.742308, -73.979386, "Photo GPS"], // E 29th & 3rd Av
+    [40.7471, -73.9450, "Approximate location"], // Court Square Station
+    [40.7125, -73.9878, "Approximate location"], // 219 Madison Street
+    [40.7208, -73.9983, "Approximate location"], // Lafayette St & Prince St
+    [40.7323, -73.9866, "Approximate location"], // E14th & 2nd Av
+    [40.7150, -74.0021, "Approximate location"], // Centre Street, Civic Center
+    [40.7168, -73.9975, "Approximate location"], // PARK at KIMS, Chinatown
+    [40.7163, -73.9999, "Approximate location"], // Centre Street, Chinatown
+    [40.7033, -73.9903, "Approximate location"], // Brooklyn Bridge, DUMBO
+    [40.7128, -74.0060, "Approximate location"], // City Hall Park, Civic Center
+    [40.7712, -73.9740, "Approximate location"], // Sheep Meadow, Central Park
+    [40.7357, -73.9986, "Approximate location"], // Jefferson Market Garden, West Village
+    [40.7027, -73.9903, "Approximate location"], // Manhattan Bridge, DUMBO
   ];
   let map: L.Map | undefined;
   function showGallery() {
@@ -36,11 +42,64 @@ import "leaflet/dist/leaflet.css";
   }
   function createMap() {
     map = L.map("photo-map", { scrollWheelZoom: false });
-    const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    const tiles = L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
       maxZoom: 19,
+      detectRetina: true,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
     tiles.on("tileerror", () => { document.querySelector<HTMLElement>("#map-error")!.hidden = false; });
+    // Trackpad pinch reaches the browser as a wheel event with ctrlKey set, distinct from a
+    // plain two-finger scroll — handle that case ourselves so pinch zooms the map without
+    // enabling scrollWheelZoom, which would hijack normal page scrolling over the map.
+    const mapContainer = document.getElementById("photo-map")!;
+    // Safari reports trackpad pinch via its own proprietary gesturestart/change/end events —
+    // driving its native page-zoom — in addition to a ctrlKey wheel event. Left unhandled,
+    // that native zoom fights our own, which reads as lag and a full-page flash. Chrome/Firefox
+    // never fire gesture events at all, so this branch is a no-op there.
+    let inSafariGesture = false;
+    let gestureStartZoom = 0;
+    let gesturePoint: L.Point | undefined;
+    mapContainer.addEventListener("gesturestart", (event: any) => {
+      event.preventDefault();
+      if (!map) return;
+      inSafariGesture = true;
+      gestureStartZoom = map.getZoom();
+      gesturePoint = map.mouseEventToContainerPoint(event);
+    });
+    mapContainer.addEventListener("gesturechange", (event: any) => {
+      event.preventDefault();
+      if (!map || !gesturePoint) return;
+      map.setZoomAround(gesturePoint, gestureStartZoom + Math.log2(event.scale), { animate: false });
+    });
+    mapContainer.addEventListener("gestureend", (event: any) => {
+      event.preventDefault();
+      inSafariGesture = false;
+    });
+    // A running float target, not reset per frame: zoom snaps to whole levels, so a tiny
+    // per-frame nudge often rounds away to nothing — it needs to keep accumulating across
+    // the whole gesture to actually cross a zoom level, only resetting once the gesture pauses.
+    let pinchZoomTarget: number | undefined;
+    let pinchZoomPoint: L.Point | undefined;
+    let pinchZoomFrame: number | undefined;
+    let pinchIdleTimer: number | undefined;
+    mapContainer.addEventListener("wheel", (event) => {
+      if (!event.ctrlKey || !map) return;
+      event.preventDefault();
+      if (inSafariGesture) return; // gesturechange is already driving the zoom
+      if (pinchZoomTarget === undefined) pinchZoomTarget = map.getZoom();
+      pinchZoomTarget -= event.deltaY * 0.01;
+      pinchZoomPoint = map.mouseEventToContainerPoint(event);
+      clearTimeout(pinchIdleTimer);
+      pinchIdleTimer = window.setTimeout(() => { pinchZoomTarget = undefined; }, 200);
+      // Apply on the next frame rather than debouncing after the gesture settles, so the
+      // map keeps up with a continuous pinch instead of jumping once fingers stop moving.
+      if (pinchZoomFrame !== undefined) return;
+      pinchZoomFrame = requestAnimationFrame(() => {
+        pinchZoomFrame = undefined;
+        if (!map || pinchZoomTarget === undefined || !pinchZoomPoint) return;
+        map.setZoomAround(pinchZoomPoint, pinchZoomTarget, { animate: false });
+      });
+    }, { passive: false });
     positions.forEach(([lat, lng, precision], index) => {
       const card = cards[index];
       if (!card) return;
@@ -76,6 +135,16 @@ import "leaflet/dist/leaflet.css";
       }).addTo(map!).bindPopup(popup, { maxWidth: 240 });
     });
     map.fitBounds(positions.map(([lat, lng]) => [lat, lng] as [number, number]), { padding: [48, 48] });
+    // Recenter on the Manhattan pins (excluding Court Square in Long Island City and the two
+    // DUMBO/Brooklyn pins across the river, which otherwise skew the fitted view east/south)
+    // and back off a level so the island reads centered.
+    const nonManhattanIndexes = new Set([3, 10, 14]);
+    const manhattanPositions = positions.filter((_, index) => !nonManhattanIndexes.has(index));
+    const manhattanCenter: [number, number] = [
+      manhattanPositions.reduce((sum, [lat]) => sum + lat, 0) / manhattanPositions.length,
+      manhattanPositions.reduce((sum, [, lng]) => sum + lng, 0) / manhattanPositions.length,
+    ];
+    map.setView(manhattanCenter, map.getZoom() - 1);
   }
   toggle.addEventListener("click", () => {
     if (toggle.getAttribute("aria-checked") === "true") { showGallery(); return; }
@@ -88,18 +157,38 @@ import "leaflet/dist/leaflet.css";
 </script>
 <style is:global>
   .view-selector { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 auto 32px; font: 14px monospace; letter-spacing: .06em; }
-  .gallery-word { color: #83af8b; }
-  .map-word { color: #83a9cb; visibility: hidden; }
-  .view-selector:has(#map-toggle[aria-checked="true"]) .gallery-word { visibility: hidden; }
-  .view-selector:has(#map-toggle[aria-checked="true"]) .map-word { visibility: visible; }
-  #map-toggle { width: 72px; height: 34px; border: 1px solid #a3a594; border-radius: 24px; padding: 4px; cursor: pointer; background: linear-gradient(90deg, #527c59 0 50%, #527b9c 50%); box-shadow: inset 0 2px 5px #0005; }
-  #map-toggle span { display: block; width: 24px; height: 24px; background: #f5edda; border-radius: 50%; box-shadow: 0 2px 4px #0005; transition: transform 220ms ease; }
+  .gallery-word, .map-word {
+    color: var(--color-accent);
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 260ms ease, transform 260ms ease, visibility 0s linear 0s;
+  }
+  .map-word { visibility: hidden; opacity: 0; transform: translateY(-4px); }
+  .view-selector:has(#map-toggle[aria-checked="true"]) .gallery-word {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 260ms ease, transform 260ms ease, visibility 0s linear 260ms;
+  }
+  .view-selector:has(#map-toggle[aria-checked="true"]) .map-word {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 260ms ease, transform 260ms ease, visibility 0s linear 0s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-word, .map-word { transition: opacity 260ms ease, visibility 0s linear 0s; transform: none; }
+    .view-selector:has(#map-toggle[aria-checked="true"]) .gallery-word,
+    .view-selector:has(#map-toggle[aria-checked="true"]) .map-word { transform: none; }
+  }
+  #map-toggle { width: 72px; height: 34px; border: 1px solid var(--color-accent); border-radius: 24px; padding: 4px; cursor: pointer; background: transparent; box-shadow: inset 0 2px 5px #0005; }
+  #map-toggle span { display: block; width: 24px; height: 24px; background: var(--color-accent); border-radius: 50%; box-shadow: 0 2px 4px #0005; transition: transform 220ms ease; }
   #map-toggle[aria-checked="true"] span { transform: translateX(36px); }
-  #map-toggle:focus-visible { outline: 2px solid #eee0b7; outline-offset: 5px; }
-  .map-panel { max-width: 1072px; margin: 0 auto 96px; padding: 18px; background: #e8dfc5; color: #403e31; border: 1px solid #b0a587; border-radius: 4px; box-shadow: 0 8px 28px #0003; }
+  #map-toggle:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; }
+  .map-panel { margin: 0 0 96px; padding: 18px; background: var(--color-ink); color: var(--color-body); border: 1px solid #b0a587; border-radius: 12px; box-shadow: 0 8px 28px #0003; }
   .map-panel[hidden] { display: none; }
   .atlas-heading { display: flex; justify-content: space-between; padding: 0 2px 14px; font: 12px monospace; letter-spacing: .18em; }
-  #photo-map { height: min(64vh, 640px); min-height: 390px; z-index: 0; border: 1px solid #b2a98b; background: #e4ddc5; }
+  #photo-map { height: min(64vh, 640px); min-height: 390px; z-index: 0; border: 1px solid #b2a98b; border-radius: 8px; background: #e4ddc5; overflow: hidden; }
   #photo-map .leaflet-tile-pane { filter: sepia(.65) saturate(.45) contrast(.92); }
   .atlas-note, #map-error { margin: 14px 0 0; font: 11px/1.6 monospace; }
   .atlas-pin span { display: grid; place-items: center; width: 32px; height: 32px; border: 2px solid #f5eed9; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #9a4939; color: #fff5df; box-shadow: -2px 3px 5px #0005; font: bold 11px monospace; }
@@ -110,6 +199,6 @@ import "leaflet/dist/leaflet.css";
   .photo-postcard strong { display: block; font: 14px/1.4 Georgia, serif; }
   .photo-postcard small { display: block; margin-top: 4px; font: 10px monospace; color: #74705f; }
   .photo-postcard button { margin-top: 12px; font: 11px monospace; color: #355d4c; cursor: pointer; text-decoration: underline; }
-  @media (max-width: 640px) { .map-panel { margin-inline: 24px; padding: 12px; } }
+  @media (max-width: 640px) { .map-panel { padding: 12px; } }
   @media (prefers-reduced-motion: reduce) { #map-toggle span { transition: none; } }
 </style>

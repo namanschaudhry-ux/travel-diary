@@ -1,6 +1,29 @@
 ---
+import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { cityActivity, activityTotals as totals } from "../data/activity-summary";
+import novablast5WinterSea from "../assets/shoes/novablast-5-winter-sea.png";
+import novablast5Tokyo from "../assets/shoes/novablast-5-tokyo.png";
+import zoomFly6Kipchoge from "../assets/shoes/zoom-fly-6-kipchoge.png";
+import nimbus22RedBlack from "../assets/shoes/nimbus-22-red-black.png";
+import nbNycMarathon2024 from "../assets/shoes/nb-nyc-marathon-2024.png";
+import nimbusPlatinum from "../assets/shoes/nimbus-25-platinum.png";
+import nimbusGreyBlue from "../assets/shoes/nimbus-25-grey-blue.png";
+import novablastOrange from "../assets/shoes/novablast-4-orange.png";
+import novablastParis from "../assets/shoes/novablast-4-paris.png";
+import tarmacSl7 from "../assets/bike/tarmac-sl7-sport-black.png";
+
+const shoes = [
+  { image: novablast5WinterSea, alt: "Placeholder graphic for ASICS Novablast 5 in the Winter Sea colorway.", label: "Novablast 5", sub: "Winter Sea" },
+  { image: novablast5Tokyo, alt: "Placeholder graphic for ASICS Novablast 5 in the Tokyo colorway.", label: "Novablast 5", sub: "Tokyo" },
+  { image: zoomFly6Kipchoge, alt: "Placeholder graphic for the Nike Zoom Fly 6, Eliud Kipchoge edition.", label: "Zoom Fly 6", sub: "Eliud Kipchoge" },
+  { image: nimbus22RedBlack, alt: "Placeholder graphic for ASICS GEL-Nimbus 22 in the Red/Black colorway.", label: "GEL-Nimbus 22", sub: "Red / Black" },
+  { image: nbNycMarathon2024, alt: "Placeholder graphic for a New Balance NYC Marathon 2024 edition shoe.", label: "New Balance", sub: "NYC Marathon 2024" },
+  { image: nimbusPlatinum, alt: "ASICS GEL-Nimbus 25 in the Platinum Black/Pure Silver colorway.", label: "GEL-Nimbus 25", sub: "Platinum" },
+  { image: nimbusGreyBlue, alt: "ASICS GEL-Nimbus 25 in the Sheet Rock/Indigo Blue colorway.", label: "GEL-Nimbus 25", sub: "Sheet Rock Indigo" },
+  { image: novablastOrange, alt: "ASICS Novablast 4 in the Bright Sunstone orange colorway.", label: "Novablast 4", sub: "Bright Sunstone" },
+  { image: novablastParis, alt: "ASICS Novablast 4 in the Paris Olympics Cool Matcha/Safety Yellow colorway.", label: "Novablast 4", sub: "Paris" },
+];
 
 const cities = [...cityActivity]
   .map((c) => ({ ...c, total: c.run + c.cycle + c.swim }))
@@ -61,7 +84,17 @@ const filters = ["run", "cycle", "swim"];
     </div>
   </section>
 
-  <section class="mx-auto max-w-2xl px-6 pb-16 sm:px-10">
+  <div class="mx-auto max-w-2xl px-6 pb-8 sm:px-10" id="view-toggle-wrap">
+    <div class="filter-wheel-wrap mx-auto">
+      <div class="filter-wheel" id="view-wheel" role="tablist" aria-label="City or gear view">
+        {["city", "gear"].map((label) => (
+          <button type="button" class="filter-item" role="tab" data-view={label} aria-selected={label === "city" ? "true" : "false"}>{label}</button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <section class="mx-auto max-w-2xl px-6 pb-16 sm:px-10" data-view-section="city">
     <div class="grid gap-5 sm:grid-cols-2">
       {
         cities.map((c) => (
@@ -92,6 +125,42 @@ const filters = ["run", "cycle", "swim"];
       }
     </div>
   </section>
+
+  <section class="mx-auto max-w-2xl px-6 pb-16 sm:px-10" data-view-section="gear" data-sport-section="run" hidden>
+    <div class="flex flex-col gap-6">
+      {
+        shoes.map((shoe) => (
+          <div
+            class="city-card rounded-[12px] border border-[var(--color-card-border)] p-6 text-center"
+            data-gear-card
+            tabindex="0"
+            data-distance={totals.run / shoes.length}
+          >
+            <Image src={shoe.image} alt={shoe.alt} widths={[240, 360, 480]} sizes="(min-width: 640px) 280px, 55vw" format="webp" class="mx-auto h-auto w-full max-w-[280px]" />
+            <div class="mt-2 flex flex-col gap-0.5">
+              <span class="city-name font-sans text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">{shoe.label}</span>
+              <span class="font-sans text-[10px] text-[var(--color-muted-40)]">{shoe.sub}</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-2xl px-6 pb-16 sm:px-10" data-view-section="gear" data-sport-section="cycle" hidden>
+    <div
+      class="city-card mx-auto max-w-sm rounded-[12px] border border-[var(--color-card-border)] p-6 text-center"
+      data-gear-card
+      tabindex="0"
+      data-distance={totals.cycle}
+    >
+      <Image src={tarmacSl7} alt="Specialized Tarmac SL7 Sport road bike in black." widths={[240, 360, 480]} sizes="(min-width: 640px) 280px, 60vw" format="webp" class="mx-auto h-auto w-full max-w-[280px]" />
+      <div class="mt-3 flex flex-col gap-0.5">
+        <span class="city-name font-sans text-xs font-semibold uppercase tracking-[0.12em] text-accent">Specialized Tarmac SL7</span>
+        <span class="font-sans text-xs text-[var(--color-muted-40)]">Sport, Black</span>
+      </div>
+    </div>
+  </section>
 </Layout>
 
 <script>
@@ -102,38 +171,57 @@ const filters = ["run", "cycle", "swim"];
 
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter-btn]");
   const cityCards = document.querySelectorAll<HTMLElement>("[data-city-card]");
+  const viewToggleWrap = document.getElementById("view-toggle-wrap");
 
   const fill = document.querySelector<HTMLElement>("#city-fill");
   let selectedSport = "run";
-  let hoveredCity: HTMLElement | null = null;
-  let focusedCity: HTMLElement | null = null;
+  let selectedView = "city";
+  let hoveredCard: HTMLElement | null = null;
+  let focusedCard: HTMLElement | null = null;
+
+  function cardDistance(card: HTMLElement): number {
+    if (card.hasAttribute("data-gear-card")) return Number(card.dataset.distance ?? 0);
+    return Number(card.querySelector<HTMLElement>(`[data-sport="${selectedSport}"]`)?.dataset.distance ?? 0);
+  }
 
   function updateFill() {
-    const card = hoveredCity ?? focusedCity;
-    const distance = Number(card?.querySelector<HTMLElement>(`[data-sport="${selectedSport}"]`)?.dataset.distance ?? 0);
+    const card = hoveredCard ?? focusedCard;
+    const distance = card ? cardDistance(card) : 0;
     const total = Number(document.querySelector<HTMLElement>(`#top-strip [data-sport="${selectedSport}"]`)?.dataset.total ?? 0);
     const share = total > 0 ? Math.min(1, Math.max(0, distance / total)) : 0;
     fill?.style.setProperty("--city-share", String(share));
   }
 
-  cityCards.forEach((card) => {
+  function trackDistanceCard(card: HTMLElement) {
     card.addEventListener("pointerenter", (event) => {
       if (event.pointerType === "touch") return;
-      hoveredCity = card;
+      hoveredCard = card;
       updateFill();
     });
     card.addEventListener("pointerleave", () => {
-      if (hoveredCity === card) hoveredCity = null;
+      if (hoveredCard === card) hoveredCard = null;
       updateFill();
     });
-    card.addEventListener("focus", () => { focusedCity = card; updateFill(); });
-    card.addEventListener("blur", () => { focusedCity = null; updateFill(); });
-  });
+    card.addEventListener("focus", () => { focusedCard = card; updateFill(); });
+    card.addEventListener("blur", () => { focusedCard = null; updateFill(); });
+  }
+
+  cityCards.forEach(trackDistanceCard);
+  document.querySelectorAll<HTMLElement>("[data-gear-card]").forEach(trackDistanceCard);
+
+  function updateVisibility() {
+    document.querySelectorAll<HTMLElement>("[data-view-section]").forEach((el) => {
+      const sportMatches = !el.dataset.sportSection || el.dataset.sportSection === selectedSport;
+      el.hidden = el.dataset.viewSection !== selectedView || !sportMatches;
+    });
+    if (viewToggleWrap) viewToggleWrap.hidden = selectedSport === "swim";
+  }
 
   function applyFilter(filter: string) {
     selectedSport = filter;
-    hoveredCity = null;
-    focusedCity = null;
+    hoveredCard = null;
+    focusedCard = null;
+    if (filter === "swim") selectedView = "city";
     updateFill();
     buttons.forEach((btn) => {
       const isActive = btn.dataset.filterBtn === filter;
@@ -152,11 +240,77 @@ const filters = ["run", "cycle", "swim"];
         el.hidden = el.dataset.sport !== filter;
       });
     });
+
+    if (filter === "swim") resetViewToCity();
+    updateVisibility();
   }
+
+  let resetViewToCity: () => void = () => {};
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => applyFilter(btn.dataset.filterBtn ?? "run"));
   });
+
+  const viewWheel = document.getElementById("view-wheel");
+  let setView: (view: string) => void = () => {};
+  if (viewWheel) {
+    const viewItems = Array.from(viewWheel.querySelectorAll<HTMLButtonElement>(".filter-item"));
+
+    setView = (view: string) => {
+      selectedView = view;
+      viewItems.forEach((item) => item.setAttribute("aria-selected", String(item.dataset.view === view)));
+      updateVisibility();
+    };
+
+    resetViewToCity = () => {
+      const cityItem = viewItems.find((item) => item.dataset.view === "city");
+      cityItem?.scrollIntoView({ behavior: "instant", inline: "center", block: "nearest" });
+      setView("city");
+    };
+
+    const updateActive = () => {
+      const wheelRect = viewWheel.getBoundingClientRect();
+      const center = wheelRect.left + wheelRect.width / 2;
+      let closest: HTMLButtonElement | null = null;
+      let closestDistance = Infinity;
+      viewItems.forEach((item) => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenter = itemRect.left + itemRect.width / 2;
+        const distance = Math.abs(itemCenter - center);
+        const proximity = Math.max(0, 1 - distance / (wheelRect.width / 2));
+        item.style.opacity = String(0.3 + proximity * 0.7);
+        item.style.transform = `scale(${0.82 + proximity * 0.18})`;
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = item;
+        }
+      });
+      if (closest) setView(closest.dataset.view ?? "city");
+    };
+
+    let frame: number | undefined;
+    const scheduleUpdate = () => {
+      if (frame !== undefined) return;
+      frame = requestAnimationFrame(() => {
+        frame = undefined;
+        updateActive();
+      });
+    };
+
+    viewWheel.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    viewItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        item.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        setView(item.dataset.view ?? "city");
+      });
+    });
+
+    updateActive();
+  }
+
+  updateVisibility();
 </script>
 
 <style>
@@ -204,6 +358,53 @@ const filters = ["run", "cycle", "swim"];
     }
     .city-card:hover, .city-card:hover .city-name {
       transform: none;
+    }
+  }
+
+  .filter-wheel-wrap {
+    max-width: 220px;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .filter-wheel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-inline: calc(50% - 45px);
+  }
+  .filter-wheel::-webkit-scrollbar {
+    display: none;
+  }
+  .filter-item {
+    flex: 0 0 90px;
+    scroll-snap-align: center;
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    padding: 6px 0;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: var(--color-paper);
+    cursor: pointer;
+    opacity: 0.3;
+    transform: scale(0.82);
+    transition: opacity 200ms ease, transform 200ms ease, color 200ms ease;
+  }
+  .filter-item:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+  .filter-item[aria-selected="true"] {
+    color: var(--color-accent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .filter-wheel {
+      scroll-behavior: auto;
     }
   }
 </style>

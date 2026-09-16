@@ -10,28 +10,69 @@ import photo3 from "../../assets/photos/new-york/court-square.jpg";
 import photo4 from "../../assets/photos/new-york/brick-facade.jpg";
 import photo5 from "../../assets/photos/new-york/city-street.jpg";
 import photo6 from "../../assets/photos/new-york/rooftops.jpg";
+import photo7 from "../../assets/photos/new-york/coffee-shop.jpg";
+import photo8 from "../../assets/photos/new-york/brooklyn-bridge.jpg";
+import photo9 from "../../assets/photos/new-york/centre-street.jpg";
+import photo10 from "../../assets/photos/new-york/chinatown-billboard.jpg";
+import photo11 from "../../assets/photos/new-york/city-hall-park.jpg";
+import photo12 from "../../assets/photos/new-york/garden-gate.jpg";
+import photo13 from "../../assets/photos/new-york/magazine-shop.jpg";
+import photo14 from "../../assets/photos/new-york/sheep-meadow.jpg";
+import photo15 from "../../assets/photos/new-york/manhattan-bridge-dumbo.jpg";
 
 const photos = [
-  { image: photo0, alt: "A person walking beside a stone arch in a leafy New York park.", caption: "Washington Square Park" },
-  { image: photo1, alt: "An ivy-covered brick building and traffic lights on a sunny New York street.", caption: "E 19th & Irving Place" },
-  { image: photo2, alt: "A view through a window of a fire escape, leafy trees and brick apartment buildings.", caption: "E 29th & 3rd Av" },
-  { image: photo3, alt: "A passenger seated on the Court Square station platform beneath surrounding city buildings.", caption: "Court Square Station, Queens" },
-  { image: photo4, alt: "An ornate red and cream brick apartment building with fire escapes and storefronts.", caption: "219 Madison Street, Lower East Side" },
-  { image: photo5, alt: "Brick buildings with metal fire escapes beside taller towers on a New York street.", caption: "Lafayette Street, SoHo" },
-  { image: photo6, alt: "A view over New York rooftops, water towers and terraces beneath a blue sky.", caption: "E14th & 2nd Av" },
+  { image: photo0, alt: "A person walking beside a stone arch in a leafy New York park.", caption: "Washington Square Park, Greenwich Village", tags: ["buildings"] },
+  { image: photo1, alt: "An ivy-covered brick building and traffic lights on a sunny New York street.", caption: "E 19th & Irving Place, Gramercy Park", tags: ["buildings"] },
+  { image: photo2, alt: "A view through a window of a fire escape, leafy trees and brick apartment buildings.", caption: "E 29th & 3rd Av, Kips Bay", tags: ["buildings"] },
+  { image: photo3, alt: "A passenger seated on the Court Square station platform beneath surrounding city buildings.", caption: "Court Square Station, Long Island City", tags: ["buildings"] },
+  { image: photo4, alt: "An ornate red and cream brick apartment building with fire escapes and storefronts.", caption: "219 Madison Street, Lower East Side", tags: ["buildings"] },
+  { image: photo5, alt: "Brick buildings with metal fire escapes beside taller towers on a New York street.", caption: "Lafayette St & Prince St, Soho", tags: ["buildings"] },
+  { image: photo6, alt: "A view over New York rooftops, water towers and terraces beneath a blue sky.", caption: "E14th & 2nd Av, East Village", tags: ["buildings"] },
+  { image: photo9, alt: "One World Trade Center rising between an ornate brick building and a gilded corner building, with a cyclist crossing the street.", caption: "Centre Street, Civic Center", tags: ["buildings"] },
+  { image: photo7, alt: "Customers at the counter and seated inside a wood-panelled coffee shop, with a framed skyline photograph on the wall.", caption: "PARK at KIMS, Chinatown", tags: ["cafes"] },
+  { image: photo10, alt: "A giant AT&T billboard of a dog holding an iPhone above a busy Centre Street intersection, with an NYPD car in the foreground.", caption: "Centre Street, Chinatown", tags: ["buildings"] },
+  { image: photo8, alt: "People walking along the Brooklyn Bridge's wooden promenade toward its Gothic stone tower, with the Manhattan skyline behind.", caption: "Brooklyn Bridge, DUMBO", tags: ["bridges"] },
+  { image: photo11, alt: "One World Trade Center's spire seen between buildings near a limestone civic building, framed by a tree.", caption: "City Hall Park, Civic Center", tags: ["buildings"] },
+  { image: photo14, alt: "A crowded lawn in Central Park with a row of Midtown skyscrapers rising behind the trees.", caption: "Sheep Meadow, Central Park", tags: ["green"] },
+  { image: photo12, alt: "A wisteria-draped iron gate opening onto a shaded community garden path.", caption: "Jefferson Market Garden, West Village", tags: ["green"] },
+  { image: photo15, alt: "The Manhattan Bridge's towers and cables seen from a Brooklyn rooftop across the East River.", caption: "Manhattan Bridge, DUMBO", tags: ["bridges"] },
+  { image: photo13, alt: "The interior of Air Mail, a stationery and magazine store, with wall-to-wall shelves of titles and a mid-century sitting area.", caption: "Air Mail, West Village", tags: ["cafes"] },
 ];
+
+const splitCaption = (caption: string) => {
+  const commaIndex = caption.indexOf(",");
+  if (commaIndex === -1) return { top: caption, bottom: null };
+  return { top: caption.slice(0, commaIndex), bottom: caption.slice(commaIndex + 1).trim() };
+};
 ---
 
 <Layout title="New York — Naman">
   <section class="mx-auto max-w-3xl px-6 pt-8 pb-8 text-center sm:px-10 sm:pt-10 sm:pb-10">
-    <h1 class="font-heading text-[56px] leading-none text-paper sm:text-[80px]">new york</h1>
+    <h1 class="city-title font-heading text-[56px] leading-none text-paper sm:text-[80px]" aria-label="new york city">
+      <span>new</span> <span>york</span> <span>city</span>
+    </h1>
   </section>
+
+  <div class="top-controls mx-auto max-w-6xl px-6 sm:px-10">
+    <div class="view-selector">
+      <span class="gallery-word">gallery</span>
+      <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-label="Map view" aria-controls="photo-gallery map-panel"><span></span></button>
+      <span class="map-word">map</span>
+    </div>
+    <div class="filter-wheel-wrap">
+      <div class="filter-wheel" id="filter-wheel" role="tablist" aria-label="Photo category filters">
+        {["cafes", "bridges", "green", "buildings"].map((label) => (
+          <button type="button" class="filter-item" role="tab" data-filter={label}>{label}</button>
+        ))}
+      </div>
+    </div>
+  </div>
 
   <PhotoMap />
   <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
     <div class="columns-1 gap-6 sm:columns-2 sm:gap-8">
       {photos.map((photo, index) => (
-        <figure data-expand-portrait="true" data-caption={photo.caption} role="button" aria-label={`Enlarge ${photo.caption} photo`} aria-haspopup="dialog" tabindex={photo.caption ? 0 : undefined} class="photo-card relative mb-6 break-inside-avoid overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+        <figure data-expand-portrait="true" data-caption={photo.caption} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption} photo`} aria-haspopup="dialog" tabindex={photo.caption ? 0 : undefined} class="photo-card relative mb-6 break-inside-avoid overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
           <Image
             src={photo.image}
             alt={photo.alt}
@@ -42,9 +83,16 @@ const photos = [
             class="block h-auto w-full"
           />
           {photo.caption && (
-            <figcaption class="photo-caption pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-black/60 to-transparent px-6 pt-5 pb-14 text-center font-sans text-sm font-light text-white/90">
-              {photo.caption}
-            </figcaption>
+            <>
+              <figcaption class="photo-caption pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-black/60 to-transparent px-6 pt-5 pb-14 text-center font-sans text-sm font-light text-white/90">
+                {splitCaption(photo.caption).top}
+              </figcaption>
+              {splitCaption(photo.caption).bottom && (
+                <figcaption class="photo-caption pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-6 pt-14 pb-5 text-center font-sans text-sm font-light text-white/90">
+                  {splitCaption(photo.caption).bottom}
+                </figcaption>
+              )}
+            </>
           )}
         </figure>
       ))}
@@ -53,7 +101,12 @@ const photos = [
   <dialog id="portrait-view" aria-label="Washington Square Park photograph">
     <div class="portrait-stage">
       <Image src={photo0} alt={photos[0].alt} widths={[800, 1200, 1600]} sizes="90vw" format="webp" class="portrait-large" />
-      <p class="portrait-label">Washington Square Park</p>
+      <p class="portrait-label">
+        <span class="block">{splitCaption(photos[0].caption).top}</span>
+        {splitCaption(photos[0].caption).bottom && (
+          <span class="block">{splitCaption(photos[0].caption).bottom}</span>
+        )}
+      </p>
       <button type="button" class="portrait-close" aria-label="Close enlarged photo" autofocus>×</button>
     </div>
   </dialog>
@@ -105,7 +158,23 @@ const photos = [
     const ratio = Number(thumbnail.getAttribute("width")) / Number(thumbnail.getAttribute("height"));
     stage.style.width = `min(90vw, ${88 * ratio}dvh)`;
     const label = viewer.querySelector<HTMLElement>(".portrait-label");
-    if (label) label.textContent = card.dataset.caption ?? "";
+    if (label) {
+      const caption = card.dataset.caption ?? "";
+      const commaIndex = caption.indexOf(",");
+      const top = commaIndex === -1 ? caption : caption.slice(0, commaIndex);
+      const bottom = commaIndex === -1 ? "" : caption.slice(commaIndex + 1).trim();
+      label.innerHTML = "";
+      const topSpan = document.createElement("span");
+      topSpan.className = "block";
+      topSpan.textContent = top;
+      label.append(topSpan);
+      if (bottom) {
+        const bottomSpan = document.createElement("span");
+        bottomSpan.className = "block";
+        bottomSpan.textContent = bottom;
+        label.append(bottomSpan);
+      }
+    }
     viewer.setAttribute("aria-label", `${card.dataset.caption ?? "Enlarged"} photograph`);
     closing = false;
     viewer.classList.remove("is-closing");
@@ -178,7 +247,7 @@ const photos = [
   }
   .portrait-large { display: block; width: 100%; height: auto; max-height: 88dvh; object-fit: contain; border-radius: 12px; }
   .portrait-label { position: absolute; bottom: 0; inset-inline: 0; padding: 48px 24px 20px; background: linear-gradient(transparent, rgb(0 0 0 / 60%)); color: rgb(255 255 255 / 90%); font-size: 14px; font-weight: 300; border-radius: 0 0 12px 12px; }
-  .portrait-close { position: absolute; right: 12px; top: 12px; width: 36px; height: 36px; border-radius: 50%; background: rgb(0 0 0 / 45%); color: white; font-size: 24px; cursor: pointer; }
+  .portrait-close { position: absolute; right: 12px; top: 12px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; background: rgb(0 0 0 / 45%); color: white; font-size: 24px; line-height: 1; cursor: pointer; }
   #portrait-view.is-closing::backdrop { animation: backdrop-out 300ms ease both; }
   #portrait-view.is-closing .portrait-close { opacity: 0; }
   @keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
@@ -221,6 +290,253 @@ const photos = [
     }
     .photo-card:hover {
       transform: none;
+    }
+  }
+</style>
+
+<script>
+  const wheel = document.getElementById("filter-wheel");
+  if (wheel) {
+    const items = Array.from(wheel.querySelectorAll<HTMLButtonElement>(".filter-item"));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>("#photo-gallery [data-expand-portrait]"));
+    // No filter is applied until the visitor actually touches the wheel — the first item
+    // simply starts centered, and that shouldn't pre-filter the gallery down to just cafes.
+    let hasInteracted = false;
+    const reducedMotionFilter = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // A longer, eased glide instead of the browser's native (fast, fixed-feel) smooth
+    // scroll, so moving between wheel items feels like sliding rather than snapping.
+    let glideFrame: number | undefined;
+    const glideTo = (item: HTMLElement) => {
+      if (glideFrame !== undefined) cancelAnimationFrame(glideFrame);
+      const start = wheel.scrollLeft;
+      // getBoundingClientRect, not offsetLeft: .filter-wheel isn't a positioned element,
+      // so offsetLeft resolves against a distant ancestor and produces a bogus target.
+      const wheelRect = wheel.getBoundingClientRect();
+      const itemRect = item.getBoundingClientRect();
+      const itemCenterInWheel = itemRect.left - wheelRect.left + itemRect.width / 2;
+      const target = start + itemCenterInWheel - wheel.clientWidth / 2;
+      const distance = target - start;
+      if (reducedMotionFilter.matches || distance === 0) {
+        wheel.scrollLeft = target;
+        return;
+      }
+      const duration = 620;
+      const startTime = performance.now();
+      const easeOutQuint = (t: number) => 1 - Math.pow(1 - t, 5);
+      const step = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        wheel.scrollLeft = start + distance * easeOutQuint(progress);
+        if (progress < 1) {
+          glideFrame = requestAnimationFrame(step);
+        } else {
+          glideFrame = undefined;
+        }
+      };
+      glideFrame = requestAnimationFrame(step);
+    };
+
+    const applyFilter = (tag: string | undefined) => {
+      const toHide: HTMLElement[] = [];
+      const toShow: HTMLElement[] = [];
+      cards.forEach((card) => {
+        const tags = card.dataset.tags?.split(" ").filter(Boolean) ?? [];
+        const shouldHide = hasInteracted && !!tag && !tags.includes(tag);
+        if (shouldHide && !card.hidden) toHide.push(card);
+        if (!shouldHide && card.hidden) toShow.push(card);
+      });
+      if (toHide.length === 0 && toShow.length === 0) return;
+
+      // Cross-fade rather than an instant display:none snap, which reads as the whole
+      // page "blinking" when most of the grid disappears/reappears at once.
+      const reveal = () => {
+        toHide.forEach((card) => {
+          card.hidden = true;
+          card.style.opacity = "";
+        });
+        toShow.forEach((card) => {
+          card.hidden = false;
+          card.style.opacity = "0";
+        });
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            toShow.forEach((card) => {
+              card.style.opacity = "";
+            });
+          });
+        });
+      };
+
+      if (toHide.length > 0 && !reducedMotionFilter.matches) {
+        toHide.forEach((card) => {
+          card.style.opacity = "0";
+        });
+        window.setTimeout(reveal, 180);
+      } else {
+        reveal();
+      }
+    };
+
+    const updateActive = () => {
+      const wheelRect = wheel.getBoundingClientRect();
+      const center = wheelRect.left + wheelRect.width / 2;
+      let closest: HTMLButtonElement | null = null;
+      let closestDistance = Infinity;
+      items.forEach((item) => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenter = itemRect.left + itemRect.width / 2;
+        const distance = Math.abs(itemCenter - center);
+        // Fade smoothly with distance from center rather than a hard on/off cut.
+        const proximity = Math.max(0, 1 - distance / (wheelRect.width / 2));
+        item.style.opacity = String(0.3 + proximity * 0.7);
+        item.style.transform = `scale(${0.82 + proximity * 0.18})`;
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = item;
+        }
+      });
+      items.forEach((item) => item.setAttribute("aria-selected", String(item === closest)));
+      applyFilter(closest?.dataset.filter);
+    };
+
+    let frame: number | undefined;
+    const scheduleUpdate = () => {
+      if (frame !== undefined) return;
+      frame = requestAnimationFrame(() => {
+        frame = undefined;
+        updateActive();
+      });
+    };
+
+    wheel.addEventListener("scroll", () => {
+      hasInteracted = true;
+      scheduleUpdate();
+    }, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    items.forEach((item) => {
+      item.addEventListener("click", () => {
+        hasInteracted = true;
+        glideTo(item);
+        // Apply immediately rather than waiting on the scroll event: clicking an item that's
+        // already centered (e.g. the first item on initial load) causes no scroll movement at
+        // all, so the scroll-driven update would otherwise never fire for that click.
+        items.forEach((i) => i.setAttribute("aria-selected", String(i === item)));
+        applyFilter(item.dataset.filter);
+      });
+    });
+
+    updateActive();
+  }
+</script>
+
+<style is:inline>
+  .top-controls {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    margin: 0 auto 32px;
+  }
+  .top-controls .view-selector {
+    grid-column: 1;
+    justify-self: start;
+    margin: 0;
+  }
+  .top-controls .filter-wheel-wrap {
+    grid-column: 2;
+    justify-self: center;
+  }
+  @media (max-width: 640px) {
+    .top-controls {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 16px;
+    }
+    .top-controls .view-selector {
+      grid-column: 1;
+      justify-self: center;
+    }
+    .top-controls .filter-wheel-wrap {
+      grid-column: 1;
+      justify-self: stretch;
+      width: 100%;
+    }
+  }
+  .filter-wheel-wrap {
+    width: 380px;
+    max-width: 380px;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .filter-wheel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-inline: calc(50% - 75px);
+  }
+  .filter-wheel::-webkit-scrollbar {
+    display: none;
+  }
+  .filter-item {
+    flex: 0 0 150px;
+    scroll-snap-align: center;
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    padding: 10px 0;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-size: 20px;
+    text-align: center;
+    color: var(--color-paper);
+    cursor: pointer;
+    opacity: 0.3;
+    transform: scale(0.82);
+    transition: opacity 200ms ease, transform 200ms ease, color 200ms ease;
+  }
+  .filter-item:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+  .filter-item[aria-selected="true"] {
+    color: var(--color-accent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .filter-wheel {
+      scroll-behavior: auto;
+    }
+  }
+
+  .city-title span {
+    display: inline-block;
+    animation: word-jump 2.1s ease-in-out infinite;
+  }
+  .city-title span:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .city-title span:nth-child(2) {
+    animation-delay: 0.25s;
+  }
+  .city-title span:nth-child(3) {
+    animation-delay: 0.5s;
+  }
+  @keyframes word-jump {
+    0%,
+    24%,
+    100% {
+      transform: translateY(0);
+    }
+    12% {
+      transform: translateY(-0.22em);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .city-title span {
+      animation: none;
     }
   }
 </style>
