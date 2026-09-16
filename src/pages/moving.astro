@@ -14,15 +14,15 @@ import novablastParis from "../assets/shoes/novablast-4-paris.png";
 import tarmacSl7 from "../assets/bike/tarmac-sl7-sport-black.png";
 
 const shoes = [
-  { image: novablast5WinterSea, alt: "Placeholder graphic for ASICS Novablast 5 in the Winter Sea colorway.", label: "Novablast 5", sub: "Winter Sea" },
-  { image: novablast5Tokyo, alt: "Placeholder graphic for ASICS Novablast 5 in the Tokyo colorway.", label: "Novablast 5", sub: "Tokyo" },
-  { image: zoomFly6Kipchoge, alt: "Placeholder graphic for the Nike Zoom Fly 6, Eliud Kipchoge edition.", label: "Zoom Fly 6", sub: "Eliud Kipchoge" },
-  { image: nimbus22RedBlack, alt: "Placeholder graphic for ASICS GEL-Nimbus 22 in the Red/Black colorway.", label: "GEL-Nimbus 22", sub: "Red / Black" },
-  { image: nbNycMarathon2024, alt: "Placeholder graphic for a New Balance NYC Marathon 2024 edition shoe.", label: "New Balance", sub: "NYC Marathon 2024" },
-  { image: nimbusPlatinum, alt: "ASICS GEL-Nimbus 25 in the Platinum Black/Pure Silver colorway.", label: "GEL-Nimbus 25", sub: "Platinum" },
-  { image: nimbusGreyBlue, alt: "ASICS GEL-Nimbus 25 in the Sheet Rock/Indigo Blue colorway.", label: "GEL-Nimbus 25", sub: "Sheet Rock Indigo" },
-  { image: novablastOrange, alt: "ASICS Novablast 4 in the Bright Sunstone orange colorway.", label: "Novablast 4", sub: "Bright Sunstone" },
-  { image: novablastParis, alt: "ASICS Novablast 4 in the Paris Olympics Cool Matcha/Safety Yellow colorway.", label: "Novablast 4", sub: "Paris" },
+  { image: novablast5WinterSea, alt: "Placeholder graphic for ASICS Novablast 5 in the Winter Sea colorway.", label: "Novablast 5", sub: "Winter Sea", year: "2023" },
+  { image: novablast5Tokyo, alt: "Placeholder graphic for ASICS Novablast 5 in the Tokyo colorway.", label: "Novablast 5", sub: "Tokyo", year: "2023" },
+  { image: zoomFly6Kipchoge, alt: "Placeholder graphic for the Nike Zoom Fly 6, Eliud Kipchoge edition.", label: "Zoom Fly 6", sub: "Eliud Kipchoge", year: "2023" },
+  { image: nimbus22RedBlack, alt: "Placeholder graphic for ASICS GEL-Nimbus 22 in the Red/Black colorway.", label: "GEL-Nimbus 22", sub: "Red / Black", year: "2023" },
+  { image: nbNycMarathon2024, alt: "Placeholder graphic for a New Balance NYC Marathon 2024 edition shoe.", label: "New Balance", sub: "NYC Marathon 2024", year: "2023" },
+  { image: nimbusPlatinum, alt: "ASICS GEL-Nimbus 25 in the Platinum Black/Pure Silver colorway.", label: "GEL-Nimbus 25", sub: "Platinum", year: "2023" },
+  { image: nimbusGreyBlue, alt: "ASICS GEL-Nimbus 25 in the Sheet Rock/Indigo Blue colorway.", label: "GEL-Nimbus 25", sub: "Sheet Rock Indigo", year: "2023" },
+  { image: novablastOrange, alt: "ASICS Novablast 4 in the Bright Sunstone orange colorway.", label: "Novablast 4", sub: "Bright Sunstone", year: "2023" },
+  { image: novablastParis, alt: "ASICS Novablast 4 in the Paris Olympics Cool Matcha/Safety Yellow colorway.", label: "Novablast 4", sub: "Paris", year: "2023" },
 ];
 
 const cities = [...cityActivity]
@@ -136,11 +136,12 @@ const filters = ["run", "cycle", "swim"];
             tabindex="0"
             data-distance={totals.run / shoes.length}
           >
+            <figcaption class="shoe-caption mb-2 font-sans text-sm font-light text-white/90">
+              <span class="block">{shoe.label}</span>
+              <span class="block">{shoe.sub}</span>
+            </figcaption>
             <Image src={shoe.image} alt={shoe.alt} widths={[240, 360, 480]} sizes="(min-width: 640px) 280px, 55vw" format="webp" class="mx-auto h-auto w-full max-w-[280px]" />
-            <div class="mt-2 flex flex-col gap-0.5">
-              <span class="city-name font-sans text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">{shoe.label}</span>
-              <span class="font-sans text-[10px] text-[var(--color-muted-40)]">{shoe.sub}</span>
-            </div>
+            <p class="shoe-caption mt-2 font-sans text-sm font-light text-white/90">{shoe.year}</p>
           </div>
         ))
       }
@@ -338,6 +339,23 @@ const filters = ["run", "cycle", "swim"];
     transition: transform 240ms ease, font-weight 240ms ease;
   }
 
+  .shoe-caption {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 240ms ease, transform 240ms ease;
+  }
+  .city-card:hover .shoe-caption,
+  .city-card:focus-visible .shoe-caption {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (hover: none) {
+    .shoe-caption {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .city-card:hover {
       transform: translateY(-4px) scale(1.035);
@@ -353,10 +371,13 @@ const filters = ["run", "cycle", "swim"];
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .city-card, .city-name, #city-fill {
+    .city-card, .city-name, #city-fill, .shoe-caption {
       transition: none;
     }
     .city-card:hover, .city-card:hover .city-name {
+      transform: none;
+    }
+    .shoe-caption {
       transform: none;
     }
   }
