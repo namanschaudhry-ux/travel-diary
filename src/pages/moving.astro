@@ -136,12 +136,12 @@ const filters = ["run", "cycle", "swim"];
             tabindex="0"
             data-distance={totals.run / shoes.length}
           >
-            <figcaption class="shoe-caption mb-2 font-sans text-sm font-light text-white/90">
+            <figcaption class="shoe-caption mb-2 font-sans text-sm font-light text-paper/90">
               <span class="block">{shoe.label}</span>
               <span class="block">{shoe.sub}</span>
             </figcaption>
             <Image src={shoe.image} alt={shoe.alt} widths={[240, 360, 480]} sizes="(min-width: 640px) 280px, 55vw" format="webp" class="mx-auto h-auto w-full max-w-[280px]" />
-            <p class="shoe-caption mt-2 font-sans text-sm font-light text-white/90">{shoe.year}</p>
+            <p class="shoe-caption mt-2 font-sans text-sm font-light text-paper/90">{shoe.year}</p>
           </div>
         ))
       }
