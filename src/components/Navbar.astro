@@ -28,14 +28,14 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
       <details class="photos-dropdown relative">
         <summary class:list={[
           "flex cursor-pointer list-none items-center gap-2 transition-colors hover:text-accent",
-          (path === "/photos" || path.startsWith("/photos/")) && "text-accent",
+          path.startsWith("/photos/") && "text-accent",
         ]}>
           Photos
           <svg class="country-chevron h-3 w-3 transition-transform" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.2" /></svg>
         </summary>
         <div class="mt-3 min-w-40 rounded-[12px] border border-line bg-ink p-2 shadow-lg sm:absolute sm:left-0 sm:top-full">
-          <a href="/photos/new-zealand/" aria-current={path === "/photos/new-zealand" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">New Zealand</a>
-          <a href="/photos/new-york/" aria-current={path === "/photos/new-york" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">New York</a>
+          <a href="/photos/new-zealand/" aria-current={path === "/photos/new-zealand" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">New Zealand Winter '26</a>
+          <a href="/photos/new-york/" aria-current={path === "/photos/new-york" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">New York City Summer '26</a>
         </div>
       </details>
       <a
