@@ -21,17 +21,17 @@ import photo14 from "../../assets/photos/new-york/sheep-meadow.jpg";
 import photo15 from "../../assets/photos/new-york/manhattan-bridge-dumbo.jpg";
 
 const photos = [
-  { image: photo0, alt: "A person walking beside a stone arch in a leafy New York park.", caption: "Washington Square Park, Greenwich Village", tags: ["buildings"] },
+  { image: photo0, alt: "A person walking beside a stone arch in a leafy New York park.", caption: "Washington Square Park, Greenwich Village", tags: ["buildings"], djiDate: "Sep 4 '26", djiTime: "13:56" },
   { image: photo1, alt: "An ivy-covered brick building and traffic lights on a sunny New York street.", caption: "E 19th & Irving Place, Gramercy Park", tags: ["buildings"] },
   { image: photo2, alt: "A view through a window of a fire escape, leafy trees and brick apartment buildings.", caption: "E 29th & 3rd Av, Kips Bay", tags: ["buildings"] },
-  { image: photo3, alt: "A passenger seated on the Court Square station platform beneath surrounding city buildings.", caption: "Court Square Station, Long Island City", tags: ["buildings"] },
-  { image: photo4, alt: "An ornate red and cream brick apartment building with fire escapes and storefronts.", caption: "219 Madison Street, Lower East Side", tags: ["buildings"] },
-  { image: photo5, alt: "Brick buildings with metal fire escapes beside taller towers on a New York street.", caption: "Lafayette St & Prince St, Soho", tags: ["buildings"] },
-  { image: photo6, alt: "A view over New York rooftops, water towers and terraces beneath a blue sky.", caption: "E14th & 2nd Av, East Village", tags: ["buildings"] },
-  { image: photo9, alt: "One World Trade Center rising between an ornate brick building and a gilded corner building, with a cyclist crossing the street.", caption: "Centre Street, Civic Center", tags: ["buildings"] },
-  { image: photo7, alt: "Customers at the counter and seated inside a wood-panelled coffee shop, with a framed skyline photograph on the wall.", caption: "PARK at KIMS, Chinatown", tags: ["cafes"] },
+  { image: photo3, alt: "A passenger seated on the Court Square station platform beneath surrounding city buildings.", caption: "Court Square Station, Long Island City", tags: ["buildings"], djiDate: "Aug 29 '26", djiTime: "16:37" },
+  { image: photo4, alt: "An ornate red and cream brick apartment building with fire escapes and storefronts.", caption: "219 Madison Street, Lower East Side", tags: ["buildings"], djiDate: "Aug 31 '26", djiTime: "07:14" },
+  { image: photo5, alt: "Brick buildings with metal fire escapes beside taller towers on a New York street.", caption: "Lafayette St & Prince St, Soho", tags: ["buildings"], djiDate: "Aug 31 '26", djiTime: "08:32" },
+  { image: photo6, alt: "A view over New York rooftops, water towers and terraces beneath a blue sky.", caption: "E14th & 2nd Av, East Village", tags: ["buildings"], djiDate: "Sep 4 '26", djiTime: "16:13" },
+  { image: photo9, alt: "One World Trade Center rising between an ornate brick building and a gilded corner building, with a cyclist crossing the street.", caption: "Centre Street, Civic Center", tags: ["buildings"], djiDate: "Aug 26 '26", djiTime: "07:20" },
+  { image: photo7, alt: "Customers at the counter and seated inside a wood-panelled coffee shop, with a framed skyline photograph on the wall.", caption: "PARK at KIMS, Chinatown", tags: ["cafes"], djiDate: "Aug 31 '26", djiTime: "08:23" },
   { image: photo10, alt: "A giant AT&T billboard of a dog holding an iPhone above a busy Centre Street intersection, with an NYPD car in the foreground.", caption: "Centre Street, Chinatown", tags: ["buildings"] },
-  { image: photo8, alt: "People walking along the Brooklyn Bridge's wooden promenade toward its Gothic stone tower, with the Manhattan skyline behind.", caption: "Brooklyn Bridge, DUMBO", tags: ["bridges"] },
+  { image: photo8, alt: "People walking along the Brooklyn Bridge's wooden promenade toward its Gothic stone tower, with the Manhattan skyline behind.", caption: "Brooklyn Bridge, DUMBO", tags: ["bridges"], djiDate: "Aug 25 '26", djiTime: "07:02" },
   { image: photo11, alt: "One World Trade Center's spire seen between buildings near a limestone civic building, framed by a tree.", caption: "City Hall Park, Civic Center", tags: ["buildings"] },
   { image: photo14, alt: "A crowded lawn in Central Park with a row of Midtown skyscrapers rising behind the trees.", caption: "Sheep Meadow, Central Park", tags: ["green"] },
   { image: photo12, alt: "A wisteria-draped iron gate opening onto a shaded community garden path.", caption: "Jefferson Market Garden, West Village", tags: ["green"] },
@@ -88,8 +88,16 @@ const splitCaption = (caption: string) => {
                 {splitCaption(photo.caption).top}
               </figcaption>
               {splitCaption(photo.caption).bottom && (
-                <figcaption class="photo-caption pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-6 pt-14 pb-5 text-center font-sans text-sm font-light text-white/90">
-                  {splitCaption(photo.caption).bottom}
+                <figcaption class="photo-caption pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-6 pt-14 pb-5 font-sans text-sm font-light text-white/90">
+                  {photo.djiTime ? (
+                    <div class="grid grid-cols-3 items-center">
+                      <span class="text-left">{photo.djiDate}</span>
+                      <span class="text-center">{splitCaption(photo.caption).bottom}</span>
+                      <span class="text-right">{photo.djiTime}</span>
+                    </div>
+                  ) : (
+                    <div class="text-center">{splitCaption(photo.caption).bottom}</div>
+                  )}
                 </figcaption>
               )}
             </>

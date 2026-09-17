@@ -35,6 +35,16 @@ import "leaflet/dist/leaflet.css";
     [40.7027, -73.9903, "Approximate location"], // Manhattan Bridge, DUMBO
   ];
   let map: L.Map | undefined;
+  const markers: L.Marker[] = [];
+  function syncMarkerVisibility(card: HTMLElement, index: number) {
+    const marker = markers[index];
+    if (!marker || !map) return;
+    if (card.hidden) {
+      if (map.hasLayer(marker)) map.removeLayer(marker);
+    } else if (!map.hasLayer(marker)) {
+      marker.addTo(map);
+    }
+  }
   function showGallery() {
     toggle.setAttribute("aria-checked", "false");
     panel.hidden = true;
@@ -129,10 +139,23 @@ import "leaflet/dist/leaflet.css";
         }, { once: true });
       });
       popup.append(image, title, note, button);
-      L.marker([lat, lng], {
+      const marker = L.marker([lat, lng], {
         title: card.dataset.caption,
         icon: L.divIcon({ className: "atlas-pin", html: `<span><b>${String(index + 1).padStart(2, "0")}</b></span>`, iconSize: [34, 42], iconAnchor: [17, 42], popupAnchor: [0, -40] }),
-      }).addTo(map!).bindPopup(popup, { maxWidth: 240 });
+      }).bindPopup(popup, { maxWidth: 240 });
+      markers[index] = marker;
+      if (!card.hidden) marker.addTo(map!);
+    });
+    // The gallery's filter wheel only ever hides/shows [data-expand-portrait] cards — it
+    // has no idea the map exists. Watching each card's `hidden` attribute instead of
+    // duplicating the filter logic keeps the map in sync with whatever filtering the
+    // gallery does, present or future.
+    cards.forEach((card, index) => {
+      syncMarkerVisibility(card, index);
+      new MutationObserver(() => syncMarkerVisibility(card, index)).observe(card, {
+        attributes: true,
+        attributeFilter: ["hidden"],
+      });
     });
     map.fitBounds(positions.map(([lat, lng]) => [lat, lng] as [number, number]), { padding: [48, 48] });
     // Recenter on the Manhattan pins (excluding Court Square in Long Island City and the two
