@@ -1,5 +1,6 @@
 ---
 import PhotoMap from "../../components/PhotoMap.astro";
+import MapIntro from "../../components/MapIntro.astro";
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import photo0 from "../../assets/photos/new-york/park-arch.jpg";
@@ -44,9 +45,19 @@ const splitCaption = (caption: string) => {
   if (commaIndex === -1) return { top: caption, bottom: null };
   return { top: caption.slice(0, commaIndex), bottom: caption.slice(commaIndex + 1).trim() };
 };
+
+// Small line-art pictograms for the dial rim, matching a camera dial's
+// engraved icon tabs rather than printed words.
+const dialIcons: Record<string, string> = {
+  cafes: `<path d="M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M17 9h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M7 4c0 1-1 1-1 2M11 4c0 1-1 1-1 2"/>`,
+  bridges: `<path d="M2 19h20"/><path d="M6 19V6M18 19V6"/><path d="M6 6Q12 14 18 6"/><path d="M9 8V19M12 10.5V19M15 8V19"/>`,
+  green: `<path d="M12 3 6 12h3l-4 6h5v3h4v-3h5l-4-6h3L12 3Z"/>`,
+  buildings: `<path d="M3 21V9l5-3v15M8 21V6l5-3v18M13 21V11l5-4v14"/><path d="M3 21h18"/>`,
+};
 ---
 
 <Layout title="New York — Naman">
+  <MapIntro />
   <section class="mx-auto max-w-3xl px-6 pt-8 pb-8 text-center sm:px-10 sm:pt-10 sm:pb-10">
     <h1 class="city-title font-heading text-[56px] leading-none text-paper sm:text-[80px]" aria-label="new york city">
       <span>new</span> <span>york</span> <span>city</span>
@@ -59,12 +70,25 @@ const splitCaption = (caption: string) => {
       <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-label="Map view" aria-controls="photo-gallery map-panel"><span></span></button>
       <span class="map-word">map</span>
     </div>
-    <div class="filter-wheel-wrap">
-      <div class="filter-wheel" id="filter-wheel" role="tablist" aria-label="Photo category filters">
-        {["cafes", "bridges", "green", "buildings"].map((label) => (
-          <button type="button" class="filter-item" role="tab" data-filter={label}>{label}</button>
+    <div class="filter-dial-wrap">
+      <div class="camera-dial-pointer" aria-hidden="true"></div>
+      <div class="camera-dial" id="filter-dial" role="tablist" aria-label="Photo category filters">
+        {["cafes", "bridges", "green", "buildings"].map((label, index) => (
+          <div class="camera-dial-item" data-filter={label} data-angle={index * 90} style={`transform: rotate(${index * 90}deg);`}>
+            <button
+              type="button"
+              class="camera-dial-label"
+              role="tab"
+              aria-selected={index === 0 ? "true" : "false"}
+              aria-label={label}
+              style={`--counter-rot: ${index * -90}deg;`}
+            >
+              <svg class="camera-dial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={dialIcons[label]} />
+            </button>
+          </div>
         ))}
       </div>
+      <div class="camera-dial-hub" aria-hidden="true">FILM</div>
     </div>
   </div>
 
@@ -102,6 +126,10 @@ const splitCaption = (caption: string) => {
               )}
             </>
           )}
+          <span class="viewfinder-corner viewfinder-corner--tl" aria-hidden="true"></span>
+          <span class="viewfinder-corner viewfinder-corner--tr" aria-hidden="true"></span>
+          <span class="viewfinder-corner viewfinder-corner--bl" aria-hidden="true"></span>
+          <span class="viewfinder-corner viewfinder-corner--br" aria-hidden="true"></span>
         </figure>
       ))}
     </div>
@@ -281,6 +309,28 @@ const splitCaption = (caption: string) => {
     .photo-caption { transition: none; transform: none; }
   }
 
+  /* Camera-viewfinder-style autofocus brackets in each corner on hover. */
+  .viewfinder-corner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #ffd60a;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .photo-card:hover .viewfinder-corner,
+  .photo-card:focus-visible .viewfinder-corner {
+    opacity: 1;
+  }
+  .viewfinder-corner--tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .viewfinder-corner--tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+  .viewfinder-corner--bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+  .viewfinder-corner--br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .viewfinder-corner { transition: none; }
+  }
+
   .photo-card {
     transition: transform 240ms ease, box-shadow 240ms ease, opacity 180ms ease;
   }
@@ -303,46 +353,14 @@ const splitCaption = (caption: string) => {
 </style>
 
 <script>
-  const wheel = document.getElementById("filter-wheel");
-  if (wheel) {
-    const items = Array.from(wheel.querySelectorAll<HTMLButtonElement>(".filter-item"));
+  const dial = document.getElementById("filter-dial");
+  if (dial) {
+    const items = Array.from(dial.querySelectorAll<HTMLElement>(".camera-dial-item"));
     const cards = Array.from(document.querySelectorAll<HTMLElement>("#photo-gallery [data-expand-portrait]"));
-    // No filter is applied until the visitor actually touches the wheel — the first item
-    // simply starts centered, and that shouldn't pre-filter the gallery down to just cafes.
+    // No filter is applied until the visitor actually turns the dial — the item at the
+    // pointer simply starts highlighted, and that shouldn't pre-filter the gallery.
     let hasInteracted = false;
     const reducedMotionFilter = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    // A longer, eased glide instead of the browser's native (fast, fixed-feel) smooth
-    // scroll, so moving between wheel items feels like sliding rather than snapping.
-    let glideFrame: number | undefined;
-    const glideTo = (item: HTMLElement) => {
-      if (glideFrame !== undefined) cancelAnimationFrame(glideFrame);
-      const start = wheel.scrollLeft;
-      // getBoundingClientRect, not offsetLeft: .filter-wheel isn't a positioned element,
-      // so offsetLeft resolves against a distant ancestor and produces a bogus target.
-      const wheelRect = wheel.getBoundingClientRect();
-      const itemRect = item.getBoundingClientRect();
-      const itemCenterInWheel = itemRect.left - wheelRect.left + itemRect.width / 2;
-      const target = start + itemCenterInWheel - wheel.clientWidth / 2;
-      const distance = target - start;
-      if (reducedMotionFilter.matches || distance === 0) {
-        wheel.scrollLeft = target;
-        return;
-      }
-      const duration = 620;
-      const startTime = performance.now();
-      const easeOutQuint = (t: number) => 1 - Math.pow(1 - t, 5);
-      const step = (now: number) => {
-        const progress = Math.min((now - startTime) / duration, 1);
-        wheel.scrollLeft = start + distance * easeOutQuint(progress);
-        if (progress < 1) {
-          glideFrame = requestAnimationFrame(step);
-        } else {
-          glideFrame = undefined;
-        }
-      };
-      glideFrame = requestAnimationFrame(step);
-    };
 
     // Guards against rapid successive filter clicks: applyFilter reads each card's
     // current `hidden` state to decide what needs to change, but mid-transition a card
@@ -463,56 +481,32 @@ const splitCaption = (caption: string) => {
       }, 180);
     };
 
-    const updateActive = () => {
-      const wheelRect = wheel.getBoundingClientRect();
-      const center = wheelRect.left + wheelRect.width / 2;
-      let closest: HTMLButtonElement | null = null;
-      let closestDistance = Infinity;
-      items.forEach((item) => {
-        const itemRect = item.getBoundingClientRect();
-        const itemCenter = itemRect.left + itemRect.width / 2;
-        const distance = Math.abs(itemCenter - center);
-        // Fade smoothly with distance from center rather than a hard on/off cut.
-        const proximity = Math.max(0, 1 - distance / (wheelRect.width / 2));
-        item.style.opacity = String(0.3 + proximity * 0.7);
-        item.style.transform = `scale(${0.82 + proximity * 0.18})`;
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closest = item;
-        }
-      });
-      items.forEach((item) => item.setAttribute("aria-selected", String(item === closest)));
-      applyFilter(closest?.dataset.filter);
-    };
+    // Turning the dial: the whole disc rotates so the chosen item's angle lands under
+    // the fixed pointer at the top, like turning a shutter-speed dial. currentRot starts
+    // at 0 to match the first item (angle 0) already sitting at the pointer at rest.
+    let currentRot = 0;
+    const angleOf = (item: HTMLElement) => Number(item.dataset.angle ?? 0);
 
-    let frame: number | undefined;
-    const scheduleUpdate = () => {
-      if (frame !== undefined) return;
-      frame = requestAnimationFrame(() => {
-        frame = undefined;
-        updateActive();
+    const selectItem = (item: HTMLElement) => {
+      const target = -angleOf(item);
+      const delta = ((target - currentRot + 540) % 360) - 180;
+      currentRot += delta;
+      dial.style.transform = `rotate(${currentRot}deg)`;
+      items.forEach((i) => {
+        const label = i.querySelector<HTMLElement>(".camera-dial-label")!;
+        label.style.setProperty("--counter-rot", `${-(angleOf(i) + currentRot)}deg`);
+        label.setAttribute("aria-selected", String(i === item));
       });
     };
-
-    wheel.addEventListener("scroll", () => {
-      hasInteracted = true;
-      scheduleUpdate();
-    }, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
 
     items.forEach((item) => {
-      item.addEventListener("click", () => {
+      const label = item.querySelector<HTMLButtonElement>(".camera-dial-label")!;
+      label.addEventListener("click", () => {
         hasInteracted = true;
-        glideTo(item);
-        // Apply immediately rather than waiting on the scroll event: clicking an item that's
-        // already centered (e.g. the first item on initial load) causes no scroll movement at
-        // all, so the scroll-driven update would otherwise never fire for that click.
-        items.forEach((i) => i.setAttribute("aria-selected", String(i === item)));
+        selectItem(item);
         applyFilter(item.dataset.filter);
       });
     });
-
-    updateActive();
   }
 </script>
 
@@ -529,7 +523,7 @@ const splitCaption = (caption: string) => {
     justify-self: start;
     margin: 0;
   }
-  .top-controls .filter-wheel-wrap {
+  .top-controls .filter-dial-wrap {
     grid-column: 2;
     justify-self: center;
   }
@@ -543,66 +537,128 @@ const splitCaption = (caption: string) => {
       grid-column: 1;
       justify-self: center;
     }
-    .top-controls .filter-wheel-wrap {
+    .top-controls .filter-dial-wrap {
       grid-column: 1;
-      justify-self: stretch;
-      width: 100%;
+      justify-self: center;
     }
   }
-  .filter-wheel-wrap {
-    width: 380px;
-    max-width: 380px;
-    min-width: 0;
-    overflow: hidden;
+
+  /* Camera-dial filter selector: a single solid disc (like a Fujifilm
+     shutter-speed dial) that rotates so the chosen category lands under the
+     fixed pointer, rather than a scrolling list of options. */
+  .filter-dial-wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
   }
-  .filter-wheel {
+  .camera-dial-pointer {
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--color-paper);
+    z-index: 1;
+  }
+  .camera-dial {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 30%, #333 0%, #111 55%, #000 100%);
+    border: 1px solid #000;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 3px 8px rgba(255, 255, 255, 0.05),
+      inset 0 -5px 12px rgba(0, 0, 0, 0.7),
+      0 8px 18px rgba(0, 0, 0, 0.45);
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .camera-dial-item {
+    position: absolute;
+    inset: 0;
+    /* Each item covers the whole disc so its label can be positioned by
+       rotation, so later items in DOM order would otherwise intercept clicks
+       meant for an earlier item's button underneath. */
+    pointer-events: none;
+  }
+  .camera-dial-label {
+    pointer-events: auto;
+  }
+  .camera-dial-label {
+    position: absolute;
+    /* Icons are compact and uniform in size, so they can sit close to the
+       rim (like engraved tabs on a real dial) without the collision/overflow
+       issues a variable-width word had at this position. */
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%) rotate(var(--counter-rot, 0deg));
     display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    padding-inline: calc(50% - 75px);
-  }
-  .filter-wheel::-webkit-scrollbar {
-    display: none;
-  }
-  .filter-item {
-    flex: 0 0 150px;
-    scroll-snap-align: center;
+    align-items: center;
+    justify-content: center;
     appearance: none;
     -webkit-appearance: none;
     background: none;
     border: none;
     box-shadow: none;
     outline: none;
-    padding: 10px 0;
-    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-    font-size: 20px;
-    text-align: center;
-    color: var(--color-paper);
+    color: rgba(255, 255, 255, 0.4);
     cursor: pointer;
-    opacity: 0.3;
-    transform: scale(0.82);
-    transition: opacity 200ms ease, transform 200ms ease, color 200ms ease;
+    padding: 5px;
+    transition: color 200ms ease;
   }
-  .filter-item:focus-visible {
+  .camera-dial-icon {
+    width: 17px;
+    height: 17px;
+  }
+  .camera-dial-label[aria-selected="true"] {
+    color: #fff;
+  }
+  .camera-dial-label:focus-visible {
     outline: 2px solid var(--color-accent);
-    outline-offset: 4px;
-  }
-  .filter-item[aria-selected="true"] {
-    color: var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 50%;
   }
   @media (hover: hover) and (pointer: fine) {
-    /* JS sets opacity/transform inline per scroll position; !important lets hover win over that. */
-    .filter-item:hover {
-      opacity: 1 !important;
-      transform: scale(1.15) !important;
-      color: var(--color-accent) !important;
+    .camera-dial-label:hover {
+      color: rgba(255, 255, 255, 0.75);
+    }
+    .camera-dial-label[aria-selected="true"]:hover {
+      color: #fff;
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .filter-wheel {
-      scroll-behavior: auto;
+    .camera-dial {
+      transition: none;
     }
+  }
+
+  /* Static hub in the center — doesn't rotate with the disc, echoing the
+     fixed "FILM" nameplate on a real film-simulation dial. */
+  .camera-dial-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 40% 32%, #2a2a2a 0%, #0a0a0a 70%);
+    border: 1px solid #000;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 2px 5px rgba(255, 255, 255, 0.05),
+      0 2px 6px rgba(0, 0, 0, 0.5);
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.7);
+    pointer-events: none;
   }
 
   .city-title span {

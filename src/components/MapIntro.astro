@@ -1,0 +1,182 @@
+---
+// A real, non-interactive map used as a once-per-load intro overlay, showing
+// actual Manhattan/Brooklyn/Queens/New Jersey geography rather than an
+// abstract approximation. Tiles are Esri's free "World Dark Gray Base" —
+// unlike most free dark basemaps it ships base geometry and labels as two
+// separate layers, so using only the base layer gives real streets/water
+// with no place-name labels baked in, no API key required.
+import "leaflet/dist/leaflet.css";
+---
+
+<div id="map-intro" class="map-intro" aria-hidden="true">
+  <div id="map-intro-tiles" class="map-intro-tiles"></div>
+</div>
+
+<style is:inline>
+  .map-intro {
+    position: fixed;
+    /* Left uncovered so the sticky nav header stays visible/usable through
+       the whole intro instead of being buried under the map. */
+    top: 73px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--color-ink) 95%, transparent);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    pointer-events: none;
+  }
+  .map-intro-tiles {
+    /* Oversized and centered so it still fully covers the viewport even at
+       the smallest zoom step — only the map zooms, never the scrim. */
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    transform-origin: 50% 50%;
+    /* Esri's dark basemap is already dark — just deepen it slightly to sit
+       closer to the site's near-black background. */
+    filter: brightness(0.82) contrast(1.1);
+  }
+  .map-intro-tiles .leaflet-control-attribution {
+    font-size: 9px;
+    opacity: 0.5;
+    background: transparent;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .map-intro {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import L from "leaflet";
+
+  const el = document.getElementById("map-intro");
+  const tilesEl = document.getElementById("map-intro-tiles");
+  if (el && tilesEl) {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduced) {
+      el.remove();
+    } else {
+      // Tight enough that Manhattan dominates the frame, with only the edges
+      // of Jersey, Brooklyn, Queens and the Bronx visible around it.
+      const map = L.map(tilesEl, {
+        center: [40.75, -73.98],
+        zoom: 14,
+        zoomControl: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        touchZoom: false,
+        fadeAnimation: false,
+        zoomAnimation: false,
+        attributionControl: true,
+      });
+      L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+        maxZoom: 16,
+        attribution: "Tiles &copy; Esri",
+      }).addTo(map);
+      requestAnimationFrame(() => map.invalidateSize());
+
+      // Capture wheel/touch input ourselves and block real page scroll (via
+      // overflow: hidden) while the intro plays, so the underlying page is
+      // still at scrollTop 0 once it dissolves — scrolling through the intro
+      // shouldn't also scroll the real page underneath it.
+      const TOTAL = Math.max(window.innerHeight * 3, 1500);
+      const START_SCALE = 0.6;
+      const END_SCALE = 1.6;
+      const MAX_BLUR = 18;
+      let progress = 0;
+      let raf: number | undefined;
+      let touchY: number | null = null;
+
+      const html = document.documentElement;
+      const prevHtmlOverflow = html.style.overflow;
+      const prevBodyOverflow = document.body.style.overflow;
+      html.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+
+      let visuallyDone = false;
+      let releaseTimer: number | undefined;
+
+      const render = () => {
+        raf = undefined;
+        el.style.opacity = String(1 - progress);
+        const blur = `${MAX_BLUR * (1 - progress)}px`;
+        el.style.backdropFilter = `blur(${blur})`;
+        el.style.setProperty("-webkit-backdrop-filter", `blur(${blur})`);
+        tilesEl.style.transform = `scale(${START_SCALE + progress * (END_SCALE - START_SCALE)})`;
+        if (progress >= 1 && !visuallyDone) {
+          visuallyDone = true;
+          map.remove();
+          el.remove();
+        }
+      };
+
+      const schedule = () => {
+        if (raf === undefined) raf = requestAnimationFrame(render);
+      };
+
+      const addProgress = (deltaPixels: number) => {
+        progress = Math.min(1, Math.max(0, progress + deltaPixels / TOTAL));
+        schedule();
+      };
+
+      // Keep the scroll lock (and keep swallowing wheel/touch input) for a
+      // moment after progress finishes, so trailing momentum ticks from the
+      // same gesture don't leak through as a jump on the real page — only
+      // release once the gesture has actually settled.
+      const scheduleRelease = () => {
+        window.clearTimeout(releaseTimer);
+        releaseTimer = window.setTimeout(cleanup, 250);
+      };
+
+      const onWheel = (e: WheelEvent) => {
+        e.preventDefault();
+        addProgress(e.deltaY);
+        if (progress >= 1) scheduleRelease();
+      };
+      const onTouchStart = (e: TouchEvent) => {
+        touchY = e.touches[0].clientY;
+      };
+      const onTouchMove = (e: TouchEvent) => {
+        if (touchY == null) return;
+        e.preventDefault();
+        const y = e.touches[0].clientY;
+        addProgress(touchY - y);
+        touchY = y;
+        if (progress >= 1) scheduleRelease();
+      };
+      const onTouchEnd = () => {
+        if (progress >= 1) scheduleRelease();
+      };
+
+      let cleaned = false;
+      function cleanup() {
+        if (cleaned) return;
+        cleaned = true;
+        window.removeEventListener("wheel", onWheel);
+        window.removeEventListener("touchstart", onTouchStart);
+        window.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("touchend", onTouchEnd);
+        html.style.overflow = prevHtmlOverflow;
+        document.body.style.overflow = prevBodyOverflow;
+      }
+
+      window.addEventListener("wheel", onWheel, { passive: false });
+      window.addEventListener("touchstart", onTouchStart, { passive: true });
+      window.addEventListener("touchmove", onTouchMove, { passive: false });
+      window.addEventListener("touchend", onTouchEnd, { passive: true });
+
+      render();
+    }
+  }
+</script>
