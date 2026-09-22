@@ -15,7 +15,7 @@ const stats = [
 <section class="watch-home" aria-label="Naman's watch">
   <h1 class="sr-only">Naman</h1>
   <div class="watch-body" data-stats={JSON.stringify(stats)}>
-    <img class="watch-product" src="/images/instinct-teal.png" alt="Garmin Instinct watch with a teal strap" width="1254" height="1254" fetchpriority="high" />
+    <img class="watch-product" src="/images/instinct-teal-front.png" alt="Garmin Instinct watch with a teal strap" width="1254" height="1254" fetchpriority="high" />
     <button class="watch-button previous" aria-label="Previous statistic" title="Previous statistic"></button>
     <button class="watch-button next" aria-label="Next statistic" title="Next statistic"></button>
     <div class="watch-bezel">
@@ -72,20 +72,20 @@ const stats = [
  .watch-body { position:relative; width:min(720px,100%); aspect-ratio:1; container-type:inline-size; }
  .watch-product { display:block; width:100%; height:auto; }
  .watch-bezel,.watch-screen { position:absolute; inset:0; pointer-events:none; font-family:"Arial Narrow",Arial,sans-serif; color:#d3d5d0; }
- .watch-date { position:absolute; left:44.5%; top:19.2%; width:9%; height:8.5%; margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#141916; font-weight:800; font-style:italic; line-height:1; transform:skew(-8deg); }
+ .watch-date { position:absolute; left:54.5%; top:33.3%; width:10%; height:8%; margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#141916; font-weight:800; font-style:italic; line-height:1;  }
  .weekday { text-transform:uppercase; font-size:2.5cqw; } .day { font-size:4.5cqw; }
- .watch-clock { position:absolute; left:25%; top:31%; width:29%; white-space:nowrap; font-size:8.5cqw; font-weight:800; font-stretch:condensed; line-height:1; letter-spacing:-.055em; transform:skew(-8deg); font-variant-numeric:tabular-nums; }
+ .watch-clock { position:absolute; left:35%; top:45%; width:30%; white-space:nowrap; font-size:8.5cqw; font-weight:800; font-stretch:condensed; line-height:1; letter-spacing:-.055em;  font-variant-numeric:tabular-nums; }
  .seconds { font-size:2.8cqw; vertical-align:top; margin-left:1cqw; letter-spacing:0; }
- .clock-zone { position:absolute; top:27.5%; left:29%; margin:0; text-transform:uppercase; font-size:1.5cqw; letter-spacing:.14em; transform:skew(-8deg); }
- .watch-stat { position:absolute; top:39%; left:27%; width:24%; text-align:center; text-decoration:none; color:inherit; display:flex; flex-direction:column; pointer-events:auto; transform:skew(-8deg); }
+ .clock-zone { position:absolute; top:41.5%; left:36%; margin:0; text-transform:uppercase; font-size:1.5cqw; letter-spacing:.14em;  }
+ .watch-stat { position:absolute; top:53.5%; left:37%; width:26%; text-align:center; text-decoration:none; color:inherit; display:flex; flex-direction:column; pointer-events:auto;  }
  .stat-label { font-size:1.65cqw; text-transform:uppercase; letter-spacing:.04em; }
  .stat-number { font-size:3.6cqw; line-height:1.2; font-weight:700; }
  .stat-number :global(small) { font-size:1.5cqw; margin-left:.6cqw; }
  .stat-note { font-size:1.1cqw; white-space:nowrap; }
- .watch-dots { position:absolute; top:24%; left:33%; display:flex; gap:.6cqw; transform:skew(-8deg); }
+ .watch-dots { position:absolute; top:37%; left:42%; display:flex; gap:.6cqw;  }
  .watch-dots span { width:.5cqw; height:.5cqw; border-radius:50%; background:#59605a; } .watch-dots .active { background:#d3d5d0; }
  .watch-button { position:absolute; z-index:3; padding:0; border:0; background:transparent; cursor:pointer; min-width:34px; min-height:44px; touch-action:manipulation; border-radius:12px; }
- .previous { left:13%; top:30%; width:6%; height:15%; transform:rotate(10deg); } .next { left:67%; top:24%; width:6%; height:15%; transform:rotate(-10deg); }
+ .previous { left:18%; top:42%; width:6%; height:10%; } .next { left:77%; top:34%; width:6%; height:10%; }
  .watch-button:hover { background:#ffffff0a; } .watch-button:active { background:#0002; }
  .watch-button:focus-visible,.watch-stat:focus-visible { outline:2px solid #65aaa3; outline-offset:3px; }
  .home-links { display:flex; gap:28px; font:12px monospace; color:var(--color-paper-dim); } .home-links a:hover { color:var(--color-accent); }
