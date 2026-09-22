@@ -17,8 +17,8 @@ const stats = [
   <div class="watch-body" data-stats={JSON.stringify(stats)}>
     <div class="strap strap-top" aria-hidden="true"></div>
     <div class="strap strap-bottom" aria-hidden="true"></div>
-    <button class="watch-button previous" aria-label="Previous statistic">‹</button>
-    <button class="watch-button next" aria-label="Next statistic">›</button>
+    <button class="watch-button previous" aria-label="Previous statistic" title="Previous statistic"></button>
+    <button class="watch-button next" aria-label="Next statistic" title="Next statistic"></button>
     <div class="watch-bezel">
       <span class="bezel-name">NAMAN</span>
       <div class="watch-screen">
@@ -74,12 +74,12 @@ const stats = [
  .watch-home { min-height: 80vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:36px 24px 44px; gap:28px; }
  .watch-intro { font:12px monospace; letter-spacing:.2em; color:var(--color-paper-dim); text-transform:uppercase; }
  .watch-body { position:relative; width:min(440px, 78vw); aspect-ratio:1; margin:62px 0; isolation:isolate; }
- .strap { position:absolute; z-index:-1; width:40%; height:30%; left:30%; background:repeating-linear-gradient(35deg,#929b9e 0 2px,#a6aeb0 2px 5px); border:2px solid #b8c0c2; box-shadow:inset 8px 0 15px #0003; border-radius:22px; }
+ .strap { position:absolute; z-index:-1; width:40%; height:30%; left:30%; background:linear-gradient(90deg,#7a8282 0%,#aab0ad 8%,#c1c5bf 25%,#b5bab4 66%,#929a96 94%,#737e79); border:1px solid #969f99; box-shadow:inset 3px 0 4px #e4e7dc55,inset -4px 0 8px #34413b66,0 12px 20px #0004; border-radius:30% 30% 16% 16% / 12% 12% 8% 8%; }
  .strap-top { top:-15%; } .strap-bottom { bottom:-15%; }
- .strap::after { content:''; position:absolute; width:52%; height:8px; background:#334947; border-radius:10px; left:24%; top:22%; box-shadow:0 2px 2px #fff7; }
+ .strap::after { content:''; position:absolute; width:52%; height:8px; background:linear-gradient(#4f5d55,#78877d); border-radius:10px; left:24%; top:22%; box-shadow:inset 0 2px 3px #0007,0 1px 1px #e1e5d977; }
  .strap-bottom::after { top:auto; bottom:22%; }
- .watch-bezel { position:absolute; inset:0; border-radius:50%; background:linear-gradient(130deg,#64696b,#222628 42%,#464b4d); padding:8%; border:8px solid #899294; box-shadow:0 24px 44px #0005,inset 0 0 0 2px #151919,inset 0 4px 6px #fff3; }
- .watch-screen { position:relative; height:100%; border-radius:50%; background:repeating-linear-gradient(130deg,transparent 0 3px,#24c9c508 3px 4px),radial-gradient(ellipse at 40% 20%,#182523,#030908 75%); color:#f2f7f4; display:flex; align-items:center; flex-direction:column; justify-content:center; overflow:hidden; font-family:monospace; }
+ .watch-bezel { position:absolute; inset:0; border-radius:50%; background:conic-gradient(from 35deg,#333638,#222527 22%,#414547 45%,#272b2c 65%,#565b5d 83%,#333638); padding:8%; border:7px solid #7e8787; box-shadow:0 28px 38px #0006,0 5px 9px #0008,inset 0 0 0 2px #121616,inset 2px 3px 3px #cbd4cd55,inset -3px -4px 7px #0008; }
+ .watch-screen { position:relative; height:100%; border-radius:50%; background:linear-gradient(145deg,#c6d4cc12,transparent 42%),radial-gradient(ellipse at 40% 20%,#14201c,#030706 75%); box-shadow:inset 0 3px 10px #000,inset 0 0 0 1px #657b6b44; color:#f2f7f4; display:flex; align-items:center; flex-direction:column; justify-content:center; overflow:hidden; font-family:monospace; }
  .watch-ring { position:absolute; inset:3%; width:94%; height:94%; pointer-events:none; transform:rotate(-90deg); }
  .watch-ring circle { fill:none; stroke:#27e5d9; stroke-width:3; stroke-dasharray:965 198; stroke-linecap:round; }
  .bezel-name,.bezel-bottom { position:absolute; left:0; width:100%; text-align:center; font:9px monospace; letter-spacing:.18em; color:#c3cccb; }
@@ -94,8 +94,11 @@ const stats = [
  .stat-number :global(small) { font-size:10px; margin-left:5px; color:#abc1bb; }
  .stat-note { font-size:clamp(7px,1.9vw,9px); color:#8ba29c; }
  .watch-dots { display:flex; gap:7px; margin-top:12px; } .watch-dots span { width:4px; height:4px; background:#41504c; border-radius:50%; } .watch-dots .active { background:#27e5d9; }
- .watch-button { position:absolute; z-index:2; top:42%; height:17%; width:12%; border-radius:9px; border:2px solid #8e9899; background:linear-gradient(90deg,#555e61,#a1adae,#596366); color:#091512; font:32px monospace; cursor:pointer; box-shadow:0 4px 8px #0005; }
- .previous { left:-8%; } .next { right:-8%; } .watch-button:active { transform:scale(.95); }
+ .watch-button { position:absolute; z-index:2; top:43%; height:14%; width:44px; padding:0; border:0; background:transparent; cursor:pointer; touch-action:manipulation; }
+ .watch-button::before { content:''; position:absolute; top:16%; bottom:16%; width:13px; border:1px solid #89908d; border-radius:4px; background:linear-gradient(90deg,#505b57,#9da6a1 28%,#747e78 62%,#414e48); box-shadow:inset 0 2px 2px #e4e8df66,0 3px 4px #0008; transition:transform 120ms ease; }
+ .previous { left:-32px; } .next { right:-32px; }
+ .previous::before { right:0; transform:rotate(3deg); } .next::before { left:0; transform:rotate(-3deg); }
+ .previous:active::before { transform:translateX(3px); } .next:active::before { transform:translateX(-3px); }
  .watch-button:focus-visible,.watch-stat:focus-visible { outline:2px solid #27e5d9; outline-offset:5px; }
  .home-links { display:flex; gap:28px; font:12px monospace; color:var(--color-paper-dim); } .home-links a:hover { color:var(--color-accent); }
 </style>
