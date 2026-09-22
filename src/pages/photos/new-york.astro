@@ -45,6 +45,66 @@ const photos = [
   ...additionalNewYorkPhotos,
 ];
 
+// House rule: two portrait ("vertical") photos must never sit side by side.
+// Holding that everywhere would need at least as much landscape height as
+// portrait height to flank them with, and this set runs about three times the
+// other way, so the rule cannot survive the full length of the page. The two
+// columns are therefore packed here rather than left to CSS column balancing:
+// landscapes are spent near the top, so what breaks the rule collects at the
+// bottom where it is least visible. The gallery shows one tag at a time and
+// hidden figures leave the layout, so each tag is packed on its own.
+type GalleryPhoto = (typeof photos)[number];
+
+// Height of a photo once scaled to the column width, in column widths.
+const spanOf = (photo: GalleryPhoto) => photo.image.height / photo.image.width;
+const isPortrait = (photo: GalleryPhoto) => photo.image.height > photo.image.width;
+
+function packIntoColumns(group: GalleryPhoto[]): [GalleryPhoto[], GalleryPhoto[]] {
+  const columns = [
+    { items: [] as GalleryPhoto[], height: 0 },
+    { items: [] as GalleryPhoto[], height: 0 },
+  ];
+  const queue = [...group];
+
+  while (queue.length > 0) {
+    // Always feed the shorter column, the way a masonry layout would.
+    const target = columns[0].height <= columns[1].height ? columns[0] : columns[1];
+    const neighbour = target === columns[0] ? columns[1] : columns[0];
+
+    // Would this photo land level with a portrait in the other column?
+    const clashes = (photo: GalleryPhoto) => {
+      if (!isPortrait(photo)) return false;
+      const top = target.height;
+      const bottom = top + spanOf(photo);
+      let cursor = 0;
+      return neighbour.items.some((placed) => {
+        const placedTop = cursor;
+        cursor += spanOf(placed);
+        return isPortrait(placed) && placedTop < bottom && top < cursor;
+      });
+    };
+
+    // Keep the curated order wherever the rule allows: take the first photo
+    // that fits, and only fall back to the head of the queue once the
+    // landscapes have run out and every remaining choice breaks the rule.
+    const safe = queue.findIndex((photo) => !clashes(photo));
+    const [chosen] = queue.splice(safe === -1 ? 0 : safe, 1);
+    target.items.push(chosen);
+    target.height += spanOf(chosen);
+  }
+
+  return [columns[0].items, columns[1].items];
+}
+
+const tagOrder = [...new Set(photos.map((photo) => photo.tags[0]))];
+const galleryColumns = tagOrder.reduce<[GalleryPhoto[], GalleryPhoto[]]>(
+  ([left, right], tag) => {
+    const [a, b] = packIntoColumns(photos.filter((photo) => photo.tags[0] === tag));
+    return [[...left, ...a], [...right, ...b]];
+  },
+  [[], []],
+);
+
 const splitCaption = (caption: string) => {
   const commaIndex = caption.indexOf(",");
   if (commaIndex === -1) return { top: caption, bottom: null };
@@ -109,9 +169,11 @@ const dialIcons: Record<string, string> = {
 
   <PhotoMap />
   <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
-    <div class="columns-1 gap-6 sm:columns-2 sm:gap-8">
-      {photos.map((photo, index) => (
-        <figure hidden={!photo.tags.includes("buildings")} data-expand-portrait="true" data-caption={photo.caption} data-lat={"gps" in photo ? photo.gps?.[0] : undefined} data-lng={"gps" in photo ? photo.gps?.[1] : undefined} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 break-inside-avoid overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
+      {galleryColumns.map((column) => (
+      <div>
+      {column.map((photo, index) => (
+        <figure hidden={!photo.tags.includes("buildings")} data-expand-portrait="true" data-caption={photo.caption} data-lat={"gps" in photo ? photo.gps?.[0] : undefined} data-lng={"gps" in photo ? photo.gps?.[1] : undefined} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
           <Image
             src={photo.image}
             alt={photo.alt}
@@ -146,6 +208,8 @@ const dialIcons: Record<string, string> = {
           <span class="viewfinder-corner viewfinder-corner--bl" aria-hidden="true"></span>
           <span class="viewfinder-corner viewfinder-corner--br" aria-hidden="true"></span>
         </figure>
+      ))}
+      </div>
       ))}
     </div>
   </section>
