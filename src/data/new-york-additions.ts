@@ -8,7 +8,6 @@ import added4 from "../assets/photos/new-york/buildings/dji_20260901115335_0375_
 import added5 from "../assets/photos/new-york/buildings/dji_20260902130749_0005_d.jpg";
 import added6 from "../assets/photos/new-york/buildings/img_8706.jpeg";
 import added7 from "../assets/photos/new-york/buildings/img_8778.jpeg";
-import added8 from "../assets/photos/new-york/buildings/img_8787.jpeg";
 import added9 from "../assets/photos/new-york/buildings/img_8879.jpeg";
 import added10 from "../assets/photos/new-york/cafes/dji_20260829232348_0167_d.jpg";
 import added11 from "../assets/photos/new-york/cafes/dji_20260829232355_0168_d.jpg";
@@ -39,7 +38,6 @@ export const additionalNewYorkPhotos: { image: ImageMetadata; alt: string; capti
   { image: added5, alt: "A busy city street at night beneath brightly lit office buildings.", caption: "", tags: ["buildings"] },
   { image: added6, gps: [40.738922, -73.988333], alt: "Sunlit skyscrapers and older buildings beneath a blue sky.", caption: "E 20th Street, Flatiron District", tags: ["buildings"] },
   { image: added7, gps: [40.738889, -73.988342], alt: "A city view through a window framed by draped fabric.", caption: "E 20th Street, Flatiron District", tags: ["buildings"] },
-  { image: added8, gps: [40.738178, -73.986061], alt: "A tree-lined street with a cyclist and yellow taxi.", caption: "Gramercy Park North, Gramercy", tags: ["buildings"] },
   { image: added9, gps: [40.724094, -73.995972], alt: "A brick corner building beside a row of parked blue bicycles.", caption: "Lafayette Street, NoHo", tags: ["buildings"] },
   { image: added10, alt: "A wood-panelled cafe counter with flowers and framed artwork.", caption: "", tags: ["cafes"] },
   { image: added11, alt: "A long cafe counter with pastries and customers.", caption: "", tags: ["cafes"] },
