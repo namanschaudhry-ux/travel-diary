@@ -151,12 +151,17 @@ const dialIcons: Record<string, string> = {
       </p>
       <button type="button" class="portrait-close" aria-label="Close enlarged photo" autofocus>×</button>
     </div>
+    <button type="button" class="portrait-nav portrait-prev" aria-label="Previous photo">‹</button>
+    <button type="button" class="portrait-nav portrait-next" aria-label="Next photo">›</button>
+    <p class="portrait-position" aria-live="polite" aria-atomic="true"></p>
   </dialog>
 </Layout>
 
 <script>
   const triggers = document.querySelectorAll<HTMLElement>("[data-expand-portrait]");
   let trigger: HTMLElement | undefined;
+  let openingCard: HTMLElement | undefined;
+  let sequence: HTMLElement[] = [];
   const viewer = document.querySelector<HTMLDialogElement>("#portrait-view");
   const stage = viewer?.querySelector<HTMLElement>(".portrait-stage");
   let oldOverflow = "";
@@ -185,8 +190,8 @@ const dialIcons: Record<string, string> = {
       motion?.cancel();
     };
   }
-  function openPortrait(card: HTMLElement) {
-    if (!viewer || viewer.open || !stage) return;
+  function showPhoto(card: HTMLElement) {
+    if (!viewer || !stage) return;
     const thumbnail = card.querySelector("img");
     const enlarged = viewer.querySelector<HTMLImageElement>(".portrait-large");
     if (!thumbnail || !enlarged) return;
@@ -217,7 +222,20 @@ const dialIcons: Record<string, string> = {
         label.append(bottomSpan);
       }
     }
-    viewer.setAttribute("aria-label", `${card.dataset.caption ?? "Enlarged"} photograph`);
+    viewer.setAttribute("aria-label", card.dataset.caption || thumbnail.alt || "Enlarged photograph");
+    const position = viewer.querySelector<HTMLElement>(".portrait-position");
+    if (position) position.textContent = `${sequence.indexOf(card) + 1} / ${sequence.length}`;
+    viewer.querySelectorAll<HTMLButtonElement>(".portrait-nav").forEach(button => {
+      button.hidden = sequence.length < 2;
+    });
+  }
+  function openPortrait(card: HTMLElement) {
+    if (!viewer || viewer.open || !stage) return;
+    openingCard = card;
+    const selectedFilter = document.querySelector('[role="tab"][aria-selected="true"]')?.closest<HTMLElement>("[data-filter]")?.dataset.filter;
+    sequence = Array.from(triggers).filter(item => !selectedFilter || item.dataset.tags?.split(" ").includes(selectedFilter));
+    if (!sequence.includes(card)) sequence = [card];
+    showPhoto(card);
     closing = false;
     viewer.classList.remove("is-closing");
     oldOverflow = document.body.style.overflow;
@@ -232,6 +250,28 @@ const dialIcons: Record<string, string> = {
       });
     }
   }
+  function navigatePhoto(direction: number) {
+    if (!viewer?.open || closing || !trigger || sequence.length < 2) return;
+    motion?.cancel();
+    trigger.style.visibility = "";
+    const next = sequence[(sequence.indexOf(trigger) + direction + sequence.length) % sequence.length];
+    showPhoto(next);
+    next.style.visibility = "hidden";
+    // Animate only the image so repeated navigation keeps the controls steady.
+    viewer.querySelector(".portrait-large")?.getAnimations().forEach(animation => animation.cancel());
+    viewer.querySelector(".portrait-large")?.animate([{ opacity: 0.45 }, { opacity: 1 }], {
+      duration: reducedMotion.matches ? 0 : 180,
+      easing: "ease-out",
+    });
+  }
+  viewer?.addEventListener("keydown", event => {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      navigatePhoto(event.key === "ArrowLeft" ? -1 : 1);
+    }
+  });
+  viewer?.querySelector(".portrait-prev")?.addEventListener("click", () => navigatePhoto(-1));
+  viewer?.querySelector(".portrait-next")?.addEventListener("click", () => navigatePhoto(1));
   triggers.forEach((card) => {
     card.addEventListener("click", (event) => {
       openedWithKeyboard = event.detail === 0;
@@ -245,7 +285,7 @@ const dialIcons: Record<string, string> = {
       }
     });
   });
-  viewer?.querySelector("button")?.addEventListener("click", () => closePortrait());
+  viewer?.querySelector(".portrait-close")?.addEventListener("click", () => closePortrait());
   viewer?.addEventListener("click", (event) => {
     if (event.target === viewer) closePortrait();
   });
@@ -256,8 +296,8 @@ const dialIcons: Record<string, string> = {
   viewer?.addEventListener("close", () => {
     if (trigger) trigger.style.visibility = "";
     document.body.style.overflow = oldOverflow;
-    if (openedWithKeyboard) trigger?.focus({ preventScroll: true });
-    else trigger?.blur();
+    if (openedWithKeyboard) openingCard?.focus({ preventScroll: true });
+    else openingCard?.blur();
   });
 </script>
 
@@ -290,6 +330,13 @@ const dialIcons: Record<string, string> = {
   .portrait-large { display: block; width: 100%; height: auto; max-height: 88dvh; object-fit: contain; border-radius: 12px; }
   .portrait-label { position: absolute; bottom: 0; inset-inline: 0; padding: 48px 24px 20px; background: linear-gradient(transparent, rgb(0 0 0 / 60%)); color: rgb(255 255 255 / 90%); font-size: 14px; font-weight: 300; border-radius: 0 0 12px 12px; }
   .portrait-close { position: absolute; right: 12px; top: 12px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; background: rgb(0 0 0 / 45%); color: white; font-size: 24px; line-height: 1; cursor: pointer; }
+  .portrait-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 56px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 28px; background: rgb(0 0 0 / 55%); color: white; font-size: 38px; line-height: 1; cursor: pointer; touch-action: manipulation; }
+  .portrait-nav[hidden] { display: none; }
+  .portrait-prev { left: max(8px, env(safe-area-inset-left)); }
+  .portrait-next { right: max(8px, env(safe-area-inset-right)); }
+  .portrait-nav:focus-visible, .portrait-close:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+  .portrait-position { position: absolute; bottom: max(8px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); color: rgb(255 255 255 / 75%); font-size: 12px; pointer-events: none; }
+  #portrait-view.is-closing .portrait-nav, #portrait-view.is-closing .portrait-position { opacity: 0; pointer-events: none; }
   #portrait-view.is-closing::backdrop { animation: backdrop-out 300ms ease both; }
   #portrait-view.is-closing .portrait-close { opacity: 0; }
   @keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
