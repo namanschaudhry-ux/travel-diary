@@ -136,6 +136,7 @@ const dialIcons: Record<string, string> = {
       <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-label="Map view" aria-controls="photo-gallery map-panel"><span></span></button>
       <span class="map-word">map</span>
     </div>
+    <p id="image-count" class="image-count" aria-live="polite" aria-atomic="true">{photos.filter(photo => photo.tags.includes("buildings")).length} images</p>
     </div>
     <div class="filter-dial-wrap">
       <div class="camera-dial-pointer" aria-hidden="true"></div>
@@ -575,6 +576,9 @@ const dialIcons: Record<string, string> = {
     };
 
     const applyFilter = (tag: string | undefined) => {
+      const count = cards.filter(card => !tag || card.dataset.tags?.split(" ").includes(tag)).length;
+      const counter = document.getElementById("image-count");
+      if (counter) counter.textContent = `${count} ${count === 1 ? "image" : "images"}`;
       version += 1;
       const myVersion = version;
       finalizePending();
@@ -707,6 +711,7 @@ const dialIcons: Record<string, string> = {
     align-items: flex-start;
     gap: 12px;
   }
+  .image-count { margin: -4px 0 0; font: 12px / 1.4 monospace; letter-spacing: .06em; color: var(--color-paper-dim); }
   .top-controls .view-selector {
     margin: 0;
   }
