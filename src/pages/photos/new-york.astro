@@ -99,7 +99,7 @@ const dialIcons: Record<string, string> = {
   <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
     <div class="columns-1 gap-6 sm:columns-2 sm:gap-8">
       {photos.map((photo, index) => (
-        <figure hidden={!photo.tags.includes("buildings")} data-expand-portrait="true" data-caption={photo.caption} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 break-inside-avoid overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+        <figure hidden={!photo.tags.includes("buildings")} data-expand-portrait="true" data-caption={photo.caption} data-lat={"gps" in photo ? photo.gps?.[0] : undefined} data-lng={"gps" in photo ? photo.gps?.[1] : undefined} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 break-inside-avoid overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
           <Image
             src={photo.image}
             alt={photo.alt}

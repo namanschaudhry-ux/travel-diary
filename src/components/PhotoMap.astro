@@ -3,9 +3,9 @@ import "leaflet/dist/leaflet.css";
 ---
 <div class="mx-auto max-w-6xl px-6 sm:px-10">
   <section id="map-panel" class="map-panel" hidden aria-label="New York photo map">
-    <div class="atlas-heading"><span>FIELD NOTES / NYC</span><span>01—15</span></div>
+    <div class="atlas-heading"><span>FIELD NOTES / NYC</span><span>23 FRAMES</span></div>
     <div id="photo-map" aria-label="Interactive map of photo locations"></div>
-    <p class="atlas-note">Fifteen frames from New York · Pins show GPS positions or approximate caption locations.</p>
+    <p class="atlas-note">Twenty-three frames from New York · Pins show GPS positions or approximate caption locations.</p>
     <p id="map-error" hidden>Map tiles could not load. You can still select a photo pin or return to the gallery.</p>
   </section>
 </div>
@@ -34,6 +34,14 @@ import "leaflet/dist/leaflet.css";
     [40.7357, -73.9986, "Approximate location"], // Jefferson Market Garden, West Village
     [40.7027, -73.9903, "Approximate location"], // Manhattan Bridge, DUMBO
   ];
+  const locations = positions.map(([lat, lng, precision], index) => ({ lat, lng, precision, index }));
+  cards.forEach((card, index) => {
+    if (!card.dataset.lat || !card.dataset.lng) return;
+    const lat = Number(card.dataset.lat);
+    const lng = Number(card.dataset.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)) return;
+    locations.push({ lat, lng, precision: "Photo GPS", index });
+  });
   let map: L.Map | undefined;
   const markers: L.Marker[] = [];
   function syncMarkerVisibility(card: HTMLElement, index: number) {
@@ -110,7 +118,7 @@ import "leaflet/dist/leaflet.css";
         map.setZoomAround(pinchZoomPoint, pinchZoomTarget, { animate: false });
       });
     }, { passive: false });
-    positions.forEach(([lat, lng, precision], index) => {
+    locations.forEach(({ lat, lng, precision, index }, pinIndex) => {
       const card = cards[index];
       if (!card) return;
       const source = card.querySelector("img")!;
@@ -120,7 +128,7 @@ import "leaflet/dist/leaflet.css";
       image.src = source.currentSrc || source.src;
       image.alt = source.alt;
       const title = document.createElement("strong");
-      title.textContent = card.dataset.caption ?? "New York";
+      title.textContent = card.dataset.caption || source.alt || "New York";
       const note = document.createElement("small");
       note.textContent = precision;
       const button = document.createElement("button");
@@ -140,8 +148,8 @@ import "leaflet/dist/leaflet.css";
       });
       popup.append(image, title, note, button);
       const marker = L.marker([lat, lng], {
-        title: card.dataset.caption,
-        icon: L.divIcon({ className: "atlas-pin", html: `<span><b>${String(index + 1).padStart(2, "0")}</b></span>`, iconSize: [34, 42], iconAnchor: [17, 42], popupAnchor: [0, -40] }),
+        title: card.dataset.caption || source.alt,
+        icon: L.divIcon({ className: "atlas-pin", html: `<span><b>${String(pinIndex + 1).padStart(2, "0")}</b></span>`, iconSize: [34, 42], iconAnchor: [17, 42], popupAnchor: [0, -40] }),
       }).bindPopup(popup, { maxWidth: 240 });
       markers[index] = marker;
       if (!card.hidden) marker.addTo(map!);
@@ -157,7 +165,7 @@ import "leaflet/dist/leaflet.css";
         attributeFilter: ["hidden"],
       });
     });
-    map.fitBounds(positions.map(([lat, lng]) => [lat, lng] as [number, number]), { padding: [48, 48] });
+    map.fitBounds(locations.map(({lat, lng}) => [lat, lng] as [number, number]), { padding: [48, 48] });
     // Recenter on the Manhattan pins (excluding Court Square in Long Island City and the two
     // DUMBO/Brooklyn pins across the river, which otherwise skew the fitted view east/south)
     // and back off a level so the island reads centered.
