@@ -44,7 +44,7 @@ const filters = ["run", "cycle", "swim"];
 ---
 
 <Layout title="On the move — Naman Chaudhry" description="Kilometres logged by city, pulled from Strava.">
-  <section class="mx-auto flex max-w-2xl justify-center gap-2 px-6 pt-16 pb-10 sm:px-10 sm:pt-24">
+  <section class="mx-auto flex max-w-6xl justify-center gap-2 px-6 pt-8 pb-8 sm:px-10 sm:pt-10">
     {
       filters.map((f) => (
         <button
@@ -64,7 +64,7 @@ const filters = ["run", "cycle", "swim"];
     }
   </section>
 
-  <section class="mx-auto max-w-2xl px-6 pb-8 sm:px-10">
+  <section class="mx-auto max-w-6xl px-6 pb-8 sm:px-10">
     <div
       id="top-strip"
       class="relative isolate flex flex-wrap rounded-[12px] border border-[var(--color-card-border)] overflow-hidden"
@@ -86,7 +86,7 @@ const filters = ["run", "cycle", "swim"];
     </div>
   </section>
 
-  <div class="mx-auto max-w-2xl px-6 pb-8 sm:px-10" id="view-toggle-wrap">
+  <div class="mx-auto max-w-6xl px-6 pb-8 sm:px-10" id="view-toggle-wrap">
     <div class="filter-wheel-wrap mx-auto">
       <div class="filter-wheel" id="view-wheel" role="tablist" aria-label="City or gear view">
         {["city", "gear"].map((label) => (
@@ -96,8 +96,8 @@ const filters = ["run", "cycle", "swim"];
     </div>
   </div>
 
-  <section class="mx-auto max-w-2xl px-6 pb-16 sm:px-10" data-view-section="city">
-    <div class="grid gap-5 sm:grid-cols-2">
+  <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="city">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
         cities.map((c) => (
           <div
@@ -128,8 +128,8 @@ const filters = ["run", "cycle", "swim"];
     </div>
   </section>
 
-  <section class="mx-auto max-w-2xl px-6 pb-16 sm:px-10" data-view-section="gear" data-sport-section="run" hidden>
-    <div class="flex flex-col gap-6">
+  <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="gear" data-sport-section="run" hidden>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
         shoes.map((shoe) => (
           <div
@@ -150,7 +150,7 @@ const filters = ["run", "cycle", "swim"];
     </div>
   </section>
 
-  <section class="mx-auto max-w-2xl px-6 pb-16 sm:px-10" data-view-section="gear" data-sport-section="cycle" hidden>
+  <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="gear" data-sport-section="cycle" hidden>
     <div
       class="city-card mx-auto max-w-sm rounded-[12px] border border-[var(--color-card-border)] p-6 text-center"
       data-gear-card
