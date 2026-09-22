@@ -23,6 +23,11 @@ import added19 from "../assets/photos/new-york/bridges/img_8755.jpeg";
 import added20 from "../assets/photos/new-york/bridges/img_8808.jpeg";
 import added21 from "../assets/photos/new-york/green/img_8779.jpeg";
 
+import tennis0 from "../assets/photos/new-york/tennis/dji_20260830044059_0232_d.jpg";
+import tennis1 from "../assets/photos/new-york/tennis/dji_20260830051126_0239_d.jpg";
+import tennis2 from "../assets/photos/new-york/tennis/dji_20260830063459_0250_d.jpg";
+import tennis3 from "../assets/photos/new-york/tennis/dji_20260830074923_0256_d.jpg";
+
 export const additionalNewYorkPhotos: { image: ImageMetadata; alt: string; caption: string; tags: string[]; djiDate?: string; djiTime?: string }[] = [
   { image: added0, alt: "An ornate stone corner building beside brick apartment buildings.", caption: "", tags: ["buildings"] },
   { image: added1, alt: "Brick apartment buildings and fire escapes above shopfronts and roadworks.", caption: "", tags: ["buildings"] },
@@ -46,4 +51,8 @@ export const additionalNewYorkPhotos: { image: ImageMetadata; alt: string; capti
   { image: added19, alt: "A suspension bridge viewed from a riverside promenade.", caption: "", tags: ["bridges"] },
   { image: added20, alt: "A bridge seen through the window of a vehicle.", caption: "", tags: ["bridges"] },
   { image: added21, alt: "An ivy-covered corner building and trees beside a crosswalk.", caption: "", tags: ["green"] },
+  { image: tennis0, alt: "Visitors walking through the US Open grounds beneath trees and stadium buildings.", caption: "", tags: ["tennis"] },
+  { image: tennis1, alt: "A tennis court surrounded by spectators beneath a stadium open roof.", caption: "", tags: ["tennis"] },
+  { image: tennis2, alt: "Players practising on a blue tennis court with spectators filling the stands.", caption: "", tags: ["tennis"] },
+  { image: tennis3, alt: "A large steel globe sculpture beside the tennis grounds under a clear blue sky.", caption: "", tags: ["tennis"] },
 ];

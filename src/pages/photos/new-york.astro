@@ -50,7 +50,11 @@ const splitCaption = (caption: string) => {
 
 // Small line-art pictograms for the dial rim, matching a camera dial's
 // engraved icon tabs rather than printed words.
+const photoCategories = ["buildings", "cafes", "bridges", "green", "tennis"];
+const categoryStep = 360 / photoCategories.length;
+
 const dialIcons: Record<string, string> = {
+  tennis: `<g transform="rotate(40 12 12)"><ellipse cx="12" cy="8" rx="5" ry="6"/><path d="M10 3v10M14 3v10M7 6h10M7 10h10M10 14l2 3 2-3M12 17v5"/></g><circle cx="19" cy="18" r="2"/>`,
   cafes: `<path d="M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M17 9h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M7 4c0 1-1 1-1 2M11 4c0 1-1 1-1 2"/>`,
   bridges: `<path d="M2 19h20"/><path d="M6 19V6M18 19V6"/><path d="M6 6Q12 14 18 6"/><path d="M9 8V19M12 10.5V19M15 8V19"/>`,
   green: `<path d="M12 3 6 12h3l-4 6h5v3h4v-3h5l-4-6h3L12 3Z"/>`,
@@ -75,15 +79,15 @@ const dialIcons: Record<string, string> = {
     <div class="filter-dial-wrap">
       <div class="camera-dial-pointer" aria-hidden="true"></div>
       <div class="camera-dial" id="filter-dial" role="tablist" aria-label="Photo category filters">
-        {["buildings", "cafes", "bridges", "green"].map((label, index) => (
-          <div class="camera-dial-item" data-filter={label} data-angle={index * 90} style={`transform: rotate(${index * 90}deg);`}>
+        {photoCategories.map((label, index) => (
+          <div class="camera-dial-item" data-filter={label} data-angle={index * categoryStep} style={`transform: rotate(${index * categoryStep}deg);`}>
             <button
               type="button"
               class="camera-dial-label"
               role="tab"
               aria-selected={index === 0 ? "true" : "false"}
               aria-label={label}
-              style={`--counter-rot: ${index * -90}deg;`}
+              style={`--counter-rot: ${index * -categoryStep}deg;`}
             >
               <svg class="camera-dial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={dialIcons[label]} />
             </button>
