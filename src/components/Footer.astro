@@ -1,5 +1,4 @@
 ---
-import { languages } from "../data/i18n";
 const year = new Date().getFullYear();
 ---
 
@@ -8,30 +7,6 @@ const year = new Date().getFullYear();
     class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-10 text-xs text-paper-dim sm:flex-row sm:px-10"
   >
     <p>&copy; {year} Naman</p>
-    <div class="lang-toggle flex items-center gap-2" role="group" aria-label="Language">
-      {languages.map((lang, index) => (
-        <>
-          {index > 0 && <span aria-hidden="true">&middot;</span>}
-          <button
-            type="button"
-            class="lang-toggle-btn transition-colors hover:text-accent"
-            data-lang={lang.code}
-            aria-current={lang.code === "en" ? "true" : "false"}
-          >
-            {lang.label}
-          </button>
-        </>
-      ))}
-    </div>
     <p>made with Astro</p>
   </div>
 </footer>
-
-<script>
-  document.querySelectorAll<HTMLButtonElement>(".lang-toggle-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const lang = btn.dataset.lang;
-      if (lang) (window as any).__setLang(lang);
-    });
-  });
-</script>

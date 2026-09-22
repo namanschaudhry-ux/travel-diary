@@ -2,6 +2,7 @@
 import { additionalNewYorkPhotos } from "../../data/new-york-additions";
 import PhotoMap from "../../components/PhotoMap.astro";
 import MapIntro from "../../components/MapIntro.astro";
+import LanguageToggle from "../../components/LanguageToggle.astro";
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import { wordsAttr } from "../../data/i18n";
@@ -128,10 +129,13 @@ const dialIcons: Record<string, string> = {
 <Layout title="New York — Naman">
   <MapIntro />
   <div class="top-controls mx-auto max-w-6xl px-6 sm:px-10">
+    <div class="left-controls">
+    <LanguageToggle />
     <div class="view-selector">
       <span class="gallery-word">gallery</span>
       <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-label="Map view" aria-controls="photo-gallery map-panel"><span></span></button>
       <span class="map-word">map</span>
+    </div>
     </div>
     <div class="filter-dial-wrap">
       <div class="camera-dial-pointer" aria-hidden="true"></div>
@@ -641,9 +645,15 @@ const dialIcons: Record<string, string> = {
     gap: 24px;
     margin: 32px auto;
   }
-  .top-controls .view-selector {
+  .top-controls .left-controls {
     grid-column: 1;
     justify-self: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .top-controls .view-selector {
     margin: 0;
   }
   .top-controls .filter-dial-wrap {
@@ -656,7 +666,7 @@ const dialIcons: Record<string, string> = {
       justify-items: center;
       gap: 16px;
     }
-    .top-controls .view-selector {
+    .top-controls .left-controls {
       grid-column: 1;
       grid-row: 1;
       justify-self: start;

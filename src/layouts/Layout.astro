@@ -54,10 +54,13 @@ const {
             el.textContent = value;
           }
         });
+        // The filter is a radio group: the chosen option is the only one in
+        // the tab order, so Tab reaches the row and the arrow keys move
+        // within it.
         document.querySelectorAll(".lang-toggle-btn").forEach(function (btn) {
           var active = btn.getAttribute("data-lang") === lang;
-          btn.classList.toggle("text-accent", active);
-          btn.setAttribute("aria-current", active ? "true" : "false");
+          btn.setAttribute("aria-checked", active ? "true" : "false");
+          btn.setAttribute("tabindex", active ? "0" : "-1");
         });
       };
       window.__setLang = function (lang) {

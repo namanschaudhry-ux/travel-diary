@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import { cityLabel } from "../../data/i18n";
+import LanguageToggle from "../../components/LanguageToggle.astro";
 import daylight from "../../assets/photos/featured/lake-daylight.jpg";
 import dusk from "../../assets/photos/featured/lake-dusk.jpg";
 
@@ -23,6 +24,9 @@ const photos = [
 ---
 
 <Layout title="New Zealand — Naman">
+  <div class="mx-auto mt-8 max-w-6xl px-6 sm:px-10">
+    <LanguageToggle />
+  </div>
   <section class="mx-auto max-w-3xl px-6 pt-8 pb-8 text-center sm:px-10 sm:pt-10 sm:pb-10">
     <h1
       class="font-heading text-[56px] leading-none text-paper sm:text-[80px]"

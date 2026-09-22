@@ -1,0 +1,106 @@
+---
+// Language filter. Selection is applied by window.__setLang, defined in
+// Layout.astro, so this control works the same wherever it is placed.
+// Behaves as a radio group: click an option, or focus one and use the
+// arrow keys to move along the row.
+import { languages } from "../data/i18n";
+---
+
+<div class="lang-toggle" role="radiogroup" aria-label="Language">
+  {languages.map((lang, index) => (
+    <button
+      type="button"
+      class="lang-toggle-btn"
+      role="radio"
+      data-lang={lang.code}
+      aria-checked={index === 0 ? "true" : "false"}
+      tabindex={index === 0 ? 0 : -1}
+    >
+      {lang.label}
+    </button>
+  ))}
+</div>
+
+<style>
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font: 14px monospace;
+    letter-spacing: 0.06em;
+  }
+  .lang-toggle-btn {
+    border: 0;
+    border-radius: 3px;
+    padding: 3px 7px;
+    background: transparent;
+    /* Reads as white on the dark theme, and flips to dark ink on the light
+       one so the row stays legible either way. */
+    color: var(--color-paper);
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+  /* Same yellow as the "summer '26" label above the gallery. The text goes
+     dark here rather than staying white, which would be unreadable on it. */
+  .lang-toggle-btn[aria-checked="true"] {
+    background: #ffd60a;
+    color: #0d0d0d;
+  }
+  .lang-toggle-btn:focus-visible {
+    outline: 1px solid #ffd60a;
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lang-toggle-btn {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".lang-toggle").forEach((group) => {
+    const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>(".lang-toggle-btn"));
+
+    const choose = (button: HTMLButtonElement, moveFocus: boolean) => {
+      const lang = button.dataset.lang;
+      if (lang) (window as any).__setLang(lang);
+      if (moveFocus) button.focus();
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => choose(button, false));
+    });
+
+    // Once an option has focus the arrow keys walk the row, carrying the
+    // selection with them and wrapping around at either end.
+    group.addEventListener("keydown", (event) => {
+      const current = buttons.indexOf(document.activeElement as HTMLButtonElement);
+      if (current === -1) return;
+
+      let next = current;
+      switch (event.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          next = (current + 1) % buttons.length;
+          break;
+        case "ArrowLeft":
+        case "ArrowUp":
+          next = (current - 1 + buttons.length) % buttons.length;
+          break;
+        case "Home":
+          next = 0;
+          break;
+        case "End":
+          next = buttons.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      event.preventDefault();
+      choose(buttons[next], true);
+    });
+  });
+</script>
