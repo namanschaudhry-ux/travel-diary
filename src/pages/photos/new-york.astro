@@ -75,7 +75,7 @@ const dialIcons: Record<string, string> = {
     <div class="filter-dial-wrap">
       <div class="camera-dial-pointer" aria-hidden="true"></div>
       <div class="camera-dial" id="filter-dial" role="tablist" aria-label="Photo category filters">
-        {["cafes", "bridges", "green", "buildings"].map((label, index) => (
+        {["buildings", "cafes", "bridges", "green"].map((label, index) => (
           <div class="camera-dial-item" data-filter={label} data-angle={index * 90} style={`transform: rotate(${index * 90}deg);`}>
             <button
               type="button"
@@ -98,7 +98,7 @@ const dialIcons: Record<string, string> = {
   <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
     <div class="columns-1 gap-6 sm:columns-2 sm:gap-8">
       {photos.map((photo, index) => (
-        <figure data-expand-portrait="true" data-caption={photo.caption} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 break-inside-avoid overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+        <figure hidden={!photo.tags.includes("buildings")} data-expand-portrait="true" data-caption={photo.caption} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 break-inside-avoid overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
           <Image
             src={photo.image}
             alt={photo.alt}
@@ -359,9 +359,7 @@ const dialIcons: Record<string, string> = {
   if (dial) {
     const items = Array.from(dial.querySelectorAll<HTMLElement>(".camera-dial-item"));
     const cards = Array.from(document.querySelectorAll<HTMLElement>("#photo-gallery [data-expand-portrait]"));
-    // No filter is applied until the visitor actually turns the dial — the item at the
-    // pointer simply starts highlighted, and that shouldn't pre-filter the gallery.
-    let hasInteracted = false;
+    // Initial visibility is rendered on the server with Buildings selected.
     const reducedMotionFilter = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     // Guards against rapid successive filter clicks: applyFilter reads each card's
@@ -403,7 +401,7 @@ const dialIcons: Record<string, string> = {
       const toShow: HTMLElement[] = [];
       cards.forEach((card) => {
         const tags = card.dataset.tags?.split(" ").filter(Boolean) ?? [];
-        const shouldHide = hasInteracted && !!tag && !tags.includes(tag);
+        const shouldHide = !!tag && !tags.includes(tag);
         if (shouldHide && !card.hidden) toHide.push(card);
         if (!shouldHide && card.hidden) toShow.push(card);
       });
@@ -504,7 +502,6 @@ const dialIcons: Record<string, string> = {
     items.forEach((item) => {
       const label = item.querySelector<HTMLButtonElement>(".camera-dial-label")!;
       label.addEventListener("click", () => {
-        hasInteracted = true;
         selectItem(item);
         applyFilter(item.dataset.filter);
       });
