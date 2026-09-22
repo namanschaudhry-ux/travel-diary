@@ -349,16 +349,66 @@ const dialIcons: Record<string, string> = {
   });
   viewer?.querySelector(".portrait-prev")?.addEventListener("click", () => navigatePhoto(-1));
   viewer?.querySelector(".portrait-next")?.addEventListener("click", () => navigatePhoto(1));
+  let selectedCard: HTMLElement | undefined;
+  function selectCard(card: HTMLElement) {
+    selectedCard?.classList.remove("is-selected");
+    selectedCard?.setAttribute("aria-pressed", "false");
+    selectedCard = card;
+    card.classList.add("is-selected");
+    card.setAttribute("aria-pressed", "true");
+    card.focus({ preventScroll: true });
+  }
+  function moveSelection(card: HTMLElement, key: string) {
+    const rect = card.getBoundingClientRect();
+    const horizontal = key === "ArrowLeft" || key === "ArrowRight";
+    const sign = key === "ArrowLeft" || key === "ArrowUp" ? -1 : 1;
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const candidates = Array.from(triggers).filter(item => item !== card && !item.hidden).map(item => {
+      const r = item.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - x;
+      const dy = r.top + r.height / 2 - y;
+      const forward = (horizontal ? dx : dy) * sign;
+      const cross = Math.abs(horizontal ? dy : dx);
+      return { item, forward, score: forward + cross * 3 };
+    }).filter(candidate => candidate.forward > 10).sort((a, b) => a.score - b.score);
+    if (candidates[0]) {
+      selectCard(candidates[0].item);
+      candidates[0].item.scrollIntoView({ block: "nearest", behavior: "instant" });
+    }
+  }
   triggers.forEach((card) => {
-    card.addEventListener("click", (event) => {
-      openedWithKeyboard = event.detail === 0;
+    card.setAttribute("aria-pressed", "false");
+    card.setAttribute("aria-label", `Select ${card.dataset.caption || card.querySelector("img")?.alt || "photo"}`);
+    card.addEventListener("click", () => selectCard(card));
+    card.addEventListener("dblclick", () => {
+      openedWithKeyboard = false;
+      openPortrait(card);
+    });
+    // Map popups explicitly request enlargement without changing gallery click behaviour.
+    card.addEventListener("photo:open", () => {
+      selectCard(card);
+      openedWithKeyboard = false;
       openPortrait(card);
     });
     card.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
+      if (viewer?.open) return;
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
         event.preventDefault();
+        moveSelection(card, event.key);
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        selectCard(card);
         openedWithKeyboard = true;
         openPortrait(card);
+      } else if (event.key === " ") {
+        event.preventDefault();
+        selectCard(card);
+      } else if (event.key === "Escape") {
+        selectedCard?.classList.remove("is-selected");
+        selectedCard?.setAttribute("aria-pressed", "false");
+        selectedCard = undefined;
+        card.blur();
       }
     });
   });
@@ -374,12 +424,12 @@ const dialIcons: Record<string, string> = {
     if (trigger) trigger.style.visibility = "";
     document.body.style.overflow = oldOverflow;
     if (openedWithKeyboard) openingCard?.focus({ preventScroll: true });
-    else openingCard?.blur();
+    else openingCard?.focus({ preventScroll: true });
   });
 </script>
 
 <style is:inline>
-  [data-expand-portrait] { cursor: zoom-in; }
+  [data-expand-portrait] { cursor: pointer; }
   #portrait-view {
     position: fixed;
     inset: 0;
@@ -427,6 +477,7 @@ const dialIcons: Record<string, string> = {
     transform: translateY(-6px);
     transition: opacity 240ms ease, transform 240ms ease;
   }
+  .photo-card.is-selected .photo-caption,
   .photo-card:hover .photo-caption,
   .photo-card:focus-visible .photo-caption {
     opacity: 1;
@@ -449,6 +500,7 @@ const dialIcons: Record<string, string> = {
     pointer-events: none;
     transition: opacity 200ms ease;
   }
+  .photo-card.is-selected .viewfinder-corner,
   .photo-card:hover .viewfinder-corner,
   .photo-card:focus-visible .viewfinder-corner {
     opacity: 1;
@@ -466,6 +518,7 @@ const dialIcons: Record<string, string> = {
   }
 
   @media (hover: hover) and (pointer: fine) {
+    .photo-card.is-selected,
     .photo-card:hover {
       transform: translateY(-8px) scale(1.025);
       box-shadow: 0 14px 32px rgb(0 0 0 / 12%);
@@ -476,6 +529,7 @@ const dialIcons: Record<string, string> = {
     .photo-card {
       transition: none;
     }
+    .photo-card.is-selected,
     .photo-card:hover {
       transform: none;
     }
