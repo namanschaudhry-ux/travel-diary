@@ -48,8 +48,8 @@ import "leaflet/dist/leaflet.css";
   }
   main:has(> .map-intro) { isolation: isolate; }
   main:has(> .map-intro) > :not(.map-intro):not(script):not(style):not(dialog) { position: relative; z-index: 1; }
-  .map-intro.is-background { z-index: -1; opacity: .32; backdrop-filter: none; -webkit-backdrop-filter: none; }
-  .map-intro.is-background .map-intro-tiles { filter: brightness(.65) contrast(1.1); }
+  .map-intro.is-background { z-index: -1; opacity: .8; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .map-intro.is-background .map-intro-tiles { filter: brightness(1.25) contrast(1.15); }
 
 </style>
 
@@ -110,7 +110,7 @@ import "leaflet/dist/leaflet.css";
 
       const render = () => {
         raf = undefined;
-        el.style.opacity = String(1 - progress * .68);
+        el.style.opacity = String(1 - progress * .2);
         const blur = `${MAX_BLUR * (1 - progress)}px`;
         el.style.backdropFilter = `blur(${blur})`;
         el.style.setProperty("-webkit-backdrop-filter", `blur(${blur})`);
