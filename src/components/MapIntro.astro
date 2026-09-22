@@ -62,11 +62,10 @@ import "leaflet/dist/leaflet.css";
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     {
-      // Tight enough that Manhattan dominates the frame, with only the edges
-      // of Jersey, Brooklyn, Queens and the Bronx visible around it.
+      // A wider city view; finish the intro at native tile scale for sharp streets.
       const map = L.map(tilesEl, {
         center: [40.75, -73.98],
-        zoom: 14,
+        zoom: 13,
         zoomControl: false,
         dragging: false,
         scrollWheelZoom: false,
@@ -93,7 +92,7 @@ import "leaflet/dist/leaflet.css";
       // shouldn't also scroll the real page underneath it.
       const TOTAL = Math.max(window.innerHeight * 3, 1500);
       const START_SCALE = 0.6;
-      const END_SCALE = 1.6;
+      const END_SCALE = 1;
       const MAX_BLUR = 18;
       let progress = 0;
       let raf: number | undefined;
