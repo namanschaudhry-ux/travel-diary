@@ -115,6 +115,13 @@ const splitCaption = (caption: string) => {
 // Small line-art pictograms for the dial rim, matching a camera dial's
 // engraved icon tabs rather than printed words.
 const photoCategories = ["buildings", "cafes", "bridges", "green", "tennis"];
+const categoryNames: Record<string, { en: string; es: string; fr: string }> = {
+  buildings: { en: "buildings", es: "edificios", fr: "bâtiments" },
+  cafes: { en: "cafes", es: "cafés", fr: "cafés" },
+  bridges: { en: "bridges", es: "puentes", fr: "ponts" },
+  green: { en: "green", es: "naturaleza", fr: "nature" },
+  tennis: { en: "tennis", es: "tenis", fr: "tennis" },
+};
 const categoryStep = 360 / photoCategories.length;
 
 const dialIcons: Record<string, string> = {
@@ -142,7 +149,7 @@ const dialIcons: Record<string, string> = {
       <div class="camera-dial-pointer" aria-hidden="true"></div>
       <div class="camera-dial" id="filter-dial" role="tablist" aria-label="Photo category filters">
         {photoCategories.map((label, index) => (
-          <div class="camera-dial-item" data-filter={label} data-angle={index * categoryStep} style={`transform: rotate(${index * categoryStep}deg);`}>
+          <div class="camera-dial-item" data-category-names={JSON.stringify(categoryNames[label])} data-filter={label} data-angle={index * categoryStep} style={`transform: rotate(${index * categoryStep}deg);`}>
             <button
               type="button"
               class="camera-dial-label"
@@ -157,6 +164,7 @@ const dialIcons: Record<string, string> = {
         ))}
       </div>
       <div class="camera-dial-hub" aria-hidden="true">FILM</div>
+      <p class="dial-category" id="dial-category" aria-live="polite" data-i18n-en="buildings" data-i18n-es="edificios" data-i18n-fr="bâtiments">buildings</p>
     </div>
     <h1 class="city-title" aria-label="Summer ’26 — New York City">
       <span class="city-season">summer ’26</span>
@@ -674,6 +682,12 @@ const dialIcons: Record<string, string> = {
     const angleOf = (item: HTMLElement) => Number(item.dataset.angle ?? 0);
 
     const selectItem = (item: HTMLElement) => {
+      const caption = document.getElementById("dial-category");
+      const names = JSON.parse(item.dataset.categoryNames ?? "{}");
+      if (caption) {
+        for (const lang of ["en", "es", "fr"]) caption.setAttribute(`data-i18n-${lang}`, names[lang]);
+        caption.textContent = names[document.documentElement.dataset.lang ?? "en"] ?? names.en;
+      }
       const target = -angleOf(item);
       const delta = ((target - currentRot + 540) % 360) - 180;
       currentRot += delta;
@@ -744,9 +758,13 @@ const dialIcons: Record<string, string> = {
      fixed pointer, rather than a scrolling list of options. */
   .filter-dial-wrap {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 104px;
+    height: 128px;
   }
+  .dial-category { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); margin: 0; font: 11px / 16px monospace; letter-spacing: .06em; color: var(--color-paper-dim); white-space: nowrap; }
+  .filter-dial-wrap .camera-dial { bottom: 24px; }
+  .filter-dial-wrap .camera-dial-hub { top: 52px; width: 38px; height: 38px; }
+  .filter-dial-wrap .camera-dial-label { top: 7px; }
   .camera-dial-pointer {
     position: absolute;
     top: -3px;
