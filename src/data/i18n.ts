@@ -13,8 +13,8 @@ export const languages: { code: Lang; label: string }[] = [
 export const cityTitles: Record<string, Record<Lang, string[]>> = {
   "new-york": {
     en: ["new", "york", "city"],
-    es: ["nueva", "york"],
-    fr: ["new", "york"],
+    es: ["ciudad", "de", "nueva york"],
+    fr: ["ville", "de", "new york"],
   },
   "new-zealand": {
     en: ["new", "zealand"],
