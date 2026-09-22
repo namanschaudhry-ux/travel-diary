@@ -4,6 +4,7 @@ import PhotoMap from "../../components/PhotoMap.astro";
 import MapIntro from "../../components/MapIntro.astro";
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
+import { wordsAttr } from "../../data/i18n";
 import photo0 from "../../assets/photos/new-york/park-arch.jpg";
 import photo1 from "../../assets/photos/new-york/street-corner.jpg";
 import photo2 from "../../assets/photos/new-york/window-view.jpg";
@@ -92,7 +93,15 @@ const dialIcons: Record<string, string> = {
     </div>
     <h1 class="city-title" aria-label="Summer ’26 — New York City">
       <span class="city-season">summer ’26</span>
-      <span>new</span><span>york</span><span>city</span>
+      <span
+        class="city-words"
+        data-i18n-words
+        data-i18n-en={wordsAttr("new-york", "en")}
+        data-i18n-es={wordsAttr("new-york", "es")}
+        data-i18n-fr={wordsAttr("new-york", "fr")}
+      >
+        <span>new</span><span>york</span><span>city</span>
+      </span>
     </h1>
   </div>
 

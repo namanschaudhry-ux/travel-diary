@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
+import { cityLabel } from "../../data/i18n";
 import daylight from "../../assets/photos/featured/lake-daylight.jpg";
 import dusk from "../../assets/photos/featured/lake-dusk.jpg";
 
@@ -23,7 +24,14 @@ const photos = [
 
 <Layout title="New Zealand — Naman">
   <section class="mx-auto max-w-3xl px-6 pt-8 pb-8 text-center sm:px-10 sm:pt-10 sm:pb-10">
-    <h1 class="font-heading text-[56px] leading-none text-paper sm:text-[80px]">new zealand</h1>
+    <h1
+      class="font-heading text-[56px] leading-none text-paper sm:text-[80px]"
+      data-i18n-en={cityLabel("new-zealand", "en")}
+      data-i18n-es={cityLabel("new-zealand", "es")}
+      data-i18n-fr={cityLabel("new-zealand", "fr")}
+    >
+      new zealand
+    </h1>
   </section>
 
   <section aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">

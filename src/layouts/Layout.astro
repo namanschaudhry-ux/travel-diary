@@ -32,6 +32,48 @@ const {
         } catch (e) {}
       })();
     </script>
+    <script is:inline>
+      // Language filter: swaps any element carrying data-i18n-<lang>
+      // attributes to that language's text. Elements marked
+      // data-i18n-words hold pipe-separated words and are re-rendered as
+      // one <span> per word (used for the stacked city-name headings).
+      // Defined here (loaded on every page) so the toggle in the footer
+      // works regardless of which page it's clicked from.
+      window.__applyLang = function (lang) {
+        document.documentElement.setAttribute("data-lang", lang);
+        document.querySelectorAll("[data-i18n-" + lang + "]").forEach(function (el) {
+          var value = el.getAttribute("data-i18n-" + lang);
+          if (el.hasAttribute("data-i18n-words")) {
+            el.innerHTML = "";
+            value.split("|").forEach(function (word) {
+              var span = document.createElement("span");
+              span.textContent = word;
+              el.appendChild(span);
+            });
+          } else {
+            el.textContent = value;
+          }
+        });
+        document.querySelectorAll(".lang-toggle-btn").forEach(function (btn) {
+          var active = btn.getAttribute("data-lang") === lang;
+          btn.classList.toggle("text-accent", active);
+          btn.setAttribute("aria-current", active ? "true" : "false");
+        });
+      };
+      window.__setLang = function (lang) {
+        try {
+          localStorage.setItem("lang", lang);
+        } catch (e) {}
+        window.__applyLang(lang);
+      };
+      document.addEventListener("DOMContentLoaded", function () {
+        var lang = "en";
+        try {
+          lang = localStorage.getItem("lang") || "en";
+        } catch (e) {}
+        window.__applyLang(lang);
+      });
+    </script>
   </head>
   <body class="min-h-screen bg-ink font-sans text-[16px] leading-[1.7] text-[var(--color-body)] antialiased">
     <Navbar />
