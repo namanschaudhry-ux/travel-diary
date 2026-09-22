@@ -303,6 +303,21 @@ const filters = ["run", "cycle", "swim"];
     viewWheel.addEventListener("scroll", scheduleUpdate, { passive: true });
     window.addEventListener("resize", scheduleUpdate);
 
+    // A vertical page-scroll gesture over this horizontal wheel would otherwise get
+    // redirected into scrollLeft (since the wheel has no vertical overflow of its own),
+    // silently flipping the selected view. Let vertical-dominant gestures pass through
+    // to the page instead.
+    viewWheel.addEventListener(
+      "wheel",
+      (event) => {
+        if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+          event.preventDefault();
+          window.scrollBy({ top: event.deltaY });
+        }
+      },
+      { passive: false }
+    );
+
     viewItems.forEach((item) => {
       item.addEventListener("click", () => {
         item.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
