@@ -155,6 +155,7 @@ const dialIcons: Record<string, string> = {
               class="camera-dial-label"
               role="tab"
               aria-selected={index === 0 ? "true" : "false"}
+              tabindex={index === 0 ? 0 : -1}
               aria-label={label}
               style={`--counter-rot: ${index * -categoryStep}deg;`}
             >
@@ -358,6 +359,8 @@ const dialIcons: Record<string, string> = {
   });
   viewer?.querySelector(".portrait-prev")?.addEventListener("click", () => navigatePhoto(-1));
   viewer?.querySelector(".portrait-next")?.addEventListener("click", () => navigatePhoto(1));
+  const gallerySurface = document.getElementById("photo-gallery");
+  gallerySurface?.addEventListener("pointermove", () => gallerySurface.classList.remove("keyboard-browsing"));
   let selectedCard: HTMLElement | undefined;
   function selectCard(card: HTMLElement) {
     selectedCard?.classList.remove("is-selected");
@@ -368,6 +371,7 @@ const dialIcons: Record<string, string> = {
     card.focus({ preventScroll: true });
   }
   function moveSelection(card: HTMLElement, key: string) {
+    gallerySurface?.classList.add("keyboard-browsing");
     const rect = card.getBoundingClientRect();
     const horizontal = key === "ArrowLeft" || key === "ArrowRight";
     const sign = key === "ArrowLeft" || key === "ArrowUp" ? -1 : 1;
@@ -487,7 +491,7 @@ const dialIcons: Record<string, string> = {
     transition: opacity 240ms ease, transform 240ms ease;
   }
   .photo-card.is-selected .photo-caption,
-  .photo-card:hover .photo-caption,
+  #photo-gallery:not(.keyboard-browsing) .photo-card:hover .photo-caption,
   .photo-card:focus-visible .photo-caption {
     opacity: 1;
     transform: translateY(0);
@@ -510,7 +514,7 @@ const dialIcons: Record<string, string> = {
     transition: opacity 200ms ease;
   }
   .photo-card.is-selected .viewfinder-corner,
-  .photo-card:hover .viewfinder-corner,
+  #photo-gallery:not(.keyboard-browsing) .photo-card:hover .viewfinder-corner,
   .photo-card:focus-visible .viewfinder-corner {
     opacity: 1;
   }
@@ -528,7 +532,7 @@ const dialIcons: Record<string, string> = {
 
   @media (hover: hover) and (pointer: fine) {
     .photo-card.is-selected,
-    .photo-card:hover {
+    #photo-gallery:not(.keyboard-browsing) .photo-card:hover {
       transform: translateY(-8px) scale(1.025);
       box-shadow: 0 14px 32px rgb(0 0 0 / 12%);
     }
@@ -539,7 +543,7 @@ const dialIcons: Record<string, string> = {
       transition: none;
     }
     .photo-card.is-selected,
-    .photo-card:hover {
+    #photo-gallery:not(.keyboard-browsing) .photo-card:hover {
       transform: none;
     }
   }
@@ -696,8 +700,24 @@ const dialIcons: Record<string, string> = {
         const label = i.querySelector<HTMLElement>(".camera-dial-label")!;
         label.style.setProperty("--counter-rot", `${-(angleOf(i) + currentRot)}deg`);
         label.setAttribute("aria-selected", String(i === item));
+        label.tabIndex = i === item ? 0 : -1;
       });
     };
+
+    dial.addEventListener("keydown", (event) => {
+      const current = items.findIndex(item => item.contains(document.activeElement));
+      if (current < 0) return;
+      let next = current;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (current + 1) % items.length;
+      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (current - 1 + items.length) % items.length;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = items.length - 1;
+      else return;
+      event.preventDefault();
+      selectItem(items[next]);
+      applyFilter(items[next].dataset.filter);
+      items[next].querySelector<HTMLButtonElement>(".camera-dial-label")?.focus({ preventScroll: true });
+    });
 
     items.forEach((item) => {
       const label = item.querySelector<HTMLButtonElement>(".camera-dial-label")!;
