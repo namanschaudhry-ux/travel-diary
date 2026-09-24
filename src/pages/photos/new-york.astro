@@ -192,7 +192,7 @@ const dialIcons: Record<string, string> = {
           </div>
         ))}
       </div>
-      <div class="camera-dial-hub" aria-hidden="true">FILM</div>
+      <button type="button" class="camera-dial-hub" id="dial-hub" aria-pressed="false" aria-label="Show all photos" title="Show all photos">FILM</button>
       <p class="dial-category" id="dial-category" data-category="buildings" aria-live="polite" data-i18n-en="buildings" data-i18n-es="edificios" data-i18n-fr="bâtiments">buildings</p>
     </div>
     <h1 class="city-title" aria-label="Summer ’26 — New York City">
@@ -718,6 +718,7 @@ const dialIcons: Record<string, string> = {
       const names = JSON.parse(item.dataset.categoryNames ?? "{}");
       const filter = item.dataset.filter ?? "";
       document.getElementById("photo-gallery")?.setAttribute("data-active-filter", filter);
+      document.getElementById("dial-hub")?.setAttribute("aria-pressed", "false");
       if (caption) {
         caption.dataset.category = filter;
         for (const lang of ["en", "es", "fr"]) caption.setAttribute(`data-i18n-${lang}`, names[lang]);
@@ -756,6 +757,24 @@ const dialIcons: Record<string, string> = {
         selectItem(item);
         applyFilter(item.dataset.filter);
       });
+    });
+
+    // Clicking the centre of the dial (the FILM hub) shows every photo.
+    // No category is selected, so brackets use each photo's own colour
+    // and the label underneath reads "all" in the default yellow.
+    const hub = document.getElementById("dial-hub");
+    hub?.addEventListener("click", () => {
+      const allNames: Record<string, string> = { en: "all", es: "todas", fr: "toutes" };
+      const caption = document.getElementById("dial-category");
+      if (caption) {
+        caption.dataset.category = "all";
+        for (const lang of ["en", "es", "fr"]) caption.setAttribute(`data-i18n-${lang}`, allNames[lang]);
+        caption.textContent = allNames[document.documentElement.dataset.lang ?? "en"] ?? allNames.en;
+      }
+      document.getElementById("photo-gallery")?.removeAttribute("data-active-filter");
+      items.forEach((i) => i.querySelector<HTMLElement>(".camera-dial-label")!.setAttribute("aria-selected", "false"));
+      hub.setAttribute("aria-pressed", "true");
+      applyFilter(undefined);
     });
   }
 </script>
@@ -923,7 +942,16 @@ const dialIcons: Record<string, string> = {
     font-weight: 600;
     letter-spacing: 0.08em;
     color: rgba(255, 255, 255, 0.7);
-    pointer-events: none;
+    padding: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: color 200ms ease;
+  }
+  .camera-dial-hub[aria-pressed="true"] { color: #fff; }
+  .camera-dial-hub:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  @media (hover: hover) and (pointer: fine) {
+    .camera-dial-hub:hover { color: #fff; }
   }
 
   .city-title {
