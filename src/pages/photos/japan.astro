@@ -1,0 +1,117 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../../layouts/Layout.astro";
+import { cityLabel } from "../../data/i18n";
+import LanguageToggle from "../../components/LanguageToggle.astro";
+import { japanPhotos } from "../../data/japan-photos";
+
+// Images are matched to the manifest by file name (the Notion Photo ID).
+const files = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/photos/japan-2025/*.{jpg,jpeg}",
+  { eager: true },
+);
+const imageFor = (id: string) =>
+  (files[`/src/assets/photos/japan-2025/${id}.jpg`] ?? files[`/src/assets/photos/japan-2025/${id}.jpeg`])?.default;
+
+const photos = japanPhotos
+  .map((photo) => ({ ...photo, image: imageFor(photo.id) }))
+  .filter((photo): photo is typeof photo & { image: ImageMetadata } => Boolean(photo.image));
+
+// Two-column packing, same rule as the NYC gallery: feed the shorter column,
+// keep the Notion order where possible, and avoid two portraits side by side.
+type GalleryPhoto = (typeof photos)[number];
+const spanOf = (photo: GalleryPhoto) => photo.image.height / photo.image.width;
+const isPortrait = (photo: GalleryPhoto) => photo.image.height > photo.image.width;
+
+function packIntoColumns(group: GalleryPhoto[]): [GalleryPhoto[], GalleryPhoto[]] {
+  const columns = [
+    { items: [] as GalleryPhoto[], height: 0 },
+    { items: [] as GalleryPhoto[], height: 0 },
+  ];
+  const queue = [...group];
+  while (queue.length > 0) {
+    const target = columns[0].height <= columns[1].height ? columns[0] : columns[1];
+    const neighbour = target === columns[0] ? columns[1] : columns[0];
+    const clashes = (photo: GalleryPhoto) => {
+      if (!isPortrait(photo)) return false;
+      const top = target.height;
+      const bottom = top + spanOf(photo);
+      let cursor = 0;
+      return neighbour.items.some((placed) => {
+        const placedTop = cursor;
+        cursor += spanOf(placed);
+        return isPortrait(placed) && placedTop < bottom && top < cursor;
+      });
+    };
+    const safe = queue.findIndex((photo) => !clashes(photo));
+    const [chosen] = queue.splice(safe === -1 ? 0 : safe, 1);
+    target.items.push(chosen);
+    target.height += spanOf(chosen);
+  }
+  return [columns[0].items, columns[1].items];
+}
+
+// On mobile the columns stack, so the second column's photos follow the first.
+const galleryColumns = packIntoColumns(photos);
+const eager = new Set([galleryColumns[0][0]?.id, galleryColumns[1][0]?.id]);
+---
+
+<Layout title="Japan — Naman">
+  <div class="mx-auto mt-8 max-w-6xl px-6 sm:px-10">
+    <LanguageToggle />
+  </div>
+  <section class="mx-auto max-w-3xl px-6 pt-8 pb-8 text-center sm:px-10 sm:pt-10 sm:pb-10">
+    <h1
+      class="font-heading text-[56px] leading-none text-paper sm:text-[80px]"
+      data-i18n-en={cityLabel("japan", "en")}
+      data-i18n-es={cityLabel("japan", "es")}
+      data-i18n-fr={cityLabel("japan", "fr")}
+    >
+      japan
+    </h1>
+  </section>
+
+  <section aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
+      {galleryColumns.map((column) => (
+      <div>
+      {column.map((photo) => (
+        <figure class="photo-card mb-6 overflow-hidden rounded-[12px] bg-ink-soft sm:mb-8" data-photo-id={photo.id}>
+          <Image
+            src={photo.image}
+            alt={photo.alt}
+            widths={[480, 800, 1200, 1600]}
+            sizes="(min-width: 1152px) 520px, (min-width: 640px) 50vw, 100vw"
+            format="webp"
+            loading={eager.has(photo.id) ? "eager" : "lazy"}
+            class="block h-auto w-full"
+          />
+        </figure>
+      ))}
+      </div>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .photo-card {
+    transition: transform 240ms ease, box-shadow 240ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .photo-card:hover {
+      transform: translateY(-8px) scale(1.025);
+      box-shadow: 0 14px 32px rgb(0 0 0 / 12%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-card {
+      transition: none;
+    }
+    .photo-card:hover {
+      transform: none;
+    }
+  }
+</style>

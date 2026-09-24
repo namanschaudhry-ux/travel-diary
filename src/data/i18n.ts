@@ -21,6 +21,11 @@ export const cityTitles: Record<string, Record<Lang, string[]>> = {
     es: ["nueva", "zelanda"],
     fr: ["nouvelle", "zélande"],
   },
+  japan: {
+    en: ["japan"],
+    es: ["japón"],
+    fr: ["japon"],
+  },
 };
 
 // Renders a cityTitles entry into the pipe-separated string the heading
