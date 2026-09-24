@@ -31,5 +31,4 @@ export const japanPhotos: JapanPhoto[] = [
   { id: "japan-913cbd05-cae6-483c-a955-6ba9abd17845", date: "2025-12-15", time: "16:46", alt: "Visitors outside an illuminated red temple hall." },
   { id: "japan-739ba399-088c-4d42-90af-9198c0bf451d", date: "2025-12-15", time: "16:48", alt: "An illuminated multi-storey pagoda against a dusk sky." },
   { id: "japan-252826d4-17a6-4ff2-9ad4-c59f61365695", date: "2025-12-15", time: "16:50", alt: "A busy temple courtyard and gate viewed from steps at dusk." },
-  { id: "japan-9ea46582-bf26-43c5-8c6a-50ddc1377af2", date: "2025-12-15", time: "16:50", alt: "A second view of a busy temple courtyard and gate at dusk." },
 ];

@@ -1,80 +1,30 @@
 ---
-import { Image } from "astro:assets";
-import Layout from "../../layouts/Layout.astro";
-import { cityLabel } from "../../data/i18n";
-import LanguageToggle from "../../components/LanguageToggle.astro";
-import daylight from "../../assets/photos/featured/lake-daylight.jpg";
-import dusk from "../../assets/photos/featured/lake-dusk.jpg";
-
-import photo0 from "../../assets/photos/featured/mountain-road.jpg";
-import photo1 from "../../assets/photos/featured/mountain-trail.jpg";
-import photo2 from "../../assets/photos/featured/suspension-bridge.jpg";
-import photo3 from "../../assets/photos/featured/bridge-view.jpg";
-import photo4 from "../../assets/photos/featured/forest-ridge.jpg";
+// New Zealand, Winter '26. Layout lives in TripGallery.astro (same as NYC).
+// Photo IDs and order match the New Zealand rows of the Notion photo library.
+import TripGallery from "../../components/TripGallery.astro";
+import mountainRoad from "../../assets/photos/featured/mountain-road.jpg";
+import mountainTrail from "../../assets/photos/featured/mountain-trail.jpg";
+import suspensionBridge from "../../assets/photos/featured/suspension-bridge.jpg";
+import bridgeView from "../../assets/photos/featured/bridge-view.jpg";
+import forestRidge from "../../assets/photos/featured/forest-ridge.jpg";
+import lakeDaylight from "../../assets/photos/featured/lake-daylight.jpg";
+import lakeDusk from "../../assets/photos/featured/lake-dusk.jpg";
 
 const photos = [
-  { image: photo0, alt: "A winding mountain road above a broad valley beneath a cloudy sky." },
-  { image: photo1, alt: "A hillside trail overlooking a valley and snow-dusted mountain peaks." },
-  { image: photo2, alt: "A suspension bridge tower in front of snowy mountains and bare trees." },
-  { image: photo3, alt: "A wooden suspension bridge crossing a river toward a mountain meadow." },
-  { image: photo4, alt: "A steep forest-covered rocky ridge against a clear blue sky." },
-  { image: daylight, alt: "Snow-dusted mountains above a blue lake, with trees in the foreground under a clear sky." },
-  { image: dusk, alt: "A lakeside beach and snow-capped mountains beneath a soft pink evening sky." },
+  { id: "nz-mountain-road", image: mountainRoad, alt: "A winding mountain road above a broad valley beneath a cloudy sky." },
+  { id: "nz-mountain-trail", image: mountainTrail, alt: "A hillside trail overlooking a valley and snow-dusted mountain peaks." },
+  { id: "nz-suspension-bridge", image: suspensionBridge, alt: "A suspension bridge tower in front of snowy mountains and bare trees." },
+  { id: "nz-bridge-view", image: bridgeView, alt: "A wooden suspension bridge crossing a river toward a mountain meadow." },
+  { id: "nz-forest-ridge", image: forestRidge, alt: "A steep forest-covered rocky ridge against a clear blue sky." },
+  { id: "nz-lake-daylight", image: lakeDaylight, alt: "Snow-dusted mountains above a blue lake, with trees in the foreground under a clear sky." },
+  { id: "nz-lake-dusk", image: lakeDusk, alt: "A lakeside beach and snow-capped mountains beneath a soft pink evening sky." },
 ];
 ---
 
-<Layout title="New Zealand — Naman">
-  <div class="mx-auto mt-8 max-w-6xl px-6 sm:px-10">
-    <LanguageToggle />
-  </div>
-  <section class="mx-auto max-w-3xl px-6 pt-8 pb-8 text-center sm:px-10 sm:pt-10 sm:pb-10">
-    <h1
-      class="font-heading text-[56px] leading-none text-paper sm:text-[80px]"
-      data-i18n-en={cityLabel("new-zealand", "en")}
-      data-i18n-es={cityLabel("new-zealand", "es")}
-      data-i18n-fr={cityLabel("new-zealand", "fr")}
-    >
-      new zealand
-    </h1>
-  </section>
-
-  <section aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
-    <div class="grid gap-6 sm:grid-cols-2 sm:gap-8">
-      {photos.map((photo, index) => (
-        <figure class="photo-card overflow-hidden rounded-[12px] bg-ink-soft">
-          <Image
-            src={photo.image}
-            alt={photo.alt}
-            widths={[480, 800, 1200, 1600]}
-            sizes="(min-width: 1152px) 520px, (min-width: 640px) 50vw, 100vw"
-            format="webp"
-            loading={index < 2 ? "eager" : "lazy"}
-            class="block h-auto w-full"
-          />
-        </figure>
-      ))}
-    </div>
-  </section>
-</Layout>
-
-<style>
-  .photo-card {
-    transition: transform 240ms ease, box-shadow 240ms ease;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .photo-card:hover {
-      transform: translateY(-8px) scale(1.025);
-      box-shadow: 0 14px 32px rgb(0 0 0 / 12%);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .photo-card {
-      transition: none;
-    }
-    .photo-card:hover {
-      transform: none;
-    }
-  }
-</style>
+<TripGallery
+  title="New Zealand — Naman"
+  slug="new-zealand"
+  season="winter ’26"
+  photos={photos}
+  accent={{ onDark: "#8fd4ff", onLight: "#1a73a8" }}
+/>

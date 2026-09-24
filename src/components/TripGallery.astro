@@ -1,0 +1,870 @@
+---
+// Shared trip photo page: camera dial, season + place heading, gallery/map
+// toggle, image count, viewfinder selection, keyboard navigation and the
+// enlarged viewer. Markup, styles and scripts are copied from the NYC page
+// (src/pages/photos/new-york.astro) so trips look and behave the same.
+// Used by Japan and New Zealand. Categories, captions and the map are not set
+// up for these trips yet, so the dial has a single "all" position and the map
+// toggle is inert.
+import LanguageToggle from "./LanguageToggle.astro";
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import { wordsAttr, cityTitles } from "../data/i18n";
+
+export type TripPhoto = { id: string; image: ImageMetadata; alt: string };
+
+interface Props {
+  title: string; // browser tab title
+  slug: keyof typeof cityTitles; // heading words from i18n.ts
+  season: string; // e.g. "winter ’25"
+  photos: TripPhoto[]; // in display order (Notion "Order")
+  // Page accent: season label, active language, dial label, toggle, photo
+  // corner brackets and the nav highlight. onLight is the light-theme variant.
+  accent?: { onDark: string; onLight: string };
+}
+
+const { title, slug, season, accent = { onDark: "#ffd60a", onLight: "#8a6642" } } = Astro.props;
+const photos = Astro.props.photos.map((photo) => ({ ...photo, caption: "", tags: ["all"] }));
+
+// Two-column packing, same rule as the NYC gallery: feed the shorter column,
+// keep the given order where possible, and avoid two portraits side by side.
+type GalleryPhoto = (typeof photos)[number];
+const spanOf = (photo: GalleryPhoto) => photo.image.height / photo.image.width;
+const isPortrait = (photo: GalleryPhoto) => photo.image.height > photo.image.width;
+
+function packIntoColumns(group: GalleryPhoto[]): [GalleryPhoto[], GalleryPhoto[]] {
+  const columns = [
+    { items: [] as GalleryPhoto[], height: 0 },
+    { items: [] as GalleryPhoto[], height: 0 },
+  ];
+  const queue = [...group];
+  while (queue.length > 0) {
+    const target = columns[0].height <= columns[1].height ? columns[0] : columns[1];
+    const neighbour = target === columns[0] ? columns[1] : columns[0];
+    const clashes = (photo: GalleryPhoto) => {
+      if (!isPortrait(photo)) return false;
+      const top = target.height;
+      const bottom = top + spanOf(photo);
+      let cursor = 0;
+      return neighbour.items.some((placed) => {
+        const placedTop = cursor;
+        cursor += spanOf(placed);
+        return isPortrait(placed) && placedTop < bottom && top < cursor;
+      });
+    };
+    const safe = queue.findIndex((photo) => !clashes(photo));
+    const [chosen] = queue.splice(safe === -1 ? 0 : safe, 1);
+    target.items.push(chosen);
+    target.height += spanOf(chosen);
+  }
+  return [columns[0].items, columns[1].items];
+}
+const galleryColumns = packIntoColumns(photos);
+
+const photoCategories = ["all"];
+const categoryNames: Record<string, { en: string; es: string; fr: string }> = {
+  all: { en: "all", es: "todas", fr: "toutes" },
+};
+const categoryStep = 360 / photoCategories.length;
+
+const dialIcons: Record<string, string> = {
+  all: `<path d="M2 20 9 8l4 6 3-4 6 10Z"/><path d="M7.5 10.5 9 12l1.5-1.5"/>`,
+};
+const headingWords = cityTitles[slug].en;
+const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${accent.onDark}; --trip-accent-ui: ${accent.onDark}; }
+:root[data-theme="light"] { --color-accent: ${accent.onLight}; --trip-accent: ${accent.onLight}; --trip-accent-ui: ${accent.onLight}; }`;
+---
+
+<Layout title={title}>
+  <style is:inline set:html={accentCss}></style>
+  <div class="top-controls mx-auto max-w-6xl px-6 sm:px-10">
+    <div class="left-controls">
+    <LanguageToggle />
+    <div class="view-selector">
+      <span class="gallery-word">gallery</span>
+      <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-disabled="true" aria-label="Map view (coming soon)" title="Map coming soon"><span></span></button>
+      <span class="map-word">map</span>
+    </div>
+    <p id="image-count" class="image-count" aria-live="polite" aria-atomic="true">{photos.length} images</p>
+    </div>
+    <div class="filter-dial-wrap">
+      <div class="camera-dial-pointer" aria-hidden="true"></div>
+      <div class="camera-dial" id="filter-dial" role="tablist" aria-label="Photo category filters">
+        {photoCategories.map((label, index) => (
+          <div class="camera-dial-item" data-category-names={JSON.stringify(categoryNames[label])} data-filter={label} data-angle={index * categoryStep} style={`transform: rotate(${index * categoryStep}deg);`}>
+            <button
+              type="button"
+              class="camera-dial-label"
+              role="tab"
+              aria-selected={index === 0 ? "true" : "false"}
+              tabindex={index === 0 ? 0 : -1}
+              aria-label={label}
+              style={`--counter-rot: ${index * -categoryStep}deg;`}
+            >
+              <svg class="camera-dial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={dialIcons[label]} />
+            </button>
+          </div>
+        ))}
+      </div>
+      <div class="camera-dial-hub" aria-hidden="true">FILM</div>
+      <p class="dial-category" id="dial-category" aria-live="polite" data-i18n-en="all" data-i18n-es="todas" data-i18n-fr="toutes">all</p>
+    </div>
+    <h1 class="city-title" aria-label={`${season} — ${headingWords.join(" ")}`}>
+      <span class="city-season">{season}</span>
+      <span
+        class="city-words"
+        data-i18n-words
+        data-i18n-en={wordsAttr(slug, "en")}
+        data-i18n-es={wordsAttr(slug, "es")}
+        data-i18n-fr={wordsAttr(slug, "fr")}
+      >
+        {headingWords.map((word) => <span>{word}</span>)}
+      </span>
+    </h1>
+  </div>
+
+  <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
+      {galleryColumns.map((column) => (
+      <div>
+      {column.map((photo, index) => (
+        <figure data-expand-portrait="true" data-caption={photo.caption} data-photo-id={photo.id} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+          <Image
+            src={photo.image}
+            alt={photo.alt}
+            widths={[480, 800, 1200, 1600]}
+            sizes="(min-width: 1152px) 520px, (min-width: 640px) 50vw, 100vw"
+            format="webp"
+            loading={index < 2 ? "eager" : "lazy"}
+            class="block h-auto w-full"
+          />
+          <span class="viewfinder-corner viewfinder-corner--tl" aria-hidden="true"></span>
+          <span class="viewfinder-corner viewfinder-corner--tr" aria-hidden="true"></span>
+          <span class="viewfinder-corner viewfinder-corner--bl" aria-hidden="true"></span>
+          <span class="viewfinder-corner viewfinder-corner--br" aria-hidden="true"></span>
+        </figure>
+      ))}
+      </div>
+      ))}
+    </div>
+  </section>
+  <dialog id="portrait-view" aria-label="Enlarged photograph">
+    <div class="portrait-stage">
+      <Image src={photos[0].image} alt={photos[0].alt} widths={[800, 1200, 1600]} sizes="90vw" format="webp" class="portrait-large" />
+      <p class="portrait-label"></p>
+      <button type="button" class="portrait-close" aria-label="Close enlarged photo" autofocus>×</button>
+    </div>
+    <button type="button" class="portrait-nav portrait-prev" aria-label="Previous photo">‹</button>
+    <button type="button" class="portrait-nav portrait-next" aria-label="Next photo">›</button>
+    <p class="portrait-position" aria-live="polite" aria-atomic="true"></p>
+  </dialog>
+</Layout>
+
+<script>
+  const triggers = document.querySelectorAll<HTMLElement>("[data-expand-portrait]");
+  let trigger: HTMLElement | undefined;
+  let openingCard: HTMLElement | undefined;
+  let sequence: HTMLElement[] = [];
+  const viewer = document.querySelector<HTMLDialogElement>("#portrait-view");
+  const stage = viewer?.querySelector<HTMLElement>(".portrait-stage");
+  let oldOverflow = "";
+  let closing = false;
+  let openedWithKeyboard = false;
+  let motion: Animation | undefined;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function thumbnailTransform() {
+    const source = trigger?.querySelector("img")?.getBoundingClientRect();
+    const target = viewer?.querySelector(".portrait-large")?.getBoundingClientRect();
+    if (!source || !target) return "none";
+    return `translate(${source.left - target.left}px, ${source.top - target.top}px) scale(${source.width / target.width}, ${source.height / target.height})`;
+  }
+  function closePortrait() {
+    if (!viewer?.open || !stage || closing) return;
+    closing = true;
+    motion?.finish();
+    const destination = thumbnailTransform();
+    viewer.classList.add("is-closing");
+    motion = stage.animate([{ transform: "none" }, { transform: destination }], {
+      duration: reducedMotion.matches ? 0 : 300,
+      easing: "cubic-bezier(0.4, 0, 0.2, 1)", fill: "forwards",
+    });
+    motion.onfinish = () => {
+      viewer.close();
+      motion?.cancel();
+    };
+  }
+  function showPhoto(card: HTMLElement) {
+    if (!viewer || !stage) return;
+    const thumbnail = card.querySelector("img");
+    const enlarged = viewer.querySelector<HTMLImageElement>(".portrait-large");
+    if (!thumbnail || !enlarged) return;
+    trigger = card;
+    enlarged.srcset = thumbnail.srcset;
+    enlarged.sizes = "90vw";
+    enlarged.src = thumbnail.src;
+    enlarged.alt = thumbnail.alt;
+    enlarged.width = thumbnail.width;
+    enlarged.height = thumbnail.height;
+    const ratio = Number(thumbnail.getAttribute("width")) / Number(thumbnail.getAttribute("height"));
+    stage.style.width = `min(90vw, ${88 * ratio}dvh)`;
+    const label = viewer.querySelector<HTMLElement>(".portrait-label");
+    if (label) {
+      const caption = card.dataset.caption ?? "";
+      const commaIndex = caption.indexOf(",");
+      const top = commaIndex === -1 ? caption : caption.slice(0, commaIndex);
+      const bottom = commaIndex === -1 ? "" : caption.slice(commaIndex + 1).trim();
+      label.innerHTML = "";
+      const topSpan = document.createElement("span");
+      topSpan.className = "block";
+      topSpan.textContent = top;
+      label.append(topSpan);
+      if (bottom) {
+        const bottomSpan = document.createElement("span");
+        bottomSpan.className = "block";
+        bottomSpan.textContent = bottom;
+        label.append(bottomSpan);
+      }
+    }
+    viewer.setAttribute("aria-label", card.dataset.caption || thumbnail.alt || "Enlarged photograph");
+    const position = viewer.querySelector<HTMLElement>(".portrait-position");
+    if (position) position.textContent = `${sequence.indexOf(card) + 1} / ${sequence.length}`;
+    viewer.querySelectorAll<HTMLButtonElement>(".portrait-nav").forEach(button => {
+      button.hidden = sequence.length < 2;
+    });
+  }
+  function openPortrait(card: HTMLElement) {
+    if (!viewer || viewer.open || !stage) return;
+    openingCard = card;
+    const selectedFilter = document.querySelector('[role="tab"][aria-selected="true"]')?.closest<HTMLElement>("[data-filter]")?.dataset.filter;
+    sequence = Array.from(triggers).filter(item => !selectedFilter || item.dataset.tags?.split(" ").includes(selectedFilter));
+    if (!sequence.includes(card)) sequence = [card];
+    showPhoto(card);
+    closing = false;
+    viewer.classList.remove("is-closing");
+    oldOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    viewer.showModal();
+    if (stage && trigger) {
+      const origin = thumbnailTransform();
+      trigger.style.visibility = "hidden";
+      motion = stage.animate([{ transform: origin }, { transform: "none" }], {
+        duration: reducedMotion.matches ? 0 : 420,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "both",
+      });
+    }
+  }
+  function navigatePhoto(direction: number) {
+    if (!viewer?.open || closing || !trigger || sequence.length < 2) return;
+    motion?.cancel();
+    trigger.style.visibility = "";
+    const next = sequence[(sequence.indexOf(trigger) + direction + sequence.length) % sequence.length];
+    showPhoto(next);
+    next.style.visibility = "hidden";
+    // Animate only the image so repeated navigation keeps the controls steady.
+    viewer.querySelector(".portrait-large")?.getAnimations().forEach(animation => animation.cancel());
+    viewer.querySelector(".portrait-large")?.animate([{ opacity: 0.45 }, { opacity: 1 }], {
+      duration: reducedMotion.matches ? 0 : 180,
+      easing: "ease-out",
+    });
+  }
+  viewer?.addEventListener("keydown", event => {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      navigatePhoto(event.key === "ArrowLeft" ? -1 : 1);
+    }
+  });
+  viewer?.querySelector(".portrait-prev")?.addEventListener("click", () => navigatePhoto(-1));
+  viewer?.querySelector(".portrait-next")?.addEventListener("click", () => navigatePhoto(1));
+  const gallerySurface = document.getElementById("photo-gallery");
+  gallerySurface?.addEventListener("pointermove", () => gallerySurface.classList.remove("keyboard-browsing"));
+  let selectedCard: HTMLElement | undefined;
+  function selectCard(card: HTMLElement) {
+    selectedCard?.classList.remove("is-selected");
+    selectedCard?.setAttribute("aria-pressed", "false");
+    selectedCard = card;
+    card.classList.add("is-selected");
+    card.setAttribute("aria-pressed", "true");
+    card.focus({ preventScroll: true });
+  }
+  function moveSelection(card: HTMLElement, key: string) {
+    gallerySurface?.classList.add("keyboard-browsing");
+    const rect = card.getBoundingClientRect();
+    const horizontal = key === "ArrowLeft" || key === "ArrowRight";
+    const sign = key === "ArrowLeft" || key === "ArrowUp" ? -1 : 1;
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const candidates = Array.from(triggers).filter(item => item !== card && !item.hidden).map(item => {
+      const r = item.getBoundingClientRect();
+      const dx = r.left + r.width / 2 - x;
+      const dy = r.top + r.height / 2 - y;
+      const forward = (horizontal ? dx : dy) * sign;
+      const cross = Math.abs(horizontal ? dy : dx);
+      return { item, forward, score: forward + cross * 3 };
+    }).filter(candidate => candidate.forward > 10).sort((a, b) => a.score - b.score);
+    if (candidates[0]) {
+      selectCard(candidates[0].item);
+      candidates[0].item.scrollIntoView({ block: "nearest", behavior: "instant" });
+    }
+  }
+  triggers.forEach((card) => {
+    card.setAttribute("aria-pressed", "false");
+    card.setAttribute("aria-label", `Select ${card.dataset.caption || card.querySelector("img")?.alt || "photo"}`);
+    card.addEventListener("click", () => selectCard(card));
+    card.addEventListener("dblclick", () => {
+      openedWithKeyboard = false;
+      openPortrait(card);
+    });
+    // Map popups explicitly request enlargement without changing gallery click behaviour.
+    card.addEventListener("photo:open", () => {
+      selectCard(card);
+      openedWithKeyboard = false;
+      openPortrait(card);
+    });
+    card.addEventListener("keydown", (event) => {
+      if (viewer?.open) return;
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        event.preventDefault();
+        moveSelection(card, event.key);
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        selectCard(card);
+        openedWithKeyboard = true;
+        openPortrait(card);
+      } else if (event.key === " ") {
+        event.preventDefault();
+        selectCard(card);
+      } else if (event.key === "Escape") {
+        selectedCard?.classList.remove("is-selected");
+        selectedCard?.setAttribute("aria-pressed", "false");
+        selectedCard = undefined;
+        card.blur();
+      }
+    });
+  });
+  viewer?.querySelector(".portrait-close")?.addEventListener("click", () => closePortrait());
+  viewer?.addEventListener("click", (event) => {
+    if (event.target === viewer) closePortrait();
+  });
+  viewer?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closePortrait();
+  });
+  viewer?.addEventListener("close", () => {
+    if (trigger) trigger.style.visibility = "";
+    document.body.style.overflow = oldOverflow;
+    if (openedWithKeyboard) openingCard?.focus({ preventScroll: true });
+    else openingCard?.focus({ preventScroll: true });
+  });
+</script>
+
+<style is:inline>
+  [data-expand-portrait] { cursor: pointer; }
+  #portrait-view {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+  #portrait-view[open] { display: grid; place-items: center; }
+  #portrait-view::backdrop {
+    background: rgb(0 0 0 / 88%);
+    backdrop-filter: blur(6px);
+    animation: backdrop-in 200ms ease both;
+  }
+  .portrait-stage {
+    position: relative;
+    width: min(90vw, 49.5dvh);
+    transform-origin: top left;
+  }
+  .portrait-large { display: block; width: 100%; height: auto; max-height: 88dvh; object-fit: contain; border-radius: 12px; }
+  .portrait-label { position: absolute; bottom: 0; inset-inline: 0; padding: 48px 24px 20px; background: linear-gradient(transparent, rgb(0 0 0 / 60%)); color: rgb(255 255 255 / 90%); font-size: 14px; font-weight: 300; border-radius: 0 0 12px 12px; }
+  .portrait-close { position: absolute; right: 12px; top: 12px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: none; border-radius: 50%; background: rgb(0 0 0 / 45%); color: white; font-size: 24px; line-height: 1; cursor: pointer; }
+  .portrait-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 56px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 28px; background: rgb(0 0 0 / 55%); color: white; font-size: 38px; line-height: 1; cursor: pointer; touch-action: manipulation; }
+  .portrait-nav[hidden] { display: none; }
+  .portrait-prev { left: max(8px, env(safe-area-inset-left)); }
+  .portrait-next { right: max(8px, env(safe-area-inset-right)); }
+  .portrait-nav:focus-visible, .portrait-close:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+  .portrait-position { position: absolute; bottom: max(8px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); color: rgb(255 255 255 / 75%); font-size: 12px; pointer-events: none; }
+  #portrait-view.is-closing .portrait-nav, #portrait-view.is-closing .portrait-position { opacity: 0; pointer-events: none; }
+  #portrait-view.is-closing::backdrop { animation: backdrop-out 300ms ease both; }
+  #portrait-view.is-closing .portrait-close { opacity: 0; }
+  @keyframes backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .portrait-stage, #portrait-view::backdrop { animation: none; }
+  }
+
+  .photo-caption {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 240ms ease, transform 240ms ease;
+  }
+  .photo-card.is-selected .photo-caption,
+  #photo-gallery:not(.keyboard-browsing) .photo-card:hover .photo-caption,
+  .photo-card:focus-visible .photo-caption {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (hover: none) {
+    .photo-caption { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .photo-caption { transition: none; transform: none; }
+  }
+
+  /* Camera-viewfinder-style autofocus brackets in each corner on hover. */
+  .viewfinder-corner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--trip-accent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .photo-card.is-selected .viewfinder-corner,
+  #photo-gallery:not(.keyboard-browsing) .photo-card:hover .viewfinder-corner,
+  .photo-card:focus-visible .viewfinder-corner {
+    opacity: 1;
+  }
+  .viewfinder-corner--tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .viewfinder-corner--tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+  .viewfinder-corner--bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+  .viewfinder-corner--br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .viewfinder-corner { transition: none; }
+  }
+
+  .photo-card {
+    transition: transform 240ms ease, box-shadow 240ms ease, opacity 180ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .photo-card.is-selected,
+    #photo-gallery:not(.keyboard-browsing) .photo-card:hover {
+      transform: translateY(-8px) scale(1.025);
+      box-shadow: 0 14px 32px rgb(0 0 0 / 12%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-card {
+      transition: none;
+    }
+    .photo-card.is-selected,
+    #photo-gallery:not(.keyboard-browsing) .photo-card:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const dial = document.getElementById("filter-dial");
+  if (dial) {
+    const items = Array.from(dial.querySelectorAll<HTMLElement>(".camera-dial-item"));
+    const cards = Array.from(document.querySelectorAll<HTMLElement>("#photo-gallery [data-expand-portrait]"));
+    // Every photo sits in the single "all" category, so all start visible.
+    const reducedMotionFilter = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // Guards against rapid successive filter clicks: applyFilter reads each card's
+    // current `hidden` state to decide what needs to change, but mid-transition a card
+    // is briefly in a "not hidden yet" or "not faded in yet" limbo state. Without
+    // flushing the previous transition straight to its end state first, a new click
+    // reads that limbo state, misclassifies the card, and it can end up stuck invisible.
+    let version = 0;
+    let pendingToHide: HTMLElement[] = [];
+    let pendingToShow: HTMLElement[] = [];
+    let pendingStaying: HTMLElement[] = [];
+    const finalizePending = () => {
+      pendingToHide.forEach((card) => {
+        card.hidden = true;
+        card.style.opacity = "";
+        card.style.transition = "";
+        card.style.transform = "";
+      });
+      pendingToShow.forEach((card) => {
+        card.style.opacity = "";
+        card.style.transition = "";
+        card.style.transform = "";
+      });
+      pendingStaying.forEach((card) => {
+        card.style.transition = "";
+        card.style.transform = "";
+      });
+      pendingToHide = [];
+      pendingToShow = [];
+      pendingStaying = [];
+    };
+
+    const applyFilter = (tag: string | undefined) => {
+      const count = cards.filter(card => !tag || card.dataset.tags?.split(" ").includes(tag)).length;
+      const counter = document.getElementById("image-count");
+      if (counter) counter.textContent = `${count} ${count === 1 ? "image" : "images"}`;
+      version += 1;
+      const myVersion = version;
+      finalizePending();
+
+      const toHide: HTMLElement[] = [];
+      const toShow: HTMLElement[] = [];
+      cards.forEach((card) => {
+        const tags = card.dataset.tags?.split(" ").filter(Boolean) ?? [];
+        const shouldHide = !!tag && !tags.includes(tag);
+        if (shouldHide && !card.hidden) toHide.push(card);
+        if (!shouldHide && card.hidden) toShow.push(card);
+      });
+      if (toHide.length === 0 && toShow.length === 0) return;
+
+      if (reducedMotionFilter.matches) {
+        toHide.forEach((card) => { card.hidden = true; });
+        toShow.forEach((card) => { card.hidden = false; });
+        return;
+      }
+
+      // Cards that stay visible still shift position, because hiding/showing others
+      // rebalances the CSS-columns masonry. Record where they are now (FLIP's "First")
+      // so that shift can be animated instead of snapping instantly.
+      const staying = cards.filter(
+        (card) => !card.hidden && !toHide.includes(card) && !toShow.includes(card)
+      );
+      const first = new Map(staying.map((card) => [card, card.getBoundingClientRect()]));
+
+      // Start the outgoing cards fading out and bring the incoming ones into the layout
+      // right away, in their pre-fade-in pose, so the two crossfade. Previously the
+      // incoming cards stayed hidden until the outgoing ones had fully faded out, so the
+      // whole gallery briefly went blank in between.
+      toHide.forEach((card) => {
+        card.style.opacity = "0";
+      });
+      toShow.forEach((card) => {
+        card.hidden = false;
+        card.style.transition = "none";
+        card.style.opacity = "0";
+        card.style.transform = "translateY(8px)";
+      });
+
+      // FLIP's "Last" + "Invert": jump each staying card back to its old spot with
+      // no transition, then "Play": release the transform so it glides to its real,
+      // reflowed position instead of the layout snapping there instantly.
+      first.forEach((before, card) => {
+        const after = card.getBoundingClientRect();
+        const dx = before.left - after.left;
+        const dy = before.top - after.top;
+        if (!dx && !dy) return;
+        card.style.transition = "none";
+        card.style.transform = `translate(${dx}px, ${dy}px)`;
+      });
+
+      pendingToHide = toHide;
+      pendingToShow = toShow;
+      pendingStaying = staying;
+
+      requestAnimationFrame(() => {
+        if (myVersion !== version) return;
+        first.forEach((_, card) => {
+          card.style.transition = "transform 320ms cubic-bezier(0.4, 0, 0.2, 1)";
+          card.style.transform = "";
+          card.addEventListener("transitionend", () => { card.style.transition = ""; }, { once: true });
+        });
+        requestAnimationFrame(() => {
+          if (myVersion !== version) return;
+          toShow.forEach((card) => {
+            card.style.transition = "opacity 280ms ease, transform 280ms ease";
+            card.style.opacity = "";
+            card.style.transform = "";
+            card.addEventListener("transitionend", () => { card.style.transition = ""; }, { once: true });
+          });
+        });
+      });
+
+      window.setTimeout(() => {
+        if (myVersion !== version) return;
+        toHide.forEach((card) => {
+          card.hidden = true;
+          card.style.opacity = "";
+        });
+        pendingToHide = [];
+        pendingToShow = [];
+        pendingStaying = [];
+      }, 180);
+    };
+
+    // Turning the dial: the whole disc rotates so the chosen item's angle lands under
+    // the fixed pointer at the top, like turning a shutter-speed dial. currentRot starts
+    // at 0 to match the first item (angle 0) already sitting at the pointer at rest.
+    let currentRot = 0;
+    const angleOf = (item: HTMLElement) => Number(item.dataset.angle ?? 0);
+
+    const selectItem = (item: HTMLElement) => {
+      const caption = document.getElementById("dial-category");
+      const names = JSON.parse(item.dataset.categoryNames ?? "{}");
+      if (caption) {
+        for (const lang of ["en", "es", "fr"]) caption.setAttribute(`data-i18n-${lang}`, names[lang]);
+        caption.textContent = names[document.documentElement.dataset.lang ?? "en"] ?? names.en;
+      }
+      const target = -angleOf(item);
+      const delta = ((target - currentRot + 540) % 360) - 180;
+      currentRot += delta;
+      dial.style.transform = `rotate(${currentRot}deg)`;
+      items.forEach((i) => {
+        const label = i.querySelector<HTMLElement>(".camera-dial-label")!;
+        label.style.setProperty("--counter-rot", `${-(angleOf(i) + currentRot)}deg`);
+        label.setAttribute("aria-selected", String(i === item));
+        label.tabIndex = i === item ? 0 : -1;
+      });
+    };
+
+    dial.addEventListener("keydown", (event) => {
+      const current = items.findIndex(item => item.contains(document.activeElement));
+      if (current < 0) return;
+      let next = current;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (current + 1) % items.length;
+      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (current - 1 + items.length) % items.length;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = items.length - 1;
+      else return;
+      event.preventDefault();
+      selectItem(items[next]);
+      applyFilter(items[next].dataset.filter);
+      items[next].querySelector<HTMLButtonElement>(".camera-dial-label")?.focus({ preventScroll: true });
+    });
+
+    items.forEach((item) => {
+      const label = item.querySelector<HTMLButtonElement>(".camera-dial-label")!;
+      label.addEventListener("click", () => {
+        selectItem(item);
+        applyFilter(item.dataset.filter);
+      });
+    });
+  }
+</script>
+
+<style is:inline>
+  .top-controls {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px;
+    margin: 32px auto;
+  }
+  .top-controls .left-controls {
+    grid-column: 1;
+    justify-self: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  /* Align the language text with gallery/count, compensating for button padding. */
+  .top-controls .left-controls .lang-toggle { margin-left: -7px; }
+  .image-count { margin: -4px 0 0; font: 12px / 1.4 monospace; letter-spacing: .06em; color: var(--color-paper-dim); }
+  .top-controls .view-selector {
+    margin: 0;
+  }
+  .top-controls .filter-dial-wrap {
+    grid-column: 2;
+    justify-self: center;
+  }
+  @media (max-width: 640px) {
+    .top-controls {
+      grid-template-columns: 1fr 1fr;
+      justify-items: center;
+      gap: 16px;
+    }
+    .top-controls .left-controls {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+    }
+    .top-controls .city-title { grid-column: 2; grid-row: 1; }
+    .top-controls .filter-dial-wrap {
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+  }
+
+  /* Camera-dial filter selector: a single solid disc (like a Fujifilm
+     shutter-speed dial) that rotates so the chosen category lands under the
+     fixed pointer, rather than a scrolling list of options. */
+  .filter-dial-wrap {
+    position: relative;
+    width: 104px;
+    height: 128px;
+  }
+  .dial-category { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); margin: 0; font: 11px / 16px monospace; letter-spacing: .06em; color: var(--trip-accent); white-space: nowrap; }
+  .filter-dial-wrap .camera-dial { bottom: 24px; }
+  .filter-dial-wrap .camera-dial-hub { top: 52px; width: 38px; height: 38px; }
+  .filter-dial-wrap .camera-dial-label { top: 7px; }
+  .camera-dial-pointer {
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--color-paper);
+    z-index: 1;
+  }
+  .camera-dial {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 30%, #333 0%, #111 55%, #000 100%);
+    border: 1px solid #000;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 3px 8px rgba(255, 255, 255, 0.05),
+      inset 0 -5px 12px rgba(0, 0, 0, 0.7),
+      0 8px 18px rgba(0, 0, 0, 0.45);
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .camera-dial-item {
+    position: absolute;
+    inset: 0;
+    /* Each item covers the whole disc so its label can be positioned by
+       rotation, so later items in DOM order would otherwise intercept clicks
+       meant for an earlier item's button underneath. */
+    pointer-events: none;
+  }
+  .camera-dial-label {
+    pointer-events: auto;
+  }
+  .camera-dial-label {
+    position: absolute;
+    /* Icons are compact and uniform in size, so they can sit close to the
+       rim (like engraved tabs on a real dial) without the collision/overflow
+       issues a variable-width word had at this position. */
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%) rotate(var(--counter-rot, 0deg));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    padding: 5px;
+    transition: color 200ms ease;
+  }
+  .camera-dial-icon {
+    width: 17px;
+    height: 17px;
+  }
+  .camera-dial-label[aria-selected="true"] {
+    color: #fff;
+  }
+  .camera-dial-label:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 50%;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .camera-dial-label:hover {
+      color: rgba(255, 255, 255, 0.75);
+    }
+    .camera-dial-label[aria-selected="true"]:hover {
+      color: #fff;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .camera-dial {
+      transition: none;
+    }
+  }
+
+  /* Static hub in the center — doesn't rotate with the disc, echoing the
+     fixed "FILM" nameplate on a real film-simulation dial. */
+  .camera-dial-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 40% 32%, #2a2a2a 0%, #0a0a0a 70%);
+    border: 1px solid #000;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 2px 5px rgba(255, 255, 255, 0.05),
+      0 2px 6px rgba(0, 0, 0, 0.5);
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+  }
+
+  .city-title {
+    grid-column: 3;
+    justify-self: end;
+    margin: 0;
+    color: var(--color-paper);
+    font: 17px / 1.2 monospace;
+    letter-spacing: .06em;
+    text-align: right;
+  }
+  .city-title span { display: block; }
+  .city-title .city-season { color: var(--trip-accent); margin-bottom: 8px; white-space: nowrap; }
+</style>
+
+<style is:inline>
+  /* Gallery/map toggle styles, copied from PhotoMap.astro (not used on this page yet). */
+  .view-selector { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 0 auto 32px; font: 14px monospace; letter-spacing: .06em; }
+  .gallery-word, .map-word {
+    color: var(--color-accent);
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 260ms ease, transform 260ms ease, visibility 0s linear 0s;
+  }
+  .map-word { visibility: hidden; opacity: 0; transform: translateY(-4px); }
+  .view-selector:has(#map-toggle[aria-checked="true"]) .gallery-word {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 260ms ease, transform 260ms ease, visibility 0s linear 260ms;
+  }
+  .view-selector:has(#map-toggle[aria-checked="true"]) .map-word {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 260ms ease, transform 260ms ease, visibility 0s linear 0s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-word, .map-word { transition: opacity 260ms ease, visibility 0s linear 0s; transform: none; }
+    .view-selector:has(#map-toggle[aria-checked="true"]) .gallery-word,
+    .view-selector:has(#map-toggle[aria-checked="true"]) .map-word { transform: none; }
+  }
+  #map-toggle { width: 72px; height: 34px; border: 1px solid var(--color-accent); border-radius: 24px; padding: 4px; cursor: pointer; background: transparent; box-shadow: inset 0 2px 5px #0005; }
+  #map-toggle span { display: block; width: 24px; height: 24px; background: var(--color-accent); border-radius: 50%; box-shadow: 0 2px 4px #0005; transition: transform 220ms ease; }
+  #map-toggle[aria-checked="true"] span { transform: translateX(36px); }
+  #map-toggle:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 5px; }
+  #map-toggle[aria-disabled="true"] { cursor: default; }
+  @media (prefers-reduced-motion: reduce) { #map-toggle span { transition: none; } }
+</style>
+
+<style is:inline>
+  /* Active language pill uses the page accent (LanguageToggle.astro defaults to yellow). */
+  .top-controls .lang-toggle-btn[aria-checked="true"] { background: var(--trip-accent-ui); color: #0d0d0d; }
+  :root[data-theme="light"] .top-controls .lang-toggle-btn[aria-checked="true"] { color: #faf9f6; }
+  .top-controls .lang-toggle-btn[aria-checked]:focus-visible { outline-color: var(--trip-accent-ui); }
+  /* Enlarged view: side arrows and close button in the page accent. */
+  #portrait-view .portrait-nav, #portrait-view .portrait-close { background: var(--trip-accent); color: #0d0d0d; }
+  :root[data-theme="light"] #portrait-view .portrait-nav, :root[data-theme="light"] #portrait-view .portrait-close { color: #faf9f6; }
+</style>
