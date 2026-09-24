@@ -134,6 +134,12 @@ const dialIcons: Record<string, string> = {
 ---
 
 <Layout title="New York — Naman">
+  <!-- Page accent: yellow for the nav highlight and the gallery/map toggle,
+       matching the season label. Light theme uses a darker gold to stay readable. -->
+  <style is:inline>
+    :root { --color-accent: #ffd60a; }
+    :root[data-theme="light"] { --color-accent: #9a7b00; }
+  </style>
   <MapIntro />
   <div class="top-controls mx-auto max-w-6xl px-6 sm:px-10">
     <div class="left-controls">
