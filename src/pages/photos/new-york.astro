@@ -124,6 +124,27 @@ const categoryNames: Record<string, { en: string; es: string; fr: string }> = {
 };
 const categoryStep = 360 / photoCategories.length;
 
+// Accent colour per category, used by the dial label and the photo corner
+// brackets. This map is the only place the colours are defined.
+// onDark: dark theme label, and the brackets in both themes (they sit on photos).
+// onLight: light theme label, darker so it stays readable on the pale background.
+// Categories not listed here keep the default yellow.
+const defaultAccent = "#ffd60a";
+const categoryAccents: Record<string, { onDark: string; onLight: string }> = {
+  tennis: { onDark: "#5b9bff", onLight: "#1a56c4" },    // blue
+  buildings: { onDark: "#e0605a", onLight: "#9e1b1b" }, // dark red
+  bridges: { onDark: "#8fd4ff", onLight: "#1a73a8" },   // light blue
+  cafes: { onDark: "#c08a5b", onLight: "#6b4226" },     // dark brown
+  green: { onDark: "#5cc47a", onLight: "#2a7a3b" },     // nature, green
+};
+// A photo's brackets use its own primary category colour. When a filter is
+// active, the brackets of every visible photo use that filter's colour instead.
+const accentCss = `
+  :root { --accent-default: ${defaultAccent}; }` + Object.entries(categoryAccents).map(([tag, c]) => `
+  [data-category="${tag}"], #photo-gallery[data-active-filter="${tag}"] .photo-card { --cat-accent: ${c.onDark}; }
+  .dial-category[data-category="${tag}"] { --cat-accent-text: ${c.onDark}; }
+  :root[data-theme="light"] .dial-category[data-category="${tag}"] { --cat-accent-text: ${c.onLight}; }`).join("");
+
 const dialIcons: Record<string, string> = {
   tennis: `<g transform="rotate(40 12 12)"><ellipse cx="12" cy="8" rx="5" ry="6"/><path d="M10 3v10M14 3v10M7 6h10M7 10h10M10 14l2 3 2-3M12 17v5"/></g><circle cx="19" cy="18" r="2"/>`,
   cafes: `<path d="M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M17 9h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M7 4c0 1-1 1-1 2M11 4c0 1-1 1-1 2"/>`,
@@ -140,6 +161,7 @@ const dialIcons: Record<string, string> = {
     :root { --color-accent: #ffd60a; }
     :root[data-theme="light"] { --color-accent: #9a7b00; }
   </style>
+  <Fragment set:html={`<style>${accentCss}</style>`} />
   <MapIntro />
   <div class="top-controls mx-auto max-w-6xl px-6 sm:px-10">
     <div class="left-controls">
@@ -171,7 +193,7 @@ const dialIcons: Record<string, string> = {
         ))}
       </div>
       <div class="camera-dial-hub" aria-hidden="true">FILM</div>
-      <p class="dial-category" id="dial-category" aria-live="polite" data-i18n-en="buildings" data-i18n-es="edificios" data-i18n-fr="bâtiments">buildings</p>
+      <p class="dial-category" id="dial-category" data-category="buildings" aria-live="polite" data-i18n-en="buildings" data-i18n-es="edificios" data-i18n-fr="bâtiments">buildings</p>
     </div>
     <h1 class="city-title" aria-label="Summer ’26 — New York City">
       <span class="city-season">summer ’26</span>
@@ -188,12 +210,12 @@ const dialIcons: Record<string, string> = {
   </div>
 
   <PhotoMap />
-  <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+  <section id="photo-gallery" data-active-filter="buildings" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
       {galleryColumns.map((column) => (
       <div>
       {column.map((photo, index) => (
-        <figure hidden={!photo.tags.includes("buildings")} data-expand-portrait="true" data-caption={photo.caption} data-lat={"gps" in photo ? photo.gps?.[0] : undefined} data-lng={"gps" in photo ? photo.gps?.[1] : undefined} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+        <figure hidden={!photo.tags.includes("buildings")} data-expand-portrait="true" data-caption={photo.caption} data-lat={"gps" in photo ? photo.gps?.[0] : undefined} data-lng={"gps" in photo ? photo.gps?.[1] : undefined} data-tags={photo.tags.join(" ")} data-category={photo.tags[0]} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
           <Image
             src={photo.image}
             alt={photo.alt}
@@ -514,7 +536,7 @@ const dialIcons: Record<string, string> = {
     position: absolute;
     width: 22px;
     height: 22px;
-    border: 2px solid #ffd60a;
+    border: 2px solid var(--cat-accent, var(--accent-default));
     opacity: 0;
     pointer-events: none;
     transition: opacity 200ms ease;
@@ -694,7 +716,10 @@ const dialIcons: Record<string, string> = {
     const selectItem = (item: HTMLElement) => {
       const caption = document.getElementById("dial-category");
       const names = JSON.parse(item.dataset.categoryNames ?? "{}");
+      const filter = item.dataset.filter ?? "";
+      document.getElementById("photo-gallery")?.setAttribute("data-active-filter", filter);
       if (caption) {
+        caption.dataset.category = filter;
         for (const lang of ["en", "es", "fr"]) caption.setAttribute(`data-i18n-${lang}`, names[lang]);
         caption.textContent = names[document.documentElement.dataset.lang ?? "en"] ?? names.en;
       }
@@ -787,7 +812,7 @@ const dialIcons: Record<string, string> = {
     width: 104px;
     height: 128px;
   }
-  .dial-category { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); margin: 0; font: 11px / 16px monospace; letter-spacing: .06em; color: #ffd60a; white-space: nowrap; }
+  .dial-category { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); margin: 0; font: 11px / 16px monospace; letter-spacing: .06em; color: var(--cat-accent-text, var(--accent-default)); white-space: nowrap; transition: color 200ms ease; }
   .filter-dial-wrap .camera-dial { bottom: 24px; }
   .filter-dial-wrap .camera-dial-hub { top: 52px; width: 38px; height: 38px; }
   .filter-dial-wrap .camera-dial-label { top: 7px; }
