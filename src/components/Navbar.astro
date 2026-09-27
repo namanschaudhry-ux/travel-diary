@@ -47,15 +47,6 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
       >
         Moving
       </a>
-      <a
-        href="/about/"
-        class:list={[
-          "transition-colors hover:text-accent",
-          path === "/about" && "text-accent",
-        ]}
-      >
-        Working
-      </a>
 
     </nav>
   </div>
