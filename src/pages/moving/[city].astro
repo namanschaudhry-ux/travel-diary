@@ -63,12 +63,12 @@ const routeDate = (iso: string) =>
     });
     // Minimal basemap: no labels, faint streets, parks and water, so the
     // route is the main thing on the map. Follows the site's light/dark theme.
+    // Esri's label-free grey canvas, the same tiles as the NYC map intro. No API key needed.
     const tileUrl = (theme: string | null) =>
-      `https://{s}.basemaps.cartocdn.com/${theme === "light" ? "light_nolabels" : "dark_nolabels"}/{z}/{x}/{y}{r}.png`;
+      `https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/${theme === "light" ? "World_Light_Gray_Base" : "World_Dark_Gray_Base"}/MapServer/tile/{z}/{y}/{x}`;
     const tiles = L.tileLayer(tileUrl(document.documentElement.getAttribute("data-theme")), {
-      maxZoom: 18,
-      subdomains: "abcd",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      maxZoom: 16,
+      attribution: "Tiles &copy; Esri",
     }).addTo(map);
     new MutationObserver(() => {
       tiles.setUrl(tileUrl(document.documentElement.getAttribute("data-theme")));
