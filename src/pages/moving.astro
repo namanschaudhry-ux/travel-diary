@@ -2,6 +2,8 @@
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { cityActivity, activityTotals as totals } from "../data/activity-summary";
+import { cityRoutes } from "../data/city-routes";
+import "leaflet/dist/leaflet.css";
 import novablast5WinterSea from "../assets/shoes/novablast-5-winter-sea.png";
 import novablast5Tokyo from "../assets/shoes/novablast-5-tokyo.png";
 import novablast5PurpleRed from "../assets/shoes/novablast-5-purple-red.png";
@@ -30,6 +32,9 @@ const shoes = [
 const cities = [...cityActivity]
   .map((c) => ({ ...c, total: c.run + c.cycle + c.swim }))
   .sort((a, b) => b.total - a.total);
+
+const routeDate = (iso: string) =>
+  new Date(`${iso}T12:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
 
 const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
 
@@ -103,6 +108,10 @@ const filters = ["run", "cycle", "swim"];
           <div
             class="city-card rounded-[12px] border border-[var(--color-card-border)] p-6 text-center"
             data-city-card
+            data-has-routes={cityRoutes[c.city]?.length ? "true" : undefined}
+            role={cityRoutes[c.city]?.length ? "button" : undefined}
+            aria-expanded={cityRoutes[c.city]?.length ? "false" : undefined}
+            aria-label={cityRoutes[c.city]?.length ? `${c.city}: show routes on a map` : undefined}
             tabindex="0"
             data-sports={typeRows(c)
               .map((r) => r.label)
@@ -122,6 +131,24 @@ const filters = ["run", "cycle", "swim"];
                 </div>
               ))}
             </div>
+            {cityRoutes[c.city]?.length ? (
+              <>
+                <p class="route-hint mt-4 font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
+                  {cityRoutes[c.city].length} {cityRoutes[c.city].length === 1 ? "route" : "routes"} · <span class="route-hint-action">view map</span>
+                </p>
+                <div class="route-panel" hidden data-routes={JSON.stringify(cityRoutes[c.city])}>
+                  <div class="route-map" aria-label={`Map of routes in ${c.city}`}></div>
+                  <ul class="route-list">
+                    {cityRoutes[c.city].map((route) => (
+                      <li>
+                        <span class="route-name">{route.name}</span>
+                        <span class="route-meta">{route.sport.toLowerCase()} · {routeDate(route.date)} · {fmt(route.distanceKm)} km · {route.elevationM} m up</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            ) : null}
           </div>
         ))
       }
@@ -445,4 +472,97 @@ const filters = ["run", "cycle", "swim"];
       scroll-behavior: auto;
     }
   }
+</style>
+
+<script>
+  // City route maps: a card with routes opens in place, spanning the grid,
+  // and draws its routes with Leaflet. The map is built on first open.
+  import L from "leaflet";
+
+  const routeCards = document.querySelectorAll<HTMLElement>("[data-has-routes]");
+  const maps = new WeakMap<HTMLElement, L.Map>();
+
+  function drawMap(card: HTMLElement) {
+    const panel = card.querySelector<HTMLElement>(".route-panel");
+    const target = panel?.querySelector<HTMLElement>(".route-map");
+    if (!panel || !target) return;
+    const existing = maps.get(card);
+    if (existing) {
+      existing.invalidateSize();
+      return;
+    }
+    const routes: { points: [number, number][] }[] = JSON.parse(panel.dataset.routes ?? "[]");
+    const accent = getComputedStyle(document.documentElement).getPropertyValue("--color-accent").trim() || "#b08968";
+    const map = L.map(target, { scrollWheelZoom: false, attributionControl: true });
+    L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+    const bounds = L.latLngBounds([]);
+    routes.forEach((route) => {
+      const line = L.polyline(route.points, { color: accent, weight: 4, opacity: 0.95, lineCap: "round" }).addTo(map);
+      bounds.extend(line.getBounds());
+      const start = route.points[0];
+      const end = route.points[route.points.length - 1];
+      L.circleMarker(start, { radius: 6, color: "#0d0d0d", weight: 2, fillColor: "#5cc47a", fillOpacity: 1 }).bindTooltip("start").addTo(map);
+      L.circleMarker(end, { radius: 6, color: "#0d0d0d", weight: 2, fillColor: "#e0605a", fillOpacity: 1 }).bindTooltip("finish").addTo(map);
+    });
+    map.fitBounds(bounds, { padding: [24, 24] });
+    maps.set(card, map);
+  }
+
+  function setOpen(card: HTMLElement, open: boolean) {
+    const panel = card.querySelector<HTMLElement>(".route-panel");
+    if (!panel) return;
+    card.classList.toggle("is-open", open);
+    card.setAttribute("aria-expanded", String(open));
+    panel.hidden = !open;
+    const action = card.querySelector(".route-hint-action");
+    if (action) action.textContent = open ? "hide map" : "view map";
+    if (open) {
+      requestAnimationFrame(() => {
+        drawMap(card);
+        card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      });
+    }
+  }
+
+  routeCards.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      // Panning or zooming the map should not close the card.
+      if ((event.target as HTMLElement).closest(".route-panel")) return;
+      setOpen(card, !card.classList.contains("is-open"));
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.target !== card) return;
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        setOpen(card, !card.classList.contains("is-open"));
+      } else if (event.key === "Escape" && card.classList.contains("is-open")) {
+        setOpen(card, false);
+      }
+    });
+  });
+</script>
+
+<style>
+  [data-has-routes] { cursor: pointer; }
+  [data-has-routes].is-open { grid-column: 1 / -1; cursor: default; }
+  [data-has-routes].is-open > :not(.route-panel) { cursor: pointer; }
+  .route-hint-action { color: var(--color-accent); }
+  .route-panel { margin-top: 20px; text-align: left; }
+  .route-map {
+    height: min(60vh, 520px);
+    min-height: 320px;
+    border-radius: 8px;
+    border: 1px solid var(--color-card-border);
+    overflow: hidden;
+    z-index: 0;
+  }
+  .route-map :global(.leaflet-tile-pane) { filter: grayscale(0.85) brightness(0.8) contrast(1.05); }
+  :global(:root[data-theme="light"]) .route-map :global(.leaflet-tile-pane) { filter: grayscale(0.85); }
+  .route-list { margin: 14px 0 0; padding: 0; list-style: none; }
+  .route-list li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; }
+  .route-name { font: 600 13px var(--font-sans); color: var(--color-paper); }
+  .route-meta { font: 12px / 1.5 monospace; letter-spacing: .04em; color: var(--color-muted-60); }
 </style>
