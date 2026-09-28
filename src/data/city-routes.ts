@@ -5,7 +5,7 @@
 //
 // Route geometry comes from Strava's summary polylines in strava-export.json
 // (Jun to Sep 2026), strava-runs-over-25km.json and strava-runs-20-to-25km.json
-// (all-time runs of 20 km and up) and strava-rides-over-40km.json (all-time
+// (all-time runs of 20 km and up), strava-race-runs.json (shorter run races) and strava-rides-over-40km.json (all-time
 // rides over 40 km) and strava-swims-melbourne.json (open water swims), decoded
 // at build time. Routes are shown in full, start and finish included.
 import stravaExport from "./strava-export.json";
@@ -13,6 +13,7 @@ import longRuns from "./strava-runs-over-25km.json";
 import halfRuns from "./strava-runs-20-to-25km.json";
 import longRides from "./strava-rides-over-40km.json";
 import swims from "./strava-swims-melbourne.json";
+import raceRuns from "./strava-race-runs.json";
 
 type ExportActivity = {
   id: string;
@@ -41,8 +42,9 @@ export type CityRoute = {
 export const citySlug = (city: string) =>
   city.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-// Runs tagged as races. Best guess from names, Strava descriptions and dates
-// (reviewed with Naman); add or remove IDs here.
+// Runs tagged as races. The Races tab of Naman's Running / Travel Journal sheet
+// is the source of truth (the first 12 were a best guess, reviewed with Naman);
+// add or remove IDs here.
 export const raceIds = new Set([
   "12816714577", // NYC Marathon, 3 Nov 2024
   "8741442037", // NYC United Half, 19 Mar 2023
@@ -56,6 +58,18 @@ export const raceIds = new Set([
   "8136671234", // Queenstown Half Mara, 19 Nov 2022
   "15008799672", // Gold Coast Half Marathon, 5 Jul 2025
   "9109465613", // Great Ocean Road Half, 21 May 2023
+  "10975062361", // Run For Kids 14k (ran on to 23 km), 17 Mar 2024
+  "7444860727", // ASICS 10k, London, 10 Jul 2022
+  "7463923205", // Run Through 10k, Battersea, 13 Jul 2022
+  "7501116536", // Run Through 10k, Wimbledon, 20 Jul 2022
+  "7749956419", // Sandy Point 10k, 4 Sep 2022
+  "7824954140", // Sydney 10k (Blackmores), 18 Sep 2022
+  "7896604408", // Melbourne 10k, 2 Oct 2022
+  "11220086204", // Run the Rock 14k, 20 Apr 2024
+  "14091776386", // Run For Kids 14k, 6 Apr 2025
+  "15094426010", // Run Melbourne 10k, 13 Jul 2025
+  "17400019077", // Carman's Fun Run, 15 Feb 2026
+  "18444569084", // Mothers Day Run 12k, 10 May 2026
   "17323711748", // 2XU Tri Ride (bike leg of the 2XU triathlon), 8 Feb 2026
   "17323709695", // 2XU Tri Swim, 8 Feb 2026
   "13763998629", // 2XU Tri Swim, 2 Mar 2025
@@ -80,6 +94,12 @@ const featuredRoutes: Record<string, string[]> = {
     "8741442037", // NYC United Half, 19 Mar 2023
   ],
   Melbourne: [
+    "18444569084", // Mother’s Day Run, 10 May 2026 (race)
+    "17400019077", // Carman’s Fun Run, 15 Feb 2026 (race)
+    "15094426010", // Run Melbourne 10k, 13 Jul 2025 (race)
+    "14091776386", // Run for the Kids #2, 6 Apr 2025 (race)
+    "7896604408", // Melb 10k, 2 Oct 2022 (race)
+    "7749956419", // Sandy Point 10k, 4 Sep 2022 (race)
     "19004351677", // Avengers Assemble, 21 Jun 2026
     "15393896141", // Dandenong Creek Trail, 9 Aug 2025
     "15160000664", // Horse Hommage, 19 Jul 2025
@@ -111,6 +131,7 @@ const featuredRoutes: Record<string, string[]> = {
     "8355893835", // Afternoon Run, 8 Jan 2023
   ],
   Sydney: [
+    "7824954140", // Blackmores 10k, 18 Sep 2022 (race)
     "11609226699", // Rocks to Manly on a DAVID 🌞, 9 Jun 2024
     "11333672087", // HOOOOOKA Half, 5 May 2024
   ],
@@ -123,6 +144,14 @@ const featuredRoutes: Record<string, string[]> = {
   "South Island": [
     "15326054835", // Kaikoūra, 3 Aug 2025
     "8136671234", // Queenstown Half Mara, 19 Nov 2022
+  ],
+  London: [
+    "7501116536", // Chase The Sun Wimbledon (Run Through 10k), 20 Jul 2022 (race)
+    "7463923205", // Battersea Chase The Sun 10k (Run Through), 13 Jul 2022 (race)
+    "7444860727", // ASICS 10k, 10 Jul 2022 (race)
+  ],
+  "Hanging Rock": [
+    "11220086204", // Run The Rock, 20 Apr 2024 (race)
   ],
   Munich: [
     "12170428720", // Into Munich, 17 Aug 2024
@@ -226,6 +255,7 @@ const activities = [
   ...(halfRuns as { activities: ExportActivity[] }).activities,
   ...(longRides as { activities: ExportActivity[] }).activities,
   ...(swims as { activities: ExportActivity[] }).activities,
+  ...(raceRuns as { activities: ExportActivity[] }).activities,
 ];
 
 const shortDate = (iso: string) =>
