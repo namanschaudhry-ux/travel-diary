@@ -1,0 +1,334 @@
+---
+// One map with several routes drawn on top of each other. Hovering (or
+// tapping, or choosing a name in the row below) a route lifts it: it thickens, glows and
+// comes to the front while the others fade, and its name and stats fade in
+// using the same captions as the route cards. Fixed zoom, full routes.
+import "leaflet/dist/leaflet.css";
+import { routeStats, type CityRoute } from "../data/city-routes";
+
+interface Props {
+  routes: CityRoute[];
+  // Frame the opening view on the points within this many km of the median
+  // point, instead of the middle 90% of all points. For routes that bunch up
+  // in one small area, like swims off one beach.
+  frameRadiusKm?: number;
+}
+
+const { routes, frameRadiusKm } = Astro.props;
+const routeDate = (iso: string) =>
+  new Date(`${iso}T12:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
+const details = routes.map((route) => ({
+  id: route.id,
+  name: route.name,
+  date: routeDate(route.date),
+  middle: routeStats(route).middle,
+  climb: routeStats(route).right,
+  points: route.points,
+}));
+---
+
+<figure class="overlay-card" data-overlay-routes={JSON.stringify(details)} data-frame-radius={frameRadiusKm}>
+  <div class="overlay-map" aria-label={`Map of ${routes.length} routes drawn together`}></div>
+  <figcaption class="route-caption route-caption--top" data-caption-name></figcaption>
+  <figcaption class="route-caption route-caption--bottom">
+    <div class="route-caption-row">
+      <span class="text-left" data-caption-date></span>
+      <span class="text-center" data-caption-middle></span>
+      <span class="text-right" data-caption-climb></span>
+    </div>
+  </figcaption>
+  <span class="viewfinder-corner viewfinder-corner--tl" aria-hidden="true"></span>
+  <span class="viewfinder-corner viewfinder-corner--tr" aria-hidden="true"></span>
+  <span class="viewfinder-corner viewfinder-corner--bl" aria-hidden="true"></span>
+  <span class="viewfinder-corner viewfinder-corner--br" aria-hidden="true"></span>
+</figure>
+
+{/* Works like the language toggle: a radio group. Click a name, or focus the
+    row and use the left and right arrow keys to move between routes. */}
+<div class="overlay-names" role="radiogroup" aria-label="Routes on the map">
+  {details.map((route, index) => (
+    <button type="button" role="radio" aria-checked="false" tabindex={index === 0 ? 0 : -1} data-route-id={route.id}>{route.name}</button>
+  ))}
+</div>
+
+<script>
+  import L from "leaflet";
+
+  type Detail = { id: string; name: string; date: string; middle: string; climb: string; points: [number, number][] };
+
+  const card = document.querySelector<HTMLElement>(".overlay-card");
+  const target = card?.querySelector<HTMLElement>(".overlay-map");
+  if (card && target) {
+    const routes: Detail[] = JSON.parse(card.dataset.overlayRoutes ?? "[]");
+    const tileUrl = (theme: string | null) =>
+      `https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/${theme === "light" ? "World_Light_Gray_Base" : "World_Dark_Gray_Base"}/MapServer/tile/{z}/{y}/{x}`;
+    const accent = getComputedStyle(document.documentElement).getPropertyValue("--color-accent").trim() || "#b08968";
+
+    // Fixed zoom: no zoom buttons, scroll, pinch, double-click or keyboard zoom.
+    const map = L.map(target, {
+      zoomControl: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      touchZoom: false,
+      boxZoom: false,
+      keyboard: false,
+      zoomSnap: 0,
+    });
+    const tiles = L.tileLayer(tileUrl(document.documentElement.getAttribute("data-theme")), {
+      maxZoom: 16,
+      attribution: "Tiles &copy; Esri",
+    }).addTo(map);
+    new MutationObserver(() => tiles.setUrl(tileUrl(document.documentElement.getAttribute("data-theme"))))
+      .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+    const REST = { weight: 3, opacity: 0.55 };
+    const FADED = { weight: 3, opacity: 0.18 };
+    const ACTIVE = { weight: 6, opacity: 1 };
+
+    const bounds = L.latLngBounds([]);
+    const drawn = routes.map((route) => {
+      const line = L.polyline(route.points, { color: accent, lineCap: "round", lineJoin: "round", className: "overlay-line", ...REST }).addTo(map);
+      // A wide invisible line on top makes each route easy to hover.
+      const hit = L.polyline(route.points, { color: "#000", weight: 18, opacity: 0, interactive: true }).addTo(map);
+      const start = L.circleMarker(route.points[0], { radius: 6, color: "#0d0d0d", weight: 2, fillColor: "#5cc47a", fillOpacity: 1 });
+      const end = L.circleMarker(route.points[route.points.length - 1], { radius: 6, color: "#0d0d0d", weight: 2, fillColor: "#e0605a", fillOpacity: 1 });
+      bounds.extend(line.getBounds());
+      return { route, line, hit, start, end };
+    });
+
+    const nameEl = card.querySelector<HTMLElement>("[data-caption-name]");
+    const dateEl = card.querySelector<HTMLElement>("[data-caption-date]");
+    const middleEl = card.querySelector<HTMLElement>("[data-caption-middle]");
+    const climbEl = card.querySelector<HTMLElement>("[data-caption-climb]");
+    const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>(".overlay-names [data-route-id]"));
+    let active: (typeof drawn)[number] | null = null;
+    let pinned = false; // set by a tap or click, so touch screens keep the highlight
+    let panned = false; // the map slid over to show a far-off chosen route
+
+    function highlight(item: (typeof drawn)[number] | null) {
+      if (active === item) return;
+      active = item;
+      drawn.forEach((d) => {
+        const isActive = d === item;
+        d.line.setStyle(item ? (isActive ? ACTIVE : FADED) : REST);
+        d.line.getElement()?.classList.toggle("is-active", isActive);
+        if (isActive) {
+          d.line.bringToFront();
+          d.start.addTo(map);
+          d.end.addTo(map);
+        } else {
+          d.start.remove();
+          d.end.remove();
+        }
+      });
+      // Keep the hover targets above the visible lines.
+      drawn.forEach((d) => d.hit.bringToFront());
+      card.classList.toggle("has-active", Boolean(item));
+      buttons.forEach((b) => b.classList.toggle("is-active", b.dataset.routeId === item?.route.id));
+      if (item && nameEl && dateEl && middleEl && climbEl) {
+        nameEl.textContent = item.route.name;
+        dateEl.textContent = item.route.date;
+        middleEl.textContent = item.route.middle;
+        climbEl.textContent = item.route.climb;
+      }
+    }
+
+    // Choosing a route (tap, click, or arrow keys on the names) keeps it
+    // highlighted until another is chosen or it is cleared.
+    function select(item: (typeof drawn)[number] | null, focus = false) {
+      pinned = Boolean(item);
+      highlight(item);
+      const animate = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (item && !map.getBounds().contains(item.line.getBounds())) {
+        map.panTo(item.line.getBounds().getCenter(), { animate });
+        panned = true;
+      } else if (!item && panned) {
+        map.panTo(frameBounds.getCenter(), { animate });
+        panned = false;
+      }
+      buttons.forEach((b, index) => {
+        const chosen = b.dataset.routeId === item?.route.id;
+        b.setAttribute("aria-checked", String(chosen));
+        b.tabIndex = chosen || (!item && index === 0) ? 0 : -1;
+        if (chosen && focus) b.focus();
+      });
+    }
+    const itemFor = (button: HTMLButtonElement) => drawn.find((d) => d.route.id === button.dataset.routeId) ?? null;
+
+    drawn.forEach((item) => {
+      item.hit.on("mouseover", () => { if (!pinned) highlight(item); });
+      item.hit.on("mouseout", () => { if (!pinned) highlight(null); });
+      item.hit.on("click", (event) => {
+        L.DomEvent.stopPropagation(event);
+        select(pinned && active === item ? null : item);
+      });
+    });
+    map.on("click", () => select(null));
+
+    buttons.forEach((button, index) => {
+      const item = itemFor(button);
+      button.addEventListener("mouseenter", () => { if (!pinned) highlight(item); });
+      button.addEventListener("mouseleave", () => { if (!pinned) highlight(null); });
+      button.addEventListener("click", () => select(pinned && active === item ? null : item));
+      button.addEventListener("keydown", (event) => {
+        let next = -1;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % buttons.length;
+        else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + buttons.length) % buttons.length;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = buttons.length - 1;
+        else if (event.key === "Escape") {
+          event.preventDefault();
+          select(null);
+          button.focus();
+          return;
+        } else return;
+        event.preventDefault();
+        // The first arrow press picks the focused route; later presses move along the row.
+        if (!pinned) next = index;
+        select(itemFor(buttons[next]), true);
+      });
+    });
+
+    // Framing is based on where most of the running happens: the middle 90%
+    // of all route points, or those near the median point (data-frame-radius). A far-off route (a race out of town, say) can run
+    // off the edge; choosing it slides the map across to it.
+    const allPoints = routes.flatMap((route) => route.points);
+    const pct = (values: number[], q: number) => {
+      const sorted = [...values].sort((a, b) => a - b);
+      return sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(q * (sorted.length - 1))))];
+    };
+    const lats = allPoints.map((pt) => pt[0]);
+    const lngs = allPoints.map((pt) => pt[1]);
+    const radiusKm = Number(card.dataset.frameRadius ?? 0);
+    const median = L.latLng(pct(lats, 0.5), pct(lngs, 0.5));
+    const near = allPoints.filter((pt) => median.distanceTo(pt) <= radiusKm * 1000);
+    const core = radiusKm > 0 && near.length > 1
+      ? L.latLngBounds(near)
+      : L.latLngBounds([pct(lats, 0.05), pct(lngs, 0.05)], [pct(lats, 0.95), pct(lngs, 0.95)]);
+    const frameBounds = core.isValid() && core.getNorth() > core.getSouth() ? core : bounds;
+
+    // The core area takes up about half the map's width, so the surroundings
+    // show, unless that would overflow the height.
+    const SHARE = 0.5;
+    const frame = () => {
+      if (!frameBounds.isValid()) return;
+      const lngSpan = Math.max(frameBounds.getEast() - frameBounds.getWest(), 0.001);
+      const byWidth = Math.log2((SHARE * target.clientWidth * 360) / (256 * lngSpan));
+      map.setMinZoom(0);
+      map.setMaxZoom(18);
+      const fitsHeight = map.getBoundsZoom(frameBounds.pad(0.08), false);
+      const zoom = Math.min(byWidth, fitsHeight);
+      map.setView(frameBounds.getCenter(), zoom, { animate: false });
+      map.setMinZoom(zoom);
+      map.setMaxZoom(zoom);
+    };
+    frame();
+    let resizeTimer: number | undefined;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        map.invalidateSize();
+        frame();
+      }, 150);
+    });
+  }
+</script>
+
+<style>
+  .overlay-card {
+    position: relative;
+    margin: 0;
+    border-radius: 12px;
+  }
+  .overlay-map {
+    height: min(72vh, 680px);
+    min-height: 380px;
+    border-radius: 12px;
+    border: 1px solid var(--color-card-border);
+    overflow: hidden;
+    z-index: 0;
+    background: var(--color-ink-soft);
+  }
+  /* The highlighted route lifts off the map with a soft glow. */
+  .overlay-map :global(.overlay-line) { transition: stroke-opacity 200ms ease, stroke-width 200ms ease; }
+  .overlay-map :global(.overlay-line.is-active) {
+    filter: drop-shadow(0 6px 6px rgb(0 0 0 / 55%)) drop-shadow(0 0 6px var(--color-accent));
+  }
+  .route-caption {
+    position: absolute;
+    inset-inline: 0;
+    z-index: 500;
+    margin: 0;
+    padding: 20px 24px;
+    font: 300 14px var(--font-sans);
+    color: rgb(255 255 255 / 90%);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 240ms ease, transform 240ms ease;
+  }
+  .route-caption--top {
+    top: 0;
+    padding-bottom: 56px;
+    text-align: center;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(to bottom, rgb(0 0 0 / 60%), transparent);
+  }
+  .route-caption--bottom {
+    bottom: 0;
+    padding-top: 56px;
+    padding-bottom: 28px;
+    border-radius: 0 0 12px 12px;
+    background: linear-gradient(to top, rgb(0 0 0 / 60%), transparent);
+  }
+  .route-caption-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+  .viewfinder-corner {
+    position: absolute;
+    z-index: 500;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--color-accent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .viewfinder-corner--tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .viewfinder-corner--tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+  .viewfinder-corner--bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+  .viewfinder-corner--br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+  .overlay-card.has-active .route-caption { opacity: 1; transform: none; }
+  .overlay-card.has-active .viewfinder-corner { opacity: 1; }
+  .overlay-map :global(.leaflet-control-attribution) { font-size: 10px; background: rgb(0 0 0 / 35%); color: rgb(255 255 255 / 70%); }
+  .overlay-map :global(.leaflet-control-attribution a) { color: inherit; }
+
+  .overlay-names {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 10px;
+    margin: 20px 0 0;
+    font: 12px / 1.4 monospace;
+    letter-spacing: .04em;
+  }
+  .overlay-names button {
+    appearance: none;
+    border: 0;
+    border-radius: 3px;
+    padding: 3px 7px;
+    background: transparent;
+    font: inherit;
+    letter-spacing: inherit;
+    color: var(--color-muted-60);
+    cursor: pointer;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+  .overlay-names button:hover,
+  .overlay-names button.is-active { color: var(--color-accent); }
+  /* The chosen route is filled in, like the selected language. */
+  .overlay-names button[aria-checked="true"] { background: var(--color-accent); color: var(--color-ink); }
+  .overlay-names button:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .route-caption, .viewfinder-corner, .overlay-map :global(.overlay-line) { transition: none; }
+  }
+</style>

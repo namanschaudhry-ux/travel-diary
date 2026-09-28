@@ -1,0 +1,18 @@
+---
+// One page per city that has hand-picked runs (src/data/city-routes.ts),
+// e.g. /moving/new-york/. Linked from the city cards on the Moving page.
+// Rides live on /moving/<city>/cycle/. Routes are drawn in full, start and
+// finish included.
+import CityRoutesPage from "../../components/CityRoutesPage.astro";
+import { cityRoutes, citySlug, type CityRoute } from "../../data/city-routes";
+
+export function getStaticPaths() {
+  return Object.entries(cityRoutes)
+    .filter(([, routes]) => routes.length > 0)
+    .map(([city, routes]) => ({ params: { city: citySlug(city) }, props: { city, routes } }));
+}
+
+const { city, routes } = Astro.props as { city: string; routes: CityRoute[] };
+---
+
+<CityRoutesPage city={city} routes={routes} sport="run" />

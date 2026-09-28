@@ -2,6 +2,8 @@
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { cityActivity, activityTotals as totals } from "../data/activity-summary";
+import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug } from "../data/city-routes";
+import RouteGrid from "../components/RouteGrid.astro";
 import novablast5WinterSea from "../assets/shoes/novablast-5-winter-sea.png";
 import novablast5Tokyo from "../assets/shoes/novablast-5-tokyo.png";
 import novablast5PurpleRed from "../assets/shoes/novablast-5-purple-red.png";
@@ -30,6 +32,22 @@ const shoes = [
 const cities = [...cityActivity]
   .map((c) => ({ ...c, total: c.run + c.cycle + c.swim }))
   .sort((a, b) => b.total - a.total);
+
+// Every route from every city, newest first, for the "routes" view.
+const allRoutes = Object.entries(cityRoutes)
+  .flatMap(([city, routes]) => routes.map((route) => ({ ...route, city })))
+  .sort((a, b) => b.date.localeCompare(a.date));
+const allRides = Object.entries(cityRideRoutes)
+  .flatMap(([city, routes]) => routes.map((route) => ({ ...route, city })))
+  .sort((a, b) => b.date.localeCompare(a.date));
+
+// Map pages per city and sport. A city card links to the page for the sport
+// that is selected, and is a plain card when that sport has no routes there.
+const routeLinks = (city: string) => ({
+  run: cityRoutes[city]?.length ? { href: `/moving/${citySlug(city)}/`, count: cityRoutes[city].length } : null,
+  cycle: cityRideRoutes[city]?.length ? { href: `/moving/${citySlug(city)}/cycle/`, count: cityRideRoutes[city].length } : null,
+  swim: citySwimRoutes[city]?.length ? { href: `/moving/${citySlug(city)}/swim/`, count: citySwimRoutes[city].length } : null,
+});
 
 const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
 
@@ -88,8 +106,8 @@ const filters = ["run", "cycle", "swim"];
 
   <div class="mx-auto max-w-6xl px-6 pb-8 sm:px-10" id="view-toggle-wrap">
     <div class="filter-wheel-wrap mx-auto">
-      <div class="filter-wheel" id="view-wheel" role="tablist" aria-label="City or gear view">
-        {["city", "gear"].map((label) => (
+      <div class="filter-wheel" id="view-wheel" role="tablist" aria-label="City, gear or routes view">
+        {["city", "gear", "routes"].map((label) => (
           <button type="button" class="filter-item" role="tab" data-view={label} aria-selected={label === "city" ? "true" : "false"}>{label}</button>
         ))}
       </div>
@@ -99,11 +117,20 @@ const filters = ["run", "cycle", "swim"];
   <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="city">
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
-        cities.map((c) => (
-          <div
+        cities.map((c) => {
+          // Cities with routes link to their own map page; the rest stay plain cards.
+          // The script below swaps the link when the sport filter changes.
+          const links = routeLinks(c.city);
+          const CityCard = links.run || links.cycle || links.swim ? "a" : "div";
+          return (
+          <CityCard
             class="city-card rounded-[12px] border border-[var(--color-card-border)] p-6 text-center"
             data-city-card
-            tabindex="0"
+            href={links.run?.href}
+            data-run-href={links.run?.href}
+            data-cycle-href={links.cycle?.href}
+            data-swim-href={links.swim?.href}
+            tabindex={links.run ? undefined : "0"}
             data-sports={typeRows(c)
               .map((r) => r.label)
               .join(" ")}
@@ -122,10 +149,39 @@ const filters = ["run", "cycle", "swim"];
                 </div>
               ))}
             </div>
-          </div>
-        ))
+            {(["run", "cycle", "swim"] as const).map((sport) => {
+              const link = links[sport];
+              return link ? (
+                <p class="route-hint mt-4 font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]" data-route-hint={sport} hidden={sport !== "run"}>
+                  {link.count} {link.count === 1 ? "route" : "routes"} · <span class="route-hint-action">view map →</span>
+                </p>
+              ) : null;
+            })}
+          </CityCard>
+          );
+        })
       }
     </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="routes" data-sport-section="run" hidden>
+    {/* All routes or races only. Works like the language toggle: click, or
+        focus the row and use the arrow keys. */}
+    <div class="route-filter" role="radiogroup" aria-label="Show routes">
+      <button type="button" role="radio" aria-checked="true" tabindex="0" data-route-filter="all">all</button>
+      <button type="button" role="radio" aria-checked="false" tabindex="-1" data-route-filter="races">races</button>
+    </div>
+    <p id="route-count" class="mb-6 text-center font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]" data-all={allRoutes.length} data-races={allRoutes.filter((r) => r.race).length}>
+      {allRoutes.length} routes
+    </p>
+    <RouteGrid routes={allRoutes} showCity />
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="routes" data-sport-section="cycle" hidden>
+    <p class="mb-6 text-center font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
+      {allRides.length} routes
+    </p>
+    <RouteGrid routes={allRides} showCity />
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="gear" data-sport-section="run" hidden>
@@ -242,6 +298,20 @@ const filters = ["run", "cycle", "swim"];
       card.querySelectorAll<HTMLElement>("[data-sport]").forEach((el) => {
         el.hidden = el.dataset.sport !== filter;
       });
+      card.querySelectorAll<HTMLElement>("[data-route-hint]").forEach((el) => {
+        el.hidden = el.dataset.routeHint !== filter;
+      });
+      // Link to this sport's map page, or behave as a plain card if it has none.
+      if (card instanceof HTMLAnchorElement) {
+        const href = card.dataset[`${filter}Href`];
+        if (href) {
+          card.href = href;
+          card.removeAttribute("tabindex");
+        } else {
+          card.removeAttribute("href");
+          card.tabIndex = 0;
+        }
+      }
     });
 
     if (filter === "swim") resetViewToCity();
@@ -445,4 +515,67 @@ const filters = ["run", "cycle", "swim"];
       scroll-behavior: auto;
     }
   }
+</style>
+
+
+<style>
+  .route-hint-action { color: var(--color-accent); }
+  a.city-card { color: inherit; text-decoration: none; }
+</style>
+
+<script>
+  // Routes view filter: all routes or races only.
+  const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-route-filter]"));
+  const routeCount = document.getElementById("route-count");
+  const setRouteFilter = (button: HTMLButtonElement, focus = false) => {
+    const racesOnly = button.dataset.routeFilter === "races";
+    filterButtons.forEach((b) => {
+      const chosen = b === button;
+      b.setAttribute("aria-checked", String(chosen));
+      b.tabIndex = chosen ? 0 : -1;
+    });
+    if (focus) button.focus();
+    document.querySelectorAll<HTMLElement>('[data-view-section="routes"][data-sport-section="run"] .route-card').forEach((card) => {
+      card.hidden = racesOnly && card.dataset.race !== "true";
+    });
+    if (routeCount) {
+      const n = Number(racesOnly ? routeCount.dataset.races : routeCount.dataset.all);
+      routeCount.textContent = racesOnly ? `${n} ${n === 1 ? "race" : "races"}` : `${n} routes`;
+    }
+  };
+  filterButtons.forEach((button, index) => {
+    button.addEventListener("click", () => setRouteFilter(button));
+    button.addEventListener("keydown", (event) => {
+      let next = -1;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % filterButtons.length;
+      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + filterButtons.length) % filterButtons.length;
+      else return;
+      event.preventDefault();
+      setRouteFilter(filterButtons[next], true);
+    });
+  });
+</script>
+
+<style>
+  .route-filter {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 14px;
+    font: 14px monospace;
+    letter-spacing: 0.06em;
+  }
+  .route-filter button {
+    border: 0;
+    border-radius: 3px;
+    padding: 3px 7px;
+    background: transparent;
+    color: var(--color-paper);
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+  .route-filter button[aria-checked="true"] { background: var(--color-accent); color: var(--color-ink); }
+  .route-filter button:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 2px; }
 </style>
