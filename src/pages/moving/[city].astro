@@ -51,7 +51,16 @@ const routeDate = (iso: string) =>
   if (target) {
     const routes: { points: [number, number][] }[] = JSON.parse(target.dataset.routes ?? "[]");
     const accent = getComputedStyle(document.documentElement).getPropertyValue("--color-accent").trim() || "#b08968";
-    const map = L.map(target, { scrollWheelZoom: false });
+    // Fixed zoom: no zoom buttons, scroll, pinch, double-click or keyboard zoom.
+    const map = L.map(target, {
+      zoomControl: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      touchZoom: false,
+      boxZoom: false,
+      keyboard: false,
+      zoomSnap: 0,
+    });
     // Minimal basemap: no labels, faint streets, parks and water, so the
     // route is the main thing on the map. Follows the site's light/dark theme.
     const tileUrl = (theme: string | null) =>
@@ -71,7 +80,32 @@ const routeDate = (iso: string) =>
       L.circleMarker(route.points[0], { radius: 6, color: "#0d0d0d", weight: 2, fillColor: "#5cc47a", fillOpacity: 1 }).bindTooltip("start").addTo(map);
       L.circleMarker(route.points[route.points.length - 1], { radius: 6, color: "#0d0d0d", weight: 2, fillColor: "#e0605a", fillOpacity: 1 }).bindTooltip("finish").addTo(map);
     });
-    if (bounds.isValid()) map.fitBounds(bounds, { padding: [32, 32] });
+    // Framing: the routes take up about a quarter of the map's width, so the
+    // surrounding neighbourhoods show (Naman's chosen view for Fantastico).
+    // Recomputed on resize so phones and desktops show the same area.
+    const ROUTE_SHARE = 0.26; // route width as a share of the map width
+    const frame = () => {
+      if (!bounds.isValid()) return;
+      const width = target.clientWidth;
+      const lngSpan = Math.max(bounds.getEast() - bounds.getWest(), 0.001);
+      const byWidth = Math.log2((ROUTE_SHARE * width * 360) / (256 * lngSpan));
+      const fitsHeight = map.getBoundsZoom(bounds.pad(0.1), false);
+      const zoom = Math.min(byWidth, fitsHeight);
+      map.setMinZoom(0);
+      map.setMaxZoom(18);
+      map.setView(bounds.getCenter(), zoom, { animate: false });
+      map.setMinZoom(zoom);
+      map.setMaxZoom(zoom);
+    };
+    frame();
+    let resizeTimer: number | undefined;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        map.invalidateSize();
+        frame();
+      }, 150);
+    });
   }
 </script>
 
