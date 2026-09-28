@@ -1,6 +1,6 @@
 ---
 // One map with several routes drawn on top of each other. Hovering (or
-// tapping, or focusing a name below) a route lifts it: it thickens, glows and
+// tapping, or choosing a name in the row below) a route lifts it: it thickens, glows and
 // comes to the front while the others fade, and its name and stats fade in
 // using the same captions as the route cards. Fixed zoom, full routes.
 import "leaflet/dist/leaflet.css";
@@ -41,11 +41,13 @@ const details = routes.map((route) => ({
   <span class="viewfinder-corner viewfinder-corner--br" aria-hidden="true"></span>
 </figure>
 
-<ul class="overlay-names" aria-label="Routes on the map">
-  {details.map((route) => (
-    <li><button type="button" data-route-id={route.id}>{route.name}</button></li>
+{/* Works like the language toggle: a radio group. Click a name, or focus the
+    row and use the left and right arrow keys to move between routes. */}
+<div class="overlay-names" role="radiogroup" aria-label="Routes on the map">
+  {details.map((route, index) => (
+    <button type="button" role="radio" aria-checked="false" tabindex={index === 0 ? 0 : -1} data-route-id={route.id}>{route.name}</button>
   ))}
-</ul>
+</div>
 
 <script>
   import L from "leaflet";
@@ -128,26 +130,51 @@ const details = routes.map((route) => ({
       }
     }
 
+    // Choosing a route (tap, click, or arrow keys on the names) keeps it
+    // highlighted until another is chosen or it is cleared.
+    function select(item: (typeof drawn)[number] | null, focus = false) {
+      pinned = Boolean(item);
+      highlight(item);
+      buttons.forEach((b, index) => {
+        const chosen = b.dataset.routeId === item?.route.id;
+        b.setAttribute("aria-checked", String(chosen));
+        b.tabIndex = chosen || (!item && index === 0) ? 0 : -1;
+        if (chosen && focus) b.focus();
+      });
+    }
+    const itemFor = (button: HTMLButtonElement) => drawn.find((d) => d.route.id === button.dataset.routeId) ?? null;
+
     drawn.forEach((item) => {
       item.hit.on("mouseover", () => { if (!pinned) highlight(item); });
       item.hit.on("mouseout", () => { if (!pinned) highlight(null); });
       item.hit.on("click", (event) => {
         L.DomEvent.stopPropagation(event);
-        pinned = active !== item || !pinned;
-        highlight(pinned ? item : null);
+        select(pinned && active === item ? null : item);
       });
     });
-    map.on("click", () => { pinned = false; highlight(null); });
+    map.on("click", () => select(null));
 
-    buttons.forEach((button) => {
-      const item = drawn.find((d) => d.route.id === button.dataset.routeId) ?? null;
+    buttons.forEach((button, index) => {
+      const item = itemFor(button);
       button.addEventListener("mouseenter", () => { if (!pinned) highlight(item); });
       button.addEventListener("mouseleave", () => { if (!pinned) highlight(null); });
-      button.addEventListener("focus", () => highlight(item));
-      button.addEventListener("blur", () => { if (!pinned) highlight(null); });
-      button.addEventListener("click", () => {
-        pinned = active !== item || !pinned;
-        highlight(pinned ? item : null);
+      button.addEventListener("click", () => select(pinned && active === item ? null : item));
+      button.addEventListener("keydown", (event) => {
+        let next = -1;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % buttons.length;
+        else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + buttons.length) % buttons.length;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = buttons.length - 1;
+        else if (event.key === "Escape") {
+          event.preventDefault();
+          select(null);
+          button.focus();
+          return;
+        } else return;
+        event.preventDefault();
+        // The first arrow press picks the focused route; later presses move along the row.
+        if (!pinned) next = index;
+        select(itemFor(buttons[next]), true);
       });
     });
 
@@ -249,25 +276,28 @@ const details = routes.map((route) => ({
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 8px 20px;
+    gap: 8px 10px;
     margin: 20px 0 0;
-    padding: 0;
-    list-style: none;
+    font: 12px / 1.4 monospace;
+    letter-spacing: .04em;
   }
   .overlay-names button {
     appearance: none;
-    background: none;
-    border: none;
-    padding: 4px 0;
-    font: 12px / 1.4 monospace;
-    letter-spacing: .04em;
+    border: 0;
+    border-radius: 3px;
+    padding: 3px 7px;
+    background: transparent;
+    font: inherit;
+    letter-spacing: inherit;
     color: var(--color-muted-60);
     cursor: pointer;
-    transition: color 200ms ease;
+    transition: background-color 180ms ease, color 180ms ease;
   }
   .overlay-names button:hover,
   .overlay-names button.is-active { color: var(--color-accent); }
-  .overlay-names button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 2px; }
+  /* The chosen route is filled in, like the selected language. */
+  .overlay-names button[aria-checked="true"] { background: var(--color-accent); color: var(--color-ink); }
+  .overlay-names button:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 2px; }
 
   @media (prefers-reduced-motion: reduce) {
     .route-caption, .viewfinder-corner, .overlay-map :global(.overlay-line) { transition: none; }
