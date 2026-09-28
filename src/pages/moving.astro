@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { cityActivity, activityTotals as totals } from "../data/activity-summary";
 import { cityRoutes, citySlug } from "../data/city-routes";
+import RouteGrid from "../components/RouteGrid.astro";
 import novablast5WinterSea from "../assets/shoes/novablast-5-winter-sea.png";
 import novablast5Tokyo from "../assets/shoes/novablast-5-tokyo.png";
 import novablast5PurpleRed from "../assets/shoes/novablast-5-purple-red.png";
@@ -31,6 +32,11 @@ const shoes = [
 const cities = [...cityActivity]
   .map((c) => ({ ...c, total: c.run + c.cycle + c.swim }))
   .sort((a, b) => b.total - a.total);
+
+// Every route from every city, newest first, for the "routes" view.
+const allRoutes = Object.entries(cityRoutes)
+  .flatMap(([city, routes]) => routes.map((route) => ({ ...route, city })))
+  .sort((a, b) => b.date.localeCompare(a.date));
 
 const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
 
@@ -89,8 +95,8 @@ const filters = ["run", "cycle", "swim"];
 
   <div class="mx-auto max-w-6xl px-6 pb-8 sm:px-10" id="view-toggle-wrap">
     <div class="filter-wheel-wrap mx-auto">
-      <div class="filter-wheel" id="view-wheel" role="tablist" aria-label="City or gear view">
-        {["city", "gear"].map((label) => (
+      <div class="filter-wheel" id="view-wheel" role="tablist" aria-label="City, gear or routes view">
+        {["city", "gear", "routes"].map((label) => (
           <button type="button" class="filter-item" role="tab" data-view={label} aria-selected={label === "city" ? "true" : "false"}>{label}</button>
         ))}
       </div>
@@ -138,6 +144,17 @@ const filters = ["run", "cycle", "swim"];
         })
       }
     </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="routes" data-sport-section="run" hidden>
+    <p class="mb-6 text-center font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
+      {allRoutes.length} routes
+    </p>
+    <RouteGrid routes={allRoutes} showCity />
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="routes" data-sport-section="cycle" hidden>
+    <p class="text-center font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">No ride routes yet</p>
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="gear" data-sport-section="run" hidden>

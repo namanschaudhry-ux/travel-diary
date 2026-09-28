@@ -5,7 +5,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { cityActivity } from "../../data/activity-summary";
 import { cityRoutes, citySlug, type CityRoute } from "../../data/city-routes";
-import "leaflet/dist/leaflet.css";
+import RouteGrid from "../../components/RouteGrid.astro";
 
 export function getStaticPaths() {
   return Object.entries(cityRoutes)
@@ -15,9 +15,6 @@ export function getStaticPaths() {
 
 const { city, routes } = Astro.props as { city: string; routes: CityRoute[] };
 const country = cityActivity.find((c) => c.city === city)?.country ?? "";
-const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
-const routeDate = (iso: string) =>
-  new Date(`${iso}T12:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
 ---
 
 <Layout title={`${city} routes — Naman Chaudhry`} description={`Routes run, ridden and walked in ${city}.`}>
@@ -33,178 +30,6 @@ const routeDate = (iso: string) =>
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pt-8 pb-16 sm:px-10">
-    <div class:list={["route-grid", { "route-grid--single": routes.length === 1 }]}>
-      {routes.map((route) => (
-        <figure class="route-card" tabindex="0" aria-label={`${route.name}, ${route.sport.toLowerCase()}, ${routeDate(route.date)}, ${fmt(route.distanceKm)} km`}>
-          <div class="route-map" data-route={JSON.stringify(route.points)}></div>
-          {/* Details appear on hover or focus, like the photo cards on the trip pages. */}
-          <figcaption class="route-caption route-caption--top">{route.name}</figcaption>
-          <figcaption class="route-caption route-caption--bottom">
-            <div class="route-caption-row">
-              <span class="text-left">{routeDate(route.date)}</span>
-              <span class="text-center">{route.sport === "TrailRun" ? "trail run" : route.sport.toLowerCase()} · {fmt(route.distanceKm)} km</span>
-              <span class="text-right">{route.elevationM} m up</span>
-            </div>
-          </figcaption>
-          <span class="viewfinder-corner viewfinder-corner--tl" aria-hidden="true"></span>
-          <span class="viewfinder-corner viewfinder-corner--tr" aria-hidden="true"></span>
-          <span class="viewfinder-corner viewfinder-corner--bl" aria-hidden="true"></span>
-          <span class="viewfinder-corner viewfinder-corner--br" aria-hidden="true"></span>
-        </figure>
-      ))}
-    </div>
+    <RouteGrid routes={routes} />
   </section>
 </Layout>
-
-<script>
-  import L from "leaflet";
-
-  // Esri's label-free grey canvas, the same tiles as the NYC map intro. No API key needed.
-  const tileUrl = (theme: string | null) =>
-    `https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/${theme === "light" ? "World_Light_Gray_Base" : "World_Dark_Gray_Base"}/MapServer/tile/{z}/{y}/{x}`;
-  const ROUTE_SHARE = 0.26; // route width as a share of the map width
-  const accent = getComputedStyle(document.documentElement).getPropertyValue("--color-accent").trim() || "#b08968";
-  const layers: L.TileLayer[] = [];
-  const reframes: (() => void)[] = [];
-
-  document.querySelectorAll<HTMLElement>(".route-map").forEach((target) => {
-    const points: [number, number][] = JSON.parse(target.dataset.route ?? "[]");
-    if (points.length < 2) return;
-    // Fixed zoom: no zoom buttons, scroll, pinch, double-click or keyboard zoom.
-    const map = L.map(target, {
-      zoomControl: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      touchZoom: false,
-      boxZoom: false,
-      keyboard: false,
-      zoomSnap: 0,
-    });
-    layers.push(
-      L.tileLayer(tileUrl(document.documentElement.getAttribute("data-theme")), {
-        maxZoom: 16,
-        attribution: "Tiles &copy; Esri",
-      }).addTo(map),
-    );
-    const line = L.polyline(points, { color: accent, weight: 4, opacity: 0.95, lineCap: "round" }).addTo(map);
-    L.circleMarker(points[0], { radius: 6, color: "#0d0d0d", weight: 2, fillColor: "#5cc47a", fillOpacity: 1 }).bindTooltip("start").addTo(map);
-    L.circleMarker(points[points.length - 1], { radius: 6, color: "#0d0d0d", weight: 2, fillColor: "#e0605a", fillOpacity: 1 }).bindTooltip("finish").addTo(map);
-    const bounds = line.getBounds();
-
-    // Framing: the route takes up about a quarter of the map's width, so the
-    // surrounding neighbourhoods show, unless it would then overflow the height.
-    const frame = () => {
-      const lngSpan = Math.max(bounds.getEast() - bounds.getWest(), 0.001);
-      const byWidth = Math.log2((ROUTE_SHARE * target.clientWidth * 360) / (256 * lngSpan));
-      map.setMinZoom(0);
-      map.setMaxZoom(18);
-      const fitsHeight = map.getBoundsZoom(bounds.pad(0.1), false);
-      const zoom = Math.min(byWidth, fitsHeight);
-      map.setView(bounds.getCenter(), zoom, { animate: false });
-      map.setMinZoom(zoom);
-      map.setMaxZoom(zoom);
-    };
-    frame();
-    reframes.push(() => {
-      map.invalidateSize();
-      frame();
-    });
-  });
-
-  new MutationObserver(() => {
-    const url = tileUrl(document.documentElement.getAttribute("data-theme"));
-    layers.forEach((layer) => layer.setUrl(url));
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-
-  let resizeTimer: number | undefined;
-  window.addEventListener("resize", () => {
-    window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(() => reframes.forEach((reframe) => reframe()), 150);
-  });
-</script>
-
-<style>
-  /* The map card behaves like a photo card on the trip pages: on hover or
-     focus it lifts, the viewfinder corners show and the details fade in. */
-  .route-card {
-    position: relative;
-    margin: 0;
-    border-radius: 12px;
-    transition: transform 240ms ease, box-shadow 240ms ease;
-  }
-  .route-grid { display: grid; gap: 32px; }
-  .route-grid--single .route-map { height: min(70vh, 640px); min-height: 360px; }
-  @media (min-width: 640px) { .route-grid:not(.route-grid--single) { grid-template-columns: 1fr 1fr; } }
-  .route-map {
-    height: 420px;
-    border-radius: 12px;
-    border: 1px solid var(--color-card-border);
-    overflow: hidden;
-    z-index: 0;
-    background: var(--color-ink-soft);
-  }
-  .route-caption {
-    position: absolute;
-    inset-inline: 0;
-    z-index: 500;
-    margin: 0;
-    padding: 20px 24px;
-    font: 300 14px var(--font-sans);
-    color: rgb(255 255 255 / 90%);
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(-6px);
-    transition: opacity 240ms ease, transform 240ms ease;
-  }
-  .route-caption--top {
-    top: 0;
-    padding-bottom: 56px;
-    text-align: center;
-    border-radius: 12px 12px 0 0;
-    background: linear-gradient(to bottom, rgb(0 0 0 / 60%), transparent);
-  }
-  .route-caption--bottom {
-    bottom: 0;
-    padding-top: 56px;
-    padding-bottom: 28px;
-    border-radius: 0 0 12px 12px;
-    background: linear-gradient(to top, rgb(0 0 0 / 60%), transparent);
-  }
-  .route-caption-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
-  .viewfinder-corner {
-    position: absolute;
-    z-index: 500;
-    width: 22px;
-    height: 22px;
-    border: 2px solid var(--color-accent);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 200ms ease;
-  }
-  .viewfinder-corner--tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
-  .viewfinder-corner--tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
-  .viewfinder-corner--bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
-  .viewfinder-corner--br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
-  .route-card:hover .route-caption,
-  .route-card:focus-visible .route-caption { opacity: 1; transform: none; }
-  .route-card:hover .viewfinder-corner,
-  .route-card:focus-visible .viewfinder-corner { opacity: 1; }
-  .route-card:focus-visible { outline: none; }
-  @media (hover: hover) and (pointer: fine) {
-    .route-card:hover {
-      transform: translateY(-8px) scale(1.025);
-      box-shadow: 0 14px 32px rgb(0 0 0 / 12%);
-    }
-  }
-  /* Touch screens can't hover, so show the details all the time. */
-  @media (hover: none) {
-    .route-caption { opacity: 1; transform: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .route-card, .route-caption, .viewfinder-corner { transition: none; }
-    .route-card:hover { transform: none; }
-  }
-  /* Keep the map credit clear of the details strip. */
-  .route-map :global(.leaflet-control-attribution) { font-size: 10px; background: rgb(0 0 0 / 35%); color: rgb(255 255 255 / 70%); }
-  .route-map :global(.leaflet-control-attribution a) { color: inherit; }
-</style>
