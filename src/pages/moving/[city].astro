@@ -52,10 +52,18 @@ const routeDate = (iso: string) =>
     const routes: { points: [number, number][] }[] = JSON.parse(target.dataset.routes ?? "[]");
     const accent = getComputedStyle(document.documentElement).getPropertyValue("--color-accent").trim() || "#b08968";
     const map = L.map(target, { scrollWheelZoom: false });
-    L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
+    // Minimal basemap: no labels, faint streets, parks and water, so the
+    // route is the main thing on the map. Follows the site's light/dark theme.
+    const tileUrl = (theme: string | null) =>
+      `https://{s}.basemaps.cartocdn.com/${theme === "light" ? "light_nolabels" : "dark_nolabels"}/{z}/{x}/{y}{r}.png`;
+    const tiles = L.tileLayer(tileUrl(document.documentElement.getAttribute("data-theme")), {
       maxZoom: 18,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: "abcd",
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     }).addTo(map);
+    new MutationObserver(() => {
+      tiles.setUrl(tileUrl(document.documentElement.getAttribute("data-theme")));
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     const bounds = L.latLngBounds([]);
     routes.forEach((route) => {
       const line = L.polyline(route.points, { color: accent, weight: 4, opacity: 0.95, lineCap: "round" }).addTo(map);
@@ -76,8 +84,7 @@ const routeDate = (iso: string) =>
     overflow: hidden;
     z-index: 0;
   }
-  #route-map :global(.leaflet-tile-pane) { filter: grayscale(0.85) brightness(0.8) contrast(1.05); }
-  :global(:root[data-theme="light"]) #route-map :global(.leaflet-tile-pane) { filter: grayscale(0.85); }
+  #route-map { background: var(--color-ink-soft); }
   .route-list { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
   .route-item { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
   .route-name { font: 600 14px var(--font-sans); color: var(--color-paper); }
