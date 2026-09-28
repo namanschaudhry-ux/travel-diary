@@ -30,11 +30,29 @@ export type CityRoute = {
   distanceKm: number;
   elevationM: number;
   points: [number, number][]; // [lat, lng]
+  race: boolean;
 };
 
 // URL slug for a city page, e.g. "New York" -> "new-york" (/moving/new-york/).
 export const citySlug = (city: string) =>
   city.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+// Runs tagged as races. Best guess from names, Strava descriptions and dates
+// (reviewed with Naman); add or remove IDs here.
+export const raceIds = new Set([
+  "12816714577", // NYC Marathon, 3 Nov 2024
+  "8741442037", // NYC United Half, 19 Mar 2023
+  "10040025871", // Melbourne Marathon, 15 Oct 2023
+  "11939021215", // Run Melbourne, 21 Jul 2024
+  "10318587582", // 2XU Half Marathon, 3 Dec 2023
+  "8980596129", // Mornington Half, 30 Apr 2023
+  "10783668846", // Last minute Carman's fun run, 18 Feb 2024
+  "11333672087", // HOOOOOKA Half, 5 May 2024
+  "9507227944", // San Francisco Half Marathon, 23 Jul 2023
+  "8136671234", // Queenstown Half Mara, 19 Nov 2022
+  "15008799672", // Gold Coast Half Marathon, 5 Jul 2025
+  "9109465613", // Great Ocean Road Half, 21 May 2023
+]);
 
 // Cities whose page draws all routes on one shared map instead of a card each.
 export const overlayCities = new Set(["San Francisco", "New York"]);
@@ -160,6 +178,7 @@ export const cityRoutes: Record<string, CityRoute[]> = Object.fromEntries(
         distanceKm: activity.distance_km,
         elevationM: Math.round(activity.elevation_gain_m),
         points: decodePolyline(activity.polyline),
+        race: raceIds.has(id),
       }];
     }).sort((a, b) => b.date.localeCompare(a.date)),
   ]),
