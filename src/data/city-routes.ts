@@ -44,6 +44,23 @@ const featuredRoutes: Record<string, string[]> = {
     "9640935305", // Brooklyn Touring, 13 Aug 2023
     "9595333400", // Lap of a large 🍎, 6 Aug 2023
   ],
+  Melbourne: [
+    "15393896141", // Dandenong Creek Trail, 9 Aug 2025
+    "12528429593", // 3hrs of rain w the gang, 29 Sep 2024
+    "12471662372", // Morning Run, 22 Sep 2024
+    "11443515730", // Negative Fun, 19 May 2024
+    "10837661822", // Long Run, 26 Feb 2024
+    "10134125431", // Course à pied matinale, 31 Oct 2023
+    "10040025871", // Melbourne Marathon, 15 Oct 2023
+    "9871202615", // Big Loop of Melb, 18 Sep 2023
+    "9773904900", // Yarra Long Run, 3 Sep 2023
+  ],
+  Sydney: [
+    "11609226699", // Rocks to Manly on a DAVID, 9 Jun 2024
+  ],
+  "San Francisco": [
+    "9727339221", // Golden Gate Park and more, 26 Aug 2023
+  ],
 };
 
 // Google encoded polyline algorithm (precision 5), as used by Strava.
