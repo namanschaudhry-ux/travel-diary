@@ -1,0 +1,80 @@
+{
+  "exported_at": "2026-09-28",
+  "range": { "start": "2020-04-24", "end": "2026-09-28" },
+  "source": "manual export via Claude's Strava connector (temporary, pre-live-API)",
+  "filter": "all-time Ride activities with distance over 40 km",
+  "activities": [
+    {
+      "id": "17631489969",
+      "name": "Lunch Ride",
+      "sport_type": "Ride",
+      "start_local": "2026-03-07T12:37:22",
+      "distance_km": 60.91,
+      "moving_time_s": 10253,
+      "elevation_gain_m": 479,
+      "description": "Half Ironman dream continues",
+      "location": "Melbourne, Australia",
+      "polyline": "rs`fFe{euZdDuAn@{A`MrBVw@vBsUnAc[z@wE{AhFU{DyBeJqDPyDjBqEgAg@gAr@cFu@gCDaDsHyCgBTaE|D{IbAwR{IeFfAy@tBmBGmAj@a@nBcAFuHqGuHaCcLaHuHcMaAge@bHgW@sK|CyUiCwGZ_SeDoGg@gDh@mG]aO_AuLmB}EU}ZwIob@pCeMGyBcCcFMgBnBgKb@mOzBqK{B{AaDuIv@sJkC{PvAqSy@mI_G_E}FJy@mBWeEpB{WyAiHV}Cj@hCm@aG^gMxAiCz@mKlTsi@`DkDr^jErE_@pSsVzBg@pGiHvc@_y@BeA`@hApJhE`Vjc@~Dht@v@zCbCdDlNs@hJrF~Hc@xMbBlPqNjCi@dg@|EpCrGnJxA`IiCz@bB`EcB`B^}A]vK}FpGwIzH}RhAeAjC}Iy@Ol@d@oBvFz@Fu@nDxDvK}ArCeHtDuH~X|@pHCrGnBtHmB~GsCn@y@jON~HbCrT{@hLDbRzTna@hDlDhQrEbPxItCpTMvd@tJf]rKpKz@|D\\|HaFpM|@n\\g@fTn@nG`GwBhJUxwAvP|A_@vExAr`@rEaM|fBVhAqBdVk@`@mGgCsB`@}DyC_LqCwVsCq@Am@bBmEvCkFhFq@mF_CNdB?bAzEzBYJfEbAbDd@B~BcEzABpAzAfEvT_@xRdDzHh@tDjGCrA_BpCOrIpBxAwLrGuCf@{As@c@x@]dChA_ALOnAzEfD~FyCbFKhPcEvDJ`A{DhEmFnAeE|BTjDsFnD{BnCmSzAmC`GqC|F`CnG{L`H}PbDuAtFl@hD~B~Dc@jAoBrA_JzA_CnJj@jBi@x@qBBqFr@oBdHcG|AOwAFaExCo@{Fz@kAtDY`CaDrAqFy@{Et@yCm@_C`GiEjPoAlStC|B~CdCPrFpCvDfGlAvFzBxCqDyFa@gDcEoGiJuCgC_DqOwC{NVuD~@}FtEr@vBu@bCt@xEMnCoDpGwFfAn@xGwC|D[lH_AtBoNBeB~Du@hHeA|A_EDiD{BoFc@oD`BqG`QsGrLuFcCmGxCuAbCuCxSiFnDkBzDaCg@_AvD}EtGo@hD_F?sO~D{FJeEbCgAfCbAuBgFyDFgAdAMyBwAgAp@v@Z[vA}E`AqApAmA|LsI}BiCLaBdBwJT{H_BgKScHlBkMqEgGu@?qF}A?aAfB[aH}A_FwFgLsEkBe@uIuFyJqDcB]wBuf@f@whA{AoQ|BgZnLeAc@_BdAe~@|E}M{@sO\\cGrZsDbr@sMg@aBvBoBn@"
+    },
+    {
+      "id": "17232449361",
+      "name": "Alb Laps",
+      "sport_type": "Ride",
+      "start_local": "2026-01-31T07:33:17",
+      "distance_km": 50.57,
+      "moving_time_s": 8604,
+      "elevation_gain_m": 27.4,
+      "description": "Boss debrief with cycling 🐐Adam Dendrinos",
+      "location": "Melbourne, Australia",
+      "polyline": "ns_fF}|zsZkCnBwF`Jk@hCI|FuEnHwCpCmCdAaDV_Ec@aMcEiKxAwA|@iApBw@jIoAfExBzJ|EtKdC\\xGnChAnCpJgGpM{OhBWxCh@v^ig@@eB}CkENm@pG}DjA{ABkAkBaNyLvBmGrC{HrMIrG[lA{FrIeDrBkDp@wDKcLcEaCYsKpB}BhDo@rGwAjGnCvKbEvIbLvDtApChJqGnLyN~Bs@jDd@r^og@EcBcC_DIo@bJ}HDy@oBoN}L~B{F`CwHtL_@jBD|EUt@qEdHsEdDyDr@eDIsLeEaDQwIvAoBvBeA`ESlEkApEzEdP~BtEfC^tGrClAjC~F}CZx@oA~@I~@UFh@yAt@_@Ok@iGlCmAeDgGeCoC[qDmH]mBhAwBk@xDrDjI~KvDzAvCrL{IdJmLzBs@fDb@h^}f@B}BoCyDb@cAtFmDhAaB@uAiBsMkPpDqEzC_GnK[pIwF|IiBvAqEpAeDFqE{@iIaDgKz@cBx@wA|Bi@~BQbEqA|DDpAxC|KnDvHvL~DbAlCfB}@nJkIbJaLfGFh^yf@@uBsCcEbAuAbHoFBqAqBaNiQ|D_DvB_GtJk@jDCzEoFpIeD~BkDz@}DCkLcEqDYqHdAcCjBu@|Ao@jHoAlEzCxMdEpIjCZvGnC|@jCvB{@xHqGpKaNtA[jCx@d@SrY_`@pCeEN_AI_AeCcDGq@tIwGPwBkBsMiFj@{KfDcCbCcGxKGtGY|@oEdHgDdCwCx@kEHsL}DaDc@wHbAqCfBqArCe@xGiAdD`CnLxEdKpC`@tGjCbAlCdASzJcIxJaM`C]fBn@b@QpZua@xBgDNiAO{@kCiD?w@bIgF`@sBaB_NYWqS|FsIjM]dCD~Do@~A_FfHiElCuH\\gMmEwBSaJpAgBzAeAxBo@lHmArDtBhKzErK|KpDfAjCn@FpJaHdLwNtA_@rCn@r@Wv]gf@RoBqCuDIaAzHgFn@gCkBgNeEj@eL|C_CdB{GbM]hIqEdHoDpCoDbAyD@kP}EcKjAwChDu@rDS~DeA|CAhApBdI`FvKdLpD`AnC`Bm@pJyHrJ{LdB[jD^~]if@PqByCaE@w@xHaFfAmBvAK`HqMzAU~@{AxBsAnHxBXd@[o@mIeB{C|CeBf@uG`MmBf@cBiN]s@oRtEsBlBuF~Ic@bBWrHgG~IqEhC{B^qEScK{DmC[_K|AoCxDs@dIiAhDxDdPlDlG`CXjGbCtAvC~K}HlK_NfC_@lBl@n@Ub^gg@@yAsC}EnHgFr@mABmAcBaMQa@cADoQfFiBnBaH~LLoAvGyKbCuB"
+    },
+    {
+      "id": "17144200339",
+      "name": "Baysiding",
+      "sport_type": "Ride",
+      "start_local": "2026-01-23T06:56:47",
+      "distance_km": 50.47,
+      "moving_time_s": 8771,
+      "elevation_gain_m": 175,
+      "description": "Spotted a wild Adam Dendrinos driving (allegedly) and TWIN DOLPHINS at Elwood Holly Li Anuraag Roy.",
+      "location": "Melbourne, Australia",
+      "polyline": "h`_fFwyysZqB`C_CvAuG~@cD_@uK}DqDCaHtAwAnAw@bBa@xBQzDaAxCGlA~CnM|DtHdCZhGhCnArCnDaBzG{FbKqMrAQ~Bl@j@W`^if@HqBwCmEXo@~GuEh@aAFyAcBcMcDPgJ|BaEtBkHdLc@|C?hEcEdHuEpD}D|@cD?yLgEqBUgKpAcBxAaAzBm@lHmAbEtCjM~CdHj@h@|BLpGhCd@d@ZjBd@HbD{A~DiDjL_OlB{@zBf@n@OtHaJnTqZrCvBZ|BhA[vR_XdAjAzCiBfK|SpD}B~B_@~AHjDlB~CXhBQpBeAhGsHzLkGb@Ep@dAp@o@lDqAtGO|@k@zTaBt@zA@jB^j@VlDRJ~AOfKgEd@e@p@}AhAGnCr@rGW|C`AbFqJxC_D~E{JpI}HvAk@nF{ER]C}@X]bTcMfMLnHoAbFD~@vB`DtCtCLhGpD|HrBrIuBdIkA|PiE`DY|IT^e@vAWfEr@rAM`NwFxKe@tLmDbHS|OpAdKnBj@`A`Cc@zBiBlD{EfIkIfF_HzQwN|K_L`PiN`IqDnJoAvLuEzHXfBr@r@MbK|AfCa@zO}OfAYlA}BnWyTeXrU}@jB}Ad@kOlO{B\\gFkAyH}@wE[_CPmLlEiJpAmHnDcRbPmJlJaRbO}U|X_C`BwB^o@eAoKsBaECgIaAcEHwDZwItCmLj@uLnFoBTyBm@yCPa@[iBBo@j@_KLiPjE}J`BcH~AsIeCyFkDmCG_DsC?w@r@?F{@u@HWz@k@aAmCKuDRkEbA{MKcS`Ls@z@M`BuF~EqA`@{DfEkDjCoEvJiDpDmEpIiDcAyHRiBu@eADgA~BiDj@wExCmBR]iDg@iACyAu@wAmU`BaKjAqH|EkDnDoBh@k@hBaEzGwBrB}@P{CMkBkEiAMyCcB_BK}Ct@qGnGq`@tz@uu@dpBeBbFcBrLsNzZu@vCcAdJrBgNvNk[n@aCn@_Hh@kBnXys@qT{UgUsXcAaC}HwJcFcJxAuAlDMbHtC\\b@^fBd@DnJaHlL{NfB]lCt@ZMzGoIxUa]AaBiCeDKm@Rg@vHaF\\{@AoBaBaL]QqHvAmHzBaCfByFvJ_@rB@|EQv@mG`JyDxBkEf@wBMaKuDeEc@{HdAwB~AsAfDW`FmAzD?lA|CvLjDnHvCf@lCtAiCgA}B[{@o@oCoGeDeP`AcCb@mFr@wClAaBnBcAzFw@tCBhL`EdCZ`Fc@fCkApCuCvCcFb@qC?{EfF_IsExIElGU~@qGhJeE~B|CwAlCsC"
+    },
+    {
+      "id": "18459129560",
+      "name": "Touring",
+      "sport_type": "Ride",
+      "start_local": "2026-05-11T08:47:38",
+      "distance_km": 46.1,
+      "moving_time_s": 7277,
+      "elevation_gain_m": 227,
+      "description": "Can’t really dream of better mornings than this. Stops at Project Zero Coffee and South Melb Bakery. First lap around the lake in the new bike was…incredible",
+      "location": "Melbourne, Australia",
+      "polyline": "lxgfFsr|sZaAZyAtA}MjHsAhAM~AeGhFmA^qD~DcCfBy@`AgE`JgC|B_FzJcD{@aIRaBo@wA?e@rAa@j@cEz@iErCaBJ_@sDe@kAE}Ak@iAqU|Ay@n@eIZsHpFeCdCqC|@e@~AsEvHwBhBkCLmHy@_LlDoG`FaC_@wSnc@eJ~Ss\\z|@_Vln@m@hBw@`Io@tBkMzXcAbDqAdLWfAMKAfA_G~f@dAvHaCzHGvRZxG[|@ApA]LC\\v@fEQzAaAr@qWbGcC~BqBhDWIcInE{VPuHl@_Ea@wNvBgBYcBkBsDcRqCe_@?u_@nAkXbEo\\f@aBRiCf@qAh@qHdAwGtCkWnDoFh@wBXwF?qG{GuDRwAEoDd@yFVaKr@e@x@wCpAuCiHaLI{Bo@s@cIkTcCqEoEBWScBbAm@QgA_Gi@kj@LhDM|@L?jKqEvGuBfFaChQcFjG]fHZpMQpD}@pBwBbDdAn@kBHhAb@v@lHzD|EzF~BtFZpAJfCt@fAfB`HLLz@i@VRn@jCfDlG`CTrGfC`@h@VzAh@RhDkBtE_E`LqNzA_@fCn@p@Qb[wa@lB}CHeAS_AkCyCCs@nI}F`@sA[eCeBkKuF~@_KzCeB|AaGnJm@dDDrDYpAgFvHuErCgDd@_EUmK}DaCS{H`AgAf@uA|Ay@tBm@jHiAtDnD|NdDjGrC`@zGfC`@b@d@pBlEyBpIcIpGwIhC_@fBl@r@Sd]oe@`@eA@oAuCsDKg@Zm@xH{E\\eA@m@q@qDuAH`AEJYs@wGaCJcM`DaDvByGdL[fCFjDW|@uEhHeEvCmCn@mE@qMsEcBO_Hx@mClAkBfDY`BQtEcAjCIdAvCvLjEdJ{HzByRtHj@q@~A[^o@nQmGxEaAfBJrFxBr@h@f@tBf@HrEkCzCkCtDaEdFoHnCm@dBj@n@Kj^sf@DuBoCoDDcA~HiFt@uAxAYpHoMb@wB|DsBfD}Cv@j@~HtOvOj[p@`@SABf@hAf@lE\\bASzByAdFqGrSiKdc@yDbc@oCnDu@nCuA|FeEzDsEhe@}}@lBk@hjAfMf@fAkA|OOrGrIyAvPgEvD[nEL_FMyCTaRtE{IlAqGlBmI_CyDeBeBuAyBBiC{Bw@}@[eA]QaF?gHpAkE]fFZfE_A_Dx@_P@uBfB}HvDgEnCi@j@B`Ac@p@yEbE}Aj@iCrCsErD{EjKeBdBg@@r@Q|AcBdFeKpDsClDwDlA]`GoF@kAN[~RoLbA]Jq@"
+    },
+    {
+      "id": "17323711748",
+      "name": "2XU Tri Ride",
+      "sport_type": "Ride",
+      "start_local": "2026-02-08T08:38:58",
+      "distance_km": 40.32,
+      "moving_time_s": 6080,
+      "elevation_gain_m": 228.4,
+      "description": "Quality session. Think my fastest 40k?",
+      "location": "Melbourne, Australia",
+      "polyline": "||qfFgp_tZAEBC^Iz@@pE^`PfBt@?`AOtA_AfNuNtBkBnCoB~h@od@tAw@fFwA~FwA~DkAnAUrUMxMxAt@AdAYlVkRlE{Cf@g@n@YhEy@xAe@~PwG|DoAtAo@^a@\\q@|@_DrBwIt@uAdCwCvEiG|OyQ|@_A|@o@fFiBjCsArQqNl@mAxLm`@LeA?e@MwA]eAu@qAiNgRqAu@mFaCu@k@iAyAkBuCmEkPaG_OuFwJs@aBMgADgBj@yFJm@b@}AnDkJbJ{WjBiEtCgFdJ_RJQN??LgBrCoHpOkErI{@xBuBdGc@zAoJdX[~A[hEGjBTzA^`AbC~DnC~EvFvN`EbO^|@r@fApBfCtBfAzDdBnA~@pGfJhDvEhAlB\\nALfBM|AcCfH}CtJgC`Hq@zBm@fAaCtB}G|EyErD_Br@mFjBeAt@{GbIcGlG}BxCaB`CoDtEm@rAuA|F_BnFc@v@a@\\yIxCgPjGmDt@y@d@w@p@aB`@yH`G{EjDuExDmD~Bi@RiA@aJmAkCW_IBgKPoVzGgAr@kK|IeB~AgDlC}]|ZkHtHoDhDe@Z{@Py@EsUqCmAKOIFGbDf@xBN|N`BhAFh@Gf@Qp@c@bAkAnM{MtGcGtDwCbQeO~IsHdFcEn@[lUeGpAIrTE`NzAn@Ir@W~CyB|F{EnQaNjAa@hE{@dNoFvG{BvBw@\\Sp@w@b@oAxByJh@gBf@{@tBaCrCwDfRoT~AcBbAg@pE{ArBeAdO_LnBkBp@aBnCkJJm@b@}AnDsKt@kCFkA?e@UyAi@kAg@u@sMkQq@e@k@YeEgBgAk@cAcAmAmBw@uAM_@}@eDeBcHo@oBkDuImAoCqCqEcB}Cm@aBMyAH}Al@_Gb@aBbIwTrEyMd@iAhBqDhBaEvJqRHGDLIX}CrFeE|IoEtIgBjEuIbWq@bBcChHKh@g@rGAr@Bf@RfAL\\xGdL`@x@z@vBdEdLfCpJ\\fAXn@vB~Cx@|@~Az@tEnBbA|@pM|Qb@r@\\x@VxABj@Aj@OpA]lA_DrI}F|QSh@i@|@g@h@yQ~MoB`AaCv@qBx@w@p@_OxPcL`Ow@|AiAdFgBhG_@p@g@`@qH`C}KjEcDhAcDt@e@PyAlAmBh@c@XeTdPgEtCi@RYD}@?sIkA}BQoKHyCA{CFeBZgFlAqM`EaMtKqPjNeFrEqJfImNtN_A|@i@\\{@Le@AoTeCwBK"
+    },
+    {
+      "id": "17535422038",
+      "name": "Dande",
+      "sport_type": "Ride",
+      "start_local": "2026-02-27T06:49:48",
+      "distance_km": 40.26,
+      "moving_time_s": 6767,
+      "elevation_gain_m": 196.8,
+      "description": "Finally got out there. I just discovered I did my triathalon on a flat tire 😭 separately, so tempted to get a new bike",
+      "location": "Melbourne, Australia",
+      "polyline": "ht`fF_{euZhC_Ad@o@VgAtD`@r@j@jC`@hAG^o@LiFjBaR`AaXj@wDVSu@`FgAG[gFyAkHsDb@u@r@mBp@sEaAq@wAv@gEu@gCBkDmBiAyDmAwBNqBfCeAp@wI|@cQaIyAGgB|@eB?_A`CuAW}An@a@vBm@FuHgGuHcCcM_IcCsCmDyGO}Ai@}ZH{GnGcV@kJ`DiWaA{Cw@aAQo@^oDK}CRaFGiB{@wBsBoCWmBIaBl@iGGwEiAmSoBoEIo@BiL[mMkCeLeE{TEiBvB}GX}BWyBwBsDKgAj@uEhAwEQaAh@uENaGj@iBd@yDlA}D?s@fAaB\\uAk@o@JsAIe@Lo@bAoAo@d@g@tALr@GtAb@X?RaBjDIbAc@r@sBw@{BuE_@iBIoAz@oIcAqDg@}C[gFTaHz@yIQoEk@sC{EcDaC]cBb@{@Iy@iDKiEnBwUIkBe@kBA{CMi@DsEXaBFoBE_ExAyC~@cKdFoMrAkEhIwSjDgE`a@lElA@vAo@bYg]d@l@pG_IrCeG|O}Y~HoNhAuCPTH|@|IxDvVld@`@zBpCdo@d@xBfBvDjA`@vL_AvA^nCpCnCjAv@FjCm@~C@pDbAfGh@@Zg@d@Cb@vHhPdGdLqCnAkCxB]x@wH`GmGlDsFbB}_@dIU^eBdA}FUOxAmDfAwFbD}MbGqlAviAaAbANdAOPaP`PgFhEcAQ_@RwPfPO`@X~@}@lEa@|DH|ArBbERxBMzAiAvCs@bD@nBxI|b@V~KAdLL~@dBpEhAnTBrEg@tGj@tDhBlCr@fCMfHTxD]vCfCdGQbEsChRMlDJ~C{EnP}@nEDhJr@rYxD`I~BjCjM`IjG`B|HfG|@Af@kB`B{@~ATjA_CtAF~BeA~@LzM~G~Af@|JsAjDgDbASzExAnBxAKdDr@tBa@bBMnBl@lAlEjAxBs@p@{@cA~@mBd@m@a@_CWq@_@W}Ap@sDu@cCDgDsBoAqDiA_B@{DzD{JlAuP_IkASaB|@}BD{@~BqAY_Bp@ONObBq@TgAiAyG_FkFyAyD{BqJ}GaFuIWuBOeHY}QFyBXvZPfE\\xAxElIvNxJbHhBbItGx@Kl@uBpBw@jAVj@aBZ[jB@dB}@jAJhPbIvJgAv@c@fCwClAKvFrBbAv@KbCt@~Co@vERr@d@b@fE|@tBq@fA}@|C[dArGF|FdASbAsEo@nEmAb\\_B`OI~DsCVsHu@}AhBeC~@"
+    }
+  ]
+}

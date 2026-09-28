@@ -1,12 +1,10 @@
 ---
-// One page per city that has hand-picked routes (src/data/city-routes.ts),
+// One page per city that has hand-picked runs (src/data/city-routes.ts),
 // e.g. /moving/new-york/. Linked from the city cards on the Moving page.
-// Routes are drawn in full, start and finish included.
-import Layout from "../../layouts/Layout.astro";
-import { cityActivity } from "../../data/activity-summary";
-import { cityRoutes, citySlug, overlayCities, type CityRoute } from "../../data/city-routes";
-import RouteGrid from "../../components/RouteGrid.astro";
-import RouteOverlay from "../../components/RouteOverlay.astro";
+// Rides live on /moving/<city>/cycle/. Routes are drawn in full, start and
+// finish included.
+import CityRoutesPage from "../../components/CityRoutesPage.astro";
+import { cityRoutes, citySlug, type CityRoute } from "../../data/city-routes";
 
 export function getStaticPaths() {
   return Object.entries(cityRoutes)
@@ -15,22 +13,6 @@ export function getStaticPaths() {
 }
 
 const { city, routes } = Astro.props as { city: string; routes: CityRoute[] };
-const country = cityActivity.find((c) => c.city === city)?.country ?? "";
 ---
 
-<Layout title={`${city} routes — Naman Chaudhry`} description={`Routes run, ridden and walked in ${city}.`}>
-  <section class="mx-auto max-w-6xl px-6 pt-8 sm:px-10">
-    <a href="/moving/" class="back-link font-sans text-xs uppercase tracking-[0.15em] text-[var(--color-muted-60)] hover:text-accent">← moving</a>
-    <div class="mt-8 flex flex-col items-center gap-1 text-center">
-      <h1 class="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-accent">{city}</h1>
-      <span class="font-sans text-xs text-[var(--color-muted-40)]">{country}</span>
-      <p class="mt-2 font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
-        {routes.length} {routes.length === 1 ? "route" : "routes"}
-      </p>
-    </div>
-  </section>
-
-  <section class="mx-auto max-w-6xl px-6 pt-8 pb-16 sm:px-10">
-    {overlayCities.has(city) && routes.length > 1 ? <RouteOverlay routes={routes} /> : <RouteGrid routes={routes} />}
-  </section>
-</Layout>
+<CityRoutesPage city={city} routes={routes} sport="run" />

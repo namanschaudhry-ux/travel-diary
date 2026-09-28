@@ -5,11 +5,12 @@
 //
 // Route geometry comes from Strava's summary polylines in strava-export.json
 // (Jun to Sep 2026), strava-runs-over-25km.json and strava-runs-20-to-25km.json
-// (all-time runs of 20 km and up),
-// decoded at build time. Routes are shown in full, start and finish included.
+// (all-time runs of 20 km and up) and strava-rides-over-40km.json (all-time
+// rides over 40 km), decoded at build time. Routes are shown in full, start and finish included.
 import stravaExport from "./strava-export.json";
 import longRuns from "./strava-runs-over-25km.json";
 import halfRuns from "./strava-runs-20-to-25km.json";
+import longRides from "./strava-rides-over-40km.json";
 
 type ExportActivity = {
   id: string;
@@ -52,6 +53,7 @@ export const raceIds = new Set([
   "8136671234", // Queenstown Half Mara, 19 Nov 2022
   "15008799672", // Gold Coast Half Marathon, 5 Jul 2025
   "9109465613", // Great Ocean Road Half, 21 May 2023
+  "17323711748", // 2XU Tri Ride (bike leg of the 2XU triathlon), 8 Feb 2026
 ]);
 
 // Cities whose page draws all routes on one shared map instead of a card each.
@@ -133,6 +135,18 @@ const featuredRoutes: Record<string, string[]> = {
   ],
 };
 
+// Rides, drawn on their own map per city (/moving/<city>/cycle/).
+const featuredRides: Record<string, string[]> = {
+  Melbourne: [
+    "18459129560", // Touring, 11 May 2026
+    "17631489969", // Lunch Ride, 7 Mar 2026
+    "17535422038", // Dande, 27 Feb 2026
+    "17323711748", // 2XU Tri Ride, 8 Feb 2026
+    "17232449361", // Alb Laps, 31 Jan 2026
+    "17144200339", // Baysiding, 23 Jan 2026
+  ],
+};
+
 // Google encoded polyline algorithm (precision 5), as used by Strava.
 function decodePolyline(encoded: string): [number, number][] {
   const points: [number, number][] = [];
@@ -162,24 +176,31 @@ const activities = [
   ...(stravaExport as { activities: ExportActivity[] }).activities,
   ...(longRuns as { activities: ExportActivity[] }).activities,
   ...(halfRuns as { activities: ExportActivity[] }).activities,
+  ...(longRides as { activities: ExportActivity[] }).activities,
 ];
 
-export const cityRoutes: Record<string, CityRoute[]> = Object.fromEntries(
-  Object.entries(featuredRoutes).map(([city, ids]) => [
-    city,
-    ids.flatMap((id) => {
-      const activity = activities.find((a) => a.id === id);
-      if (!activity?.polyline) return [];
-      return [{
-        id,
-        name: activity.name,
-        sport: activity.sport_type,
-        date: activity.start_local.slice(0, 10),
-        distanceKm: activity.distance_km,
-        elevationM: Math.round(activity.elevation_gain_m),
-        points: decodePolyline(activity.polyline),
-        race: raceIds.has(id),
-      }];
-    }).sort((a, b) => b.date.localeCompare(a.date)),
-  ]),
-);
+const buildRoutes = (featured: Record<string, string[]>): Record<string, CityRoute[]> =>
+  Object.fromEntries(
+    Object.entries(featured).map(([city, ids]) => [
+      city,
+      ids.flatMap((id) => {
+        const activity = activities.find((a) => a.id === id);
+        if (!activity?.polyline) return [];
+        return [{
+          id,
+          name: activity.name,
+          sport: activity.sport_type,
+          date: activity.start_local.slice(0, 10),
+          distanceKm: activity.distance_km,
+          elevationM: Math.round(activity.elevation_gain_m),
+          points: decodePolyline(activity.polyline),
+          race: raceIds.has(id),
+        }];
+      }).sort((a, b) => b.date.localeCompare(a.date)),
+    ]),
+  );
+
+// Runs (including trail runs) per city: /moving/<city>/
+export const cityRoutes = buildRoutes(featuredRoutes);
+// Rides per city: /moving/<city>/cycle/
+export const cityRideRoutes = buildRoutes(featuredRides);

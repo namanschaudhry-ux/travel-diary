@@ -1,0 +1,72 @@
+---
+// Body of a city route page. Used by /moving/<city>/ (runs) and
+// /moving/<city>/cycle/ (rides). When the city has both, a run / cycle
+// switch links between the two pages.
+import Layout from "../layouts/Layout.astro";
+import { cityActivity } from "../data/activity-summary";
+import { cityDays } from "../data/city-days";
+import { cityRoutes, cityRideRoutes, citySlug, overlayCities, type CityRoute } from "../data/city-routes";
+import RouteGrid from "./RouteGrid.astro";
+import RouteOverlay from "./RouteOverlay.astro";
+
+interface Props {
+  city: string;
+  routes: CityRoute[];
+  sport: "run" | "cycle";
+}
+
+const { city, routes, sport } = Astro.props;
+const country = cityActivity.find((c) => c.city === city)?.country ?? "";
+const slug = citySlug(city);
+const sports = [
+  { label: "run", href: `/moving/${slug}/`, has: (cityRoutes[city]?.length ?? 0) > 0 },
+  { label: "cycle", href: `/moving/${slug}/cycle/`, has: (cityRideRoutes[city]?.length ?? 0) > 0 },
+].filter((s) => s.has);
+const days = cityDays[city];
+const verb = sport === "cycle" ? "ridden" : "run";
+---
+
+<Layout title={`${city} ${sport === "cycle" ? "rides" : "routes"} — Naman Chaudhry`} description={`Routes ${verb} in ${city}.`}>
+  <section class="mx-auto max-w-6xl px-6 pt-8 sm:px-10">
+    <a href="/moving/" class="back-link font-sans text-xs uppercase tracking-[0.15em] text-[var(--color-muted-60)] hover:text-accent">← moving</a>
+    <div class="mt-8 flex flex-col items-center gap-1 text-center">
+      <h1 class="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-accent">{city}</h1>
+      <span class="font-sans text-xs text-[var(--color-muted-40)]">{country}</span>
+      {sports.length > 1 ? (
+        <nav class="sport-switch mt-4" aria-label="Sport">
+          {sports.map((s) => (
+            <a href={s.href} aria-current={s.label === sport ? "page" : undefined}>{s.label}</a>
+          ))}
+        </nav>
+      ) : null}
+      <p class="mt-2 font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
+        {days ? <>{days} days · </> : null}{routes.length} {routes.length === 1 ? "route" : "routes"}
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pt-8 pb-16 sm:px-10">
+    {overlayCities.has(city) && routes.length > 1 ? <RouteOverlay routes={routes} /> : <RouteGrid routes={routes} />}
+  </section>
+</Layout>
+
+<style>
+  /* Same look as the language toggle and the routes-view all / races filter. */
+  .sport-switch {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    font: 14px monospace;
+    letter-spacing: 0.06em;
+  }
+  .sport-switch a {
+    border-radius: 3px;
+    padding: 3px 7px;
+    color: var(--color-paper);
+    text-decoration: none;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+  .sport-switch a:hover { color: var(--color-accent); }
+  .sport-switch a[aria-current="page"] { background: var(--color-accent); color: var(--color-ink); }
+  .sport-switch a:focus-visible { outline: 1px solid var(--color-accent); outline-offset: 2px; }
+</style>
