@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { cityActivity, activityTotals as totals } from "../data/activity-summary";
-import { cityRoutes, cityRideRoutes, citySlug } from "../data/city-routes";
+import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug } from "../data/city-routes";
 import RouteGrid from "../components/RouteGrid.astro";
 import novablast5WinterSea from "../assets/shoes/novablast-5-winter-sea.png";
 import novablast5Tokyo from "../assets/shoes/novablast-5-tokyo.png";
@@ -46,6 +46,7 @@ const allRides = Object.entries(cityRideRoutes)
 const routeLinks = (city: string) => ({
   run: cityRoutes[city]?.length ? { href: `/moving/${citySlug(city)}/`, count: cityRoutes[city].length } : null,
   cycle: cityRideRoutes[city]?.length ? { href: `/moving/${citySlug(city)}/cycle/`, count: cityRideRoutes[city].length } : null,
+  swim: citySwimRoutes[city]?.length ? { href: `/moving/${citySlug(city)}/swim/`, count: citySwimRoutes[city].length } : null,
 });
 
 const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
@@ -120,7 +121,7 @@ const filters = ["run", "cycle", "swim"];
           // Cities with routes link to their own map page; the rest stay plain cards.
           // The script below swaps the link when the sport filter changes.
           const links = routeLinks(c.city);
-          const CityCard = links.run || links.cycle ? "a" : "div";
+          const CityCard = links.run || links.cycle || links.swim ? "a" : "div";
           return (
           <CityCard
             class="city-card rounded-[12px] border border-[var(--color-card-border)] p-6 text-center"
@@ -128,6 +129,7 @@ const filters = ["run", "cycle", "swim"];
             href={links.run?.href}
             data-run-href={links.run?.href}
             data-cycle-href={links.cycle?.href}
+            data-swim-href={links.swim?.href}
             tabindex={links.run ? undefined : "0"}
             data-sports={typeRows(c)
               .map((r) => r.label)
@@ -147,7 +149,7 @@ const filters = ["run", "cycle", "swim"];
                 </div>
               ))}
             </div>
-            {(["run", "cycle"] as const).map((sport) => {
+            {(["run", "cycle", "swim"] as const).map((sport) => {
               const link = links[sport];
               return link ? (
                 <p class="route-hint mt-4 font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]" data-route-hint={sport} hidden={sport !== "run"}>

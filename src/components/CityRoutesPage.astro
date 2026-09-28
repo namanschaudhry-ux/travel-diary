@@ -1,18 +1,18 @@
 ---
 // Body of a city route page. Used by /moving/<city>/ (runs) and
-// /moving/<city>/cycle/ (rides). When the city has both, a run / cycle
-// switch links between the two pages.
+// /moving/<city>/cycle/ (rides) and /moving/<city>/swim/ (open water swims).
+// When the city has more than one, a run / cycle / swim switch links them.
 import Layout from "../layouts/Layout.astro";
 import { cityActivity } from "../data/activity-summary";
 import { cityDays } from "../data/city-days";
-import { cityRoutes, cityRideRoutes, citySlug, overlayCities, type CityRoute } from "../data/city-routes";
+import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug, overlayCities, type CityRoute } from "../data/city-routes";
 import RouteGrid from "./RouteGrid.astro";
 import RouteOverlay from "./RouteOverlay.astro";
 
 interface Props {
   city: string;
   routes: CityRoute[];
-  sport: "run" | "cycle";
+  sport: "run" | "cycle" | "swim";
 }
 
 const { city, routes, sport } = Astro.props;
@@ -21,12 +21,14 @@ const slug = citySlug(city);
 const sports = [
   { label: "run", href: `/moving/${slug}/`, has: (cityRoutes[city]?.length ?? 0) > 0 },
   { label: "cycle", href: `/moving/${slug}/cycle/`, has: (cityRideRoutes[city]?.length ?? 0) > 0 },
+  { label: "swim", href: `/moving/${slug}/swim/`, has: (citySwimRoutes[city]?.length ?? 0) > 0 },
 ].filter((s) => s.has);
 const days = cityDays[city];
-const verb = sport === "cycle" ? "ridden" : "run";
+const verb = { run: "run", cycle: "ridden", swim: "swum" }[sport];
+const noun = { run: "routes", cycle: "rides", swim: "swims" }[sport];
 ---
 
-<Layout title={`${city} ${sport === "cycle" ? "rides" : "routes"} — Naman Chaudhry`} description={`Routes ${verb} in ${city}.`}>
+<Layout title={`${city} ${noun} — Naman Chaudhry`} description={`Routes ${verb} in ${city}.`}>
   <section class="mx-auto max-w-6xl px-6 pt-8 sm:px-10">
     <a href="/moving/" class="back-link font-sans text-xs uppercase tracking-[0.15em] text-[var(--color-muted-60)] hover:text-accent">← moving</a>
     <div class="mt-8 flex flex-col items-center gap-1 text-center">
@@ -46,7 +48,7 @@ const verb = sport === "cycle" ? "ridden" : "run";
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pt-8 pb-16 sm:px-10">
-    {overlayCities.has(city) && routes.length > 1 ? <RouteOverlay routes={routes} /> : <RouteGrid routes={routes} />}
+    {overlayCities.has(city) && routes.length > 1 ? <RouteOverlay routes={routes} frameRadiusKm={sport === "swim" ? 2 : undefined} /> : <RouteGrid routes={routes} />}
   </section>
 </Layout>
 

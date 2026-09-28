@@ -4,28 +4,30 @@
 // comes to the front while the others fade, and its name and stats fade in
 // using the same captions as the route cards. Fixed zoom, full routes.
 import "leaflet/dist/leaflet.css";
-import type { CityRoute } from "../data/city-routes";
+import { routeStats, type CityRoute } from "../data/city-routes";
 
 interface Props {
   routes: CityRoute[];
+  // Frame the opening view on the points within this many km of the median
+  // point, instead of the middle 90% of all points. For routes that bunch up
+  // in one small area, like swims off one beach.
+  frameRadiusKm?: number;
 }
 
-const { routes } = Astro.props;
-const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
+const { routes, frameRadiusKm } = Astro.props;
 const routeDate = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
-const sportLabel = (sport: string) => (sport === "TrailRun" ? "trail run" : sport.toLowerCase());
 const details = routes.map((route) => ({
   id: route.id,
   name: route.name,
   date: routeDate(route.date),
-  middle: `${sportLabel(route.sport)} · ${fmt(route.distanceKm)} km`,
-  climb: `${route.elevationM} m up`,
+  middle: routeStats(route).middle,
+  climb: routeStats(route).right,
   points: route.points,
 }));
 ---
 
-<figure class="overlay-card" data-overlay-routes={JSON.stringify(details)}>
+<figure class="overlay-card" data-overlay-routes={JSON.stringify(details)} data-frame-radius={frameRadiusKm}>
   <div class="overlay-map" aria-label={`Map of ${routes.length} routes drawn together`}></div>
   <figcaption class="route-caption route-caption--top" data-caption-name></figcaption>
   <figcaption class="route-caption route-caption--bottom">
@@ -188,7 +190,7 @@ const details = routes.map((route) => ({
     });
 
     // Framing is based on where most of the running happens: the middle 90%
-    // of all route points. A far-off route (a race out of town, say) can run
+    // of all route points, or those near the median point (data-frame-radius). A far-off route (a race out of town, say) can run
     // off the edge; choosing it slides the map across to it.
     const allPoints = routes.flatMap((route) => route.points);
     const pct = (values: number[], q: number) => {
@@ -197,7 +199,12 @@ const details = routes.map((route) => ({
     };
     const lats = allPoints.map((pt) => pt[0]);
     const lngs = allPoints.map((pt) => pt[1]);
-    const core = L.latLngBounds([pct(lats, 0.05), pct(lngs, 0.05)], [pct(lats, 0.95), pct(lngs, 0.95)]);
+    const radiusKm = Number(card.dataset.frameRadius ?? 0);
+    const median = L.latLng(pct(lats, 0.5), pct(lngs, 0.5));
+    const near = allPoints.filter((pt) => median.distanceTo(pt) <= radiusKm * 1000);
+    const core = radiusKm > 0 && near.length > 1
+      ? L.latLngBounds(near)
+      : L.latLngBounds([pct(lats, 0.05), pct(lngs, 0.05)], [pct(lats, 0.95), pct(lngs, 0.95)]);
     const frameBounds = core.isValid() && core.getNorth() > core.getSouth() ? core : bounds;
 
     // The core area takes up about half the map's width, so the surroundings

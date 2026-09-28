@@ -4,7 +4,7 @@
 // on hover or focus it lifts and shows the route details, like the photo
 // cards on the trip pages. Routes are drawn in full, start and finish included.
 import "leaflet/dist/leaflet.css";
-import type { CityRoute } from "../data/city-routes";
+import { routeStats, type CityRoute } from "../data/city-routes";
 
 interface Props {
   routes: (CityRoute & { city?: string })[];
@@ -26,8 +26,8 @@ const routeDate = (iso: string) =>
       <figcaption class="route-caption route-caption--bottom">
         <div class="route-caption-row">
           <span class="text-left">{routeDate(route.date)}</span>
-          <span class="text-center">{route.sport === "TrailRun" ? "trail run" : route.sport.toLowerCase()} · {fmt(route.distanceKm)} km</span>
-          <span class="text-right">{route.elevationM} m up</span>
+          <span class="text-center">{routeStats(route).middle}</span>
+          <span class="text-right">{routeStats(route).right}</span>
         </div>
       </figcaption>
       <span class="viewfinder-corner viewfinder-corner--tl" aria-hidden="true"></span>

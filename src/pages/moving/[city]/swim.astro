@@ -1,0 +1,17 @@
+---
+// One page per city that has open water swims (citySwimRoutes in
+// src/data/city-routes.ts), e.g. /moving/melbourne/swim/. Linked from the
+// city cards on the Moving page when the swim filter is on.
+import CityRoutesPage from "../../../components/CityRoutesPage.astro";
+import { citySwimRoutes, citySlug, type CityRoute } from "../../../data/city-routes";
+
+export function getStaticPaths() {
+  return Object.entries(citySwimRoutes)
+    .filter(([, routes]) => routes.length > 0)
+    .map(([city, routes]) => ({ params: { city: citySlug(city) }, props: { city, routes } }));
+}
+
+const { city, routes } = Astro.props as { city: string; routes: CityRoute[] };
+---
+
+<CityRoutesPage city={city} routes={routes} sport="swim" />

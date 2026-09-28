@@ -6,11 +6,13 @@
 // Route geometry comes from Strava's summary polylines in strava-export.json
 // (Jun to Sep 2026), strava-runs-over-25km.json and strava-runs-20-to-25km.json
 // (all-time runs of 20 km and up) and strava-rides-over-40km.json (all-time
-// rides over 40 km), decoded at build time. Routes are shown in full, start and finish included.
+// rides over 40 km) and strava-swims-melbourne.json (open water swims), decoded
+// at build time. Routes are shown in full, start and finish included.
 import stravaExport from "./strava-export.json";
 import longRuns from "./strava-runs-over-25km.json";
 import halfRuns from "./strava-runs-20-to-25km.json";
 import longRides from "./strava-rides-over-40km.json";
+import swims from "./strava-swims-melbourne.json";
 
 type ExportActivity = {
   id: string;
@@ -30,6 +32,7 @@ export type CityRoute = {
   date: string; // local start date, YYYY-MM-DD
   distanceKm: number;
   elevationM: number;
+  movingTimeS: number;
   points: [number, number][]; // [lat, lng]
   race: boolean;
 };
@@ -54,6 +57,10 @@ export const raceIds = new Set([
   "15008799672", // Gold Coast Half Marathon, 5 Jul 2025
   "9109465613", // Great Ocean Road Half, 21 May 2023
   "17323711748", // 2XU Tri Ride (bike leg of the 2XU triathlon), 8 Feb 2026
+  "17323709695", // 2XU Tri Swim, 8 Feb 2026
+  "13763998629", // 2XU Tri Swim, 2 Mar 2025
+  "11024648086", // Tri Swim, 24 Mar 2024
+  "10877357606", // 2XU Tri Swim, 3 Mar 2024
 ]);
 
 // Cities whose page draws all routes on one shared map instead of a card each.
@@ -147,6 +154,47 @@ const featuredRides: Record<string, string[]> = {
   ],
 };
 
+// Open water swims, drawn on their own map per city (/moving/<city>/swim/).
+// Every GPS swim of 200 m or more in Port Phillip Bay; see the filter note in
+// strava-swims-melbourne.json for what was left out.
+const featuredSwims: Record<string, string[]> = {
+  Melbourne: [
+    "18459392689",
+    "18339132473",
+    "17726267274",
+    "17668592830",
+    "17323709695",
+    "16960667027",
+    "14161150809",
+    "13986453631",
+    "13763998629",
+    "13726718340",
+    "13691286513",
+    "13602721454",
+    "13553512754",
+    "13542151275",
+    "13322129152",
+    "12721661462",
+    "11242333662",
+    "11190661706",
+    "11059655413",
+    "11024648086",
+    "10988531906",
+    "10968967930",
+    "10954087609",
+    "10939436691",
+    "10907977401",
+    "10890711535",
+    "10877357606",
+    "10865955782",
+    "10843078121",
+    "10818562063",
+    "10784498669",
+    "10770953405",
+    "10705515262",
+  ],
+};
+
 // Google encoded polyline algorithm (precision 5), as used by Strava.
 function decodePolyline(encoded: string): [number, number][] {
   const points: [number, number][] = [];
@@ -177,9 +225,15 @@ const activities = [
   ...(longRuns as { activities: ExportActivity[] }).activities,
   ...(halfRuns as { activities: ExportActivity[] }).activities,
   ...(longRides as { activities: ExportActivity[] }).activities,
+  ...(swims as { activities: ExportActivity[] }).activities,
 ];
 
-const buildRoutes = (featured: Record<string, string[]>): Record<string, CityRoute[]> =>
+const shortDate = (iso: string) =>
+  new Date(`${iso}T12:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "2-digit" });
+
+// With datedNames, names used more than once in a city ("Morning Swim") get
+// their date added so the names under the shared map can be told apart.
+const buildRoutes = (featured: Record<string, string[]>, datedNames = false): Record<string, CityRoute[]> =>
   Object.fromEntries(
     Object.entries(featured).map(([city, ids]) => [
       city,
@@ -193,10 +247,15 @@ const buildRoutes = (featured: Record<string, string[]>): Record<string, CityRou
           date: activity.start_local.slice(0, 10),
           distanceKm: activity.distance_km,
           elevationM: Math.round(activity.elevation_gain_m),
+          movingTimeS: activity.moving_time_s,
           points: decodePolyline(activity.polyline),
           race: raceIds.has(id),
         }];
-      }).sort((a, b) => b.date.localeCompare(a.date)),
+      }).sort((a, b) => b.date.localeCompare(a.date))
+        .map((route, _, all) =>
+          datedNames && all.filter((r) => r.name === route.name).length > 1
+            ? { ...route, name: `${route.name}, ${shortDate(route.date)}` }
+            : route),
     ]),
   );
 
@@ -204,3 +263,18 @@ const buildRoutes = (featured: Record<string, string[]>): Record<string, CityRou
 export const cityRoutes = buildRoutes(featuredRoutes);
 // Rides per city: /moving/<city>/cycle/
 export const cityRideRoutes = buildRoutes(featuredRides);
+// Open water swims per city: /moving/<city>/swim/
+export const citySwimRoutes = buildRoutes(featuredSwims, true);
+
+// Caption helpers shared by the route cards and the shared map.
+export const routeStats = (route: CityRoute) => {
+  const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 });
+  if (route.sport === "Swim") {
+    return {
+      middle: `swim · ${Math.round(route.distanceKm * 1000).toLocaleString("en-US")} m`,
+      right: `${Math.round(route.movingTimeS / 60)} min`,
+    };
+  }
+  const label = route.sport === "TrailRun" ? "trail run" : route.sport.toLowerCase();
+  return { middle: `${label} · ${fmt(route.distanceKm)} km`, right: `${route.elevationM} m up` };
+};
