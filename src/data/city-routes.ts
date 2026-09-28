@@ -3,9 +3,11 @@
 // export stays off the map. Keys must match the city names used on the city
 // cards (see cityGroups in strava-since-2023.json).
 //
-// Route geometry comes from Strava's summary polyline in strava-export.json,
+// Route geometry comes from Strava's summary polylines in strava-export.json
+// (Jun to Sep 2026) and strava-runs-over-25km.json (all-time runs over 25 km),
 // decoded at build time. Routes are shown in full, start and finish included.
 import stravaExport from "./strava-export.json";
+import longRuns from "./strava-runs-over-25km.json";
 
 type ExportActivity = {
   id: string;
@@ -33,7 +35,15 @@ export const citySlug = (city: string) =>
   city.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 const featuredRoutes: Record<string, string[]> = {
-  "New York": ["19963757617"], // Fantastico, Brooklyn, 30 Aug 2026
+  // Shown newest first, in this order.
+  "New York": [
+    "19963757617", // Fantastico, Brooklyn, 30 Aug 2026
+    "12816714577", // NYC Marathon, 3 Nov 2024
+    "12351955664", // Finishing the Euro / NYC trip in style, 7 Sep 2024
+    "9688235413", // Bay Ridge Exploring, 20 Aug 2023
+    "9640935305", // Brooklyn Touring, 13 Aug 2023
+    "9595333400", // Lap of a large 🍎, 6 Aug 2023
+  ],
 };
 
 // Google encoded polyline algorithm (precision 5), as used by Strava.
@@ -61,7 +71,10 @@ function decodePolyline(encoded: string): [number, number][] {
   return points;
 }
 
-const activities = (stravaExport as { activities: ExportActivity[] }).activities;
+const activities = [
+  ...(stravaExport as { activities: ExportActivity[] }).activities,
+  ...(longRuns as { activities: ExportActivity[] }).activities,
+];
 
 export const cityRoutes: Record<string, CityRoute[]> = Object.fromEntries(
   Object.entries(featuredRoutes).map(([city, ids]) => [
