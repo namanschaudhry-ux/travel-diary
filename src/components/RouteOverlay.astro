@@ -101,6 +101,7 @@ const details = routes.map((route) => ({
     const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>(".overlay-names [data-route-id]"));
     let active: (typeof drawn)[number] | null = null;
     let pinned = false; // set by a tap or click, so touch screens keep the highlight
+    let panned = false; // the map slid over to show a far-off chosen route
 
     function highlight(item: (typeof drawn)[number] | null) {
       if (active === item) return;
@@ -135,6 +136,14 @@ const details = routes.map((route) => ({
     function select(item: (typeof drawn)[number] | null, focus = false) {
       pinned = Boolean(item);
       highlight(item);
+      const animate = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (item && !map.getBounds().contains(item.line.getBounds())) {
+        map.panTo(item.line.getBounds().getCenter(), { animate });
+        panned = true;
+      } else if (!item && panned) {
+        map.panTo(frameBounds.getCenter(), { animate });
+        panned = false;
+      }
       buttons.forEach((b, index) => {
         const chosen = b.dataset.routeId === item?.route.id;
         b.setAttribute("aria-checked", String(chosen));
@@ -178,18 +187,31 @@ const details = routes.map((route) => ({
       });
     });
 
-    // Framing: all routes together take up about half the map's width, so the
-    // surrounding area shows, unless that would overflow the height.
+    // Framing is based on where most of the running happens: the middle 90%
+    // of all route points. A far-off route (a race out of town, say) can run
+    // off the edge; choosing it slides the map across to it.
+    const allPoints = routes.flatMap((route) => route.points);
+    const pct = (values: number[], q: number) => {
+      const sorted = [...values].sort((a, b) => a - b);
+      return sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(q * (sorted.length - 1))))];
+    };
+    const lats = allPoints.map((pt) => pt[0]);
+    const lngs = allPoints.map((pt) => pt[1]);
+    const core = L.latLngBounds([pct(lats, 0.05), pct(lngs, 0.05)], [pct(lats, 0.95), pct(lngs, 0.95)]);
+    const frameBounds = core.isValid() && core.getNorth() > core.getSouth() ? core : bounds;
+
+    // The core area takes up about half the map's width, so the surroundings
+    // show, unless that would overflow the height.
     const SHARE = 0.5;
     const frame = () => {
-      if (!bounds.isValid()) return;
-      const lngSpan = Math.max(bounds.getEast() - bounds.getWest(), 0.001);
+      if (!frameBounds.isValid()) return;
+      const lngSpan = Math.max(frameBounds.getEast() - frameBounds.getWest(), 0.001);
       const byWidth = Math.log2((SHARE * target.clientWidth * 360) / (256 * lngSpan));
       map.setMinZoom(0);
       map.setMaxZoom(18);
-      const fitsHeight = map.getBoundsZoom(bounds.pad(0.08), false);
+      const fitsHeight = map.getBoundsZoom(frameBounds.pad(0.08), false);
       const zoom = Math.min(byWidth, fitsHeight);
-      map.setView(bounds.getCenter(), zoom, { animate: false });
+      map.setView(frameBounds.getCenter(), zoom, { animate: false });
       map.setMinZoom(zoom);
       map.setMaxZoom(zoom);
     };
