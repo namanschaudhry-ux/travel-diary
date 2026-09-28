@@ -37,7 +37,7 @@ export const citySlug = (city: string) =>
   city.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 // Cities whose page draws all routes on one shared map instead of a card each.
-export const overlayCities = new Set(["San Francisco"]);
+export const overlayCities = new Set(["San Francisco", "New York"]);
 
 const featuredRoutes: Record<string, string[]> = {
   // Each city page lists its routes newest first (sorted in code below).
