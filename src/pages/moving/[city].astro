@@ -4,8 +4,9 @@
 // Routes are drawn in full, start and finish included.
 import Layout from "../../layouts/Layout.astro";
 import { cityActivity } from "../../data/activity-summary";
-import { cityRoutes, citySlug, type CityRoute } from "../../data/city-routes";
+import { cityRoutes, citySlug, overlayCities, type CityRoute } from "../../data/city-routes";
 import RouteGrid from "../../components/RouteGrid.astro";
+import RouteOverlay from "../../components/RouteOverlay.astro";
 
 export function getStaticPaths() {
   return Object.entries(cityRoutes)
@@ -30,6 +31,6 @@ const country = cityActivity.find((c) => c.city === city)?.country ?? "";
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pt-8 pb-16 sm:px-10">
-    <RouteGrid routes={routes} />
+    {overlayCities.has(city) && routes.length > 1 ? <RouteOverlay routes={routes} /> : <RouteGrid routes={routes} />}
   </section>
 </Layout>
