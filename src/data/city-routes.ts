@@ -28,6 +28,10 @@ export type CityRoute = {
   points: [number, number][]; // [lat, lng]
 };
 
+// URL slug for a city page, e.g. "New York" -> "new-york" (/moving/new-york/).
+export const citySlug = (city: string) =>
+  city.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
 const featuredRoutes: Record<string, string[]> = {
   "New York": ["19963757617"], // Fantastico, Brooklyn, 30 Aug 2026
 };
