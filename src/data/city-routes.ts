@@ -61,6 +61,15 @@ const featuredRoutes: Record<string, string[]> = {
   "San Francisco": [
     "9727339221", // Golden Gate Park and more, 26 Aug 2023
   ],
+  "South Island": [
+    "15326054835", // Kaikoūra, 3 Aug 2025
+  ],
+  Munich: [
+    "12170428720", // Into Munich, 17 Aug 2024
+  ],
+  "Lake Forest": [
+    "9551677340", // Laguna Woods, 30 Jul 2023
+  ],
 };
 
 // Google encoded polyline algorithm (precision 5), as used by Strava.
