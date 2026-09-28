@@ -165,13 +165,20 @@ const filters = ["run", "cycle", "swim"];
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="routes" data-sport-section="run" hidden>
-    {/* All routes or races only. Works like the language toggle: click, or
-        focus the row and use the arrow keys. */}
-    <div class="route-filter" role="radiogroup" aria-label="Show routes">
-      <button type="button" role="radio" aria-checked="true" tabindex="0" data-route-filter="all">all</button>
-      <button type="button" role="radio" aria-checked="false" tabindex="-1" data-route-filter="races">races</button>
+    {/* Two filters that combine: distance, and all routes or races only. Each
+        works like the language toggle: click, or focus the row and use the arrow keys. */}
+    <div class="route-filter" role="radiogroup" aria-label="Filter routes by distance" data-filter-group="distance">
+      <button type="button" role="radio" aria-checked="true" tabindex="0" data-filter-value="all">all</button>
+      <button type="button" role="radio" aria-checked="false" tabindex="-1" data-filter-value="marathon">marathons</button>
+      <button type="button" role="radio" aria-checked="false" tabindex="-1" data-filter-value="30">30k+</button>
+      <button type="button" role="radio" aria-checked="false" tabindex="-1" data-filter-value="25">25k+</button>
+      <button type="button" role="radio" aria-checked="false" tabindex="-1" data-filter-value="20">20k+</button>
     </div>
-    <p id="route-count" class="mb-6 text-center font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]" data-all={allRoutes.length} data-races={allRoutes.filter((r) => r.race).length}>
+    <div class="route-filter" role="radiogroup" aria-label="Show all routes or races only" data-filter-group="type">
+      <button type="button" role="radio" aria-checked="true" tabindex="0" data-filter-value="all">all</button>
+      <button type="button" role="radio" aria-checked="false" tabindex="-1" data-filter-value="races">races</button>
+    </div>
+    <p id="route-count" class="mb-6 text-center font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
       {allRoutes.length} routes
     </p>
     <RouteGrid routes={allRoutes} showCity />
@@ -521,37 +528,58 @@ const filters = ["run", "cycle", "swim"];
 <style>
   .route-hint-action { color: var(--color-accent); }
   a.city-card { color: inherit; text-decoration: none; }
+  a.city-card:not([href]) { cursor: default; }
 </style>
 
 <script>
-  // Routes view filter: all routes or races only.
-  const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-route-filter]"));
+  // Routes view filters. Distance (all, marathons, 30k+, 25k+, 20k+) and type
+  // (all or races only) combine. Distances are compared as shown on the cards,
+  // to one decimal place, so a 19.98 km run counts as 20k+.
+  const MARATHON_KM = 42;
+  const filters: Record<string, string> = { distance: "all", type: "all" };
   const routeCount = document.getElementById("route-count");
-  const setRouteFilter = (button: HTMLButtonElement, focus = false) => {
-    const racesOnly = button.dataset.routeFilter === "races";
-    filterButtons.forEach((b) => {
-      const chosen = b === button;
-      b.setAttribute("aria-checked", String(chosen));
-      b.tabIndex = chosen ? 0 : -1;
-    });
-    if (focus) button.focus();
-    document.querySelectorAll<HTMLElement>('[data-view-section="routes"][data-sport-section="run"] .route-card').forEach((card) => {
-      card.hidden = racesOnly && card.dataset.race !== "true";
+  const routeCards = Array.from(document.querySelectorAll<HTMLElement>('[data-view-section="routes"][data-sport-section="run"] .route-card'));
+
+  const applyRouteFilters = () => {
+    let shown = 0;
+    routeCards.forEach((card) => {
+      const km = Math.round(Number(card.dataset.km ?? 0) * 10) / 10;
+      const minKm = filters.distance === "all" ? 0 : filters.distance === "marathon" ? MARATHON_KM : Number(filters.distance);
+      const visible = km >= minKm && (filters.type !== "races" || card.dataset.race === "true");
+      card.hidden = !visible;
+      if (visible) shown += 1;
     });
     if (routeCount) {
-      const n = Number(racesOnly ? routeCount.dataset.races : routeCount.dataset.all);
-      routeCount.textContent = racesOnly ? `${n} ${n === 1 ? "race" : "races"}` : `${n} routes`;
+      const noun = filters.type === "races" ? (shown === 1 ? "race" : "races") : (shown === 1 ? "route" : "routes");
+      routeCount.textContent = shown === 0 ? `No ${filters.type === "races" ? "races" : "routes"}` : `${shown} ${noun}`;
     }
+    // Maps are built lazily; let any newly shown cards frame themselves.
+    window.dispatchEvent(new Event("resize"));
   };
-  filterButtons.forEach((button, index) => {
-    button.addEventListener("click", () => setRouteFilter(button));
-    button.addEventListener("keydown", (event) => {
-      let next = -1;
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % filterButtons.length;
-      else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + filterButtons.length) % filterButtons.length;
-      else return;
-      event.preventDefault();
-      setRouteFilter(filterButtons[next], true);
+
+  document.querySelectorAll<HTMLElement>("[data-filter-group]").forEach((group) => {
+    const name = group.dataset.filterGroup ?? "";
+    const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>("[data-filter-value]"));
+    const choose = (button: HTMLButtonElement, focus = false) => {
+      buttons.forEach((b) => {
+        const chosen = b === button;
+        b.setAttribute("aria-checked", String(chosen));
+        b.tabIndex = chosen ? 0 : -1;
+      });
+      if (focus) button.focus();
+      filters[name] = button.dataset.filterValue ?? "all";
+      applyRouteFilters();
+    };
+    buttons.forEach((button, index) => {
+      button.addEventListener("click", () => choose(button));
+      button.addEventListener("keydown", (event) => {
+        let next = -1;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % buttons.length;
+        else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + buttons.length) % buttons.length;
+        else return;
+        event.preventDefault();
+        choose(buttons[next], true);
+      });
     });
   });
 </script>
@@ -559,6 +587,7 @@ const filters = ["run", "cycle", "swim"];
 <style>
   .route-filter {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 4px;
     margin-bottom: 14px;

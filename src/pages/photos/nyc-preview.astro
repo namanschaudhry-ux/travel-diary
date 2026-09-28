@@ -1,0 +1,57 @@
+---
+// NYC preview: a short grid-mosaic film made from the New York gallery photos.
+// Video and poster live in public/videos/.
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="NYC Preview — Naman" description="A short film made from photos of New York City, summer ’26.">
+  <section class="mx-auto max-w-6xl px-6 pt-8 pb-20 sm:px-10">
+    <div class="mt-8 flex flex-col items-center gap-1 text-center">
+      <h1 class="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-accent">NYC Preview</h1>
+      <span class="font-sans text-xs text-[var(--color-muted-40)]">New York City · summer ’26</span>
+    </div>
+    <figure class="preview-frame mx-auto mt-10">
+      <video
+        class="preview-video"
+        src="/videos/nyc-preview.mp4"
+        poster="/videos/nyc-preview.jpg"
+        width="1080"
+        height="1350"
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label="A 20-second film of New York City photos cut together in a three by three grid."
+      ></video>
+    </figure>
+  </section>
+</Layout>
+
+<style>
+  .preview-frame {
+    width: min(100%, 540px, calc((100svh - 220px) * 0.8));
+  }
+  .preview-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    border-radius: 12px;
+    background: #000;
+  }
+</style>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>(".preview-video");
+  if (video) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      video.controls = true;
+    } else {
+      video.autoplay = true;
+      video.play().catch(() => { video.controls = true; });
+      // Click or tap to pause and resume.
+      video.addEventListener("click", () => (video.paused ? video.play() : video.pause()));
+    }
+  }
+</script>

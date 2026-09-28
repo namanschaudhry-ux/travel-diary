@@ -19,7 +19,7 @@ const routeDate = (iso: string) =>
 
 <div class:list={["route-grid", { "route-grid--single": routes.length === 1 }]}>
   {routes.map((route) => (
-    <figure class="route-card" tabindex="0" data-race={route.race ? "true" : "false"} aria-label={`${route.name}, ${showCity && route.city ? `${route.city}, ` : ""}${route.sport.toLowerCase()}, ${routeDate(route.date)}, ${fmt(route.distanceKm)} km`}>
+    <figure class="route-card" tabindex="0" data-race={route.race ? "true" : "false"} data-km={route.distanceKm} aria-label={`${route.name}, ${showCity && route.city ? `${route.city}, ` : ""}${route.sport.toLowerCase()}, ${routeDate(route.date)}, ${fmt(route.distanceKm)} km`}>
       <div class="route-map" data-route={JSON.stringify(route.points)}></div>
       {/* Details appear on hover or focus, like the photo cards on the trip pages. */}
       <figcaption class="route-caption route-caption--top">{route.name}{showCity && route.city ? ` · ${route.city}` : ""}</figcaption>

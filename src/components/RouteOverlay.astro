@@ -1,6 +1,6 @@
 ---
 // One map with several routes drawn on top of each other. Hovering (or
-// tapping, or choosing a name in the row below) a route lifts it: it thickens, glows and
+// tapping, or choosing a name in the row below) a route lifts it: it thickens and
 // comes to the front while the others fade, and its name and stats fade in
 // using the same captions as the route cards. Fixed zoom, full routes.
 import "leaflet/dist/leaflet.css";
@@ -249,11 +249,8 @@ const details = routes.map((route) => ({
     z-index: 0;
     background: var(--color-ink-soft);
   }
-  /* The highlighted route lifts off the map with a soft glow. */
+  /* The highlighted route thickens; no shadow or glow. */
   .overlay-map :global(.overlay-line) { transition: stroke-opacity 200ms ease, stroke-width 200ms ease; }
-  .overlay-map :global(.overlay-line.is-active) {
-    filter: drop-shadow(0 6px 6px rgb(0 0 0 / 55%)) drop-shadow(0 0 6px var(--color-accent));
-  }
   .route-caption {
     position: absolute;
     inset-inline: 0;
