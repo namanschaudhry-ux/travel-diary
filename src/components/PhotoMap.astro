@@ -1,11 +1,30 @@
 ---
 import "leaflet/dist/leaflet.css";
+
+// Defaults reproduce the New York page exactly. Other trips pass their own text
+// and preset="gps", which uses only the photos' own GPS (data-lat/data-lng).
+interface Props {
+  preset?: "nyc" | "gps";
+  heading?: string;
+  frames?: string;
+  note?: string;
+  label?: string;
+  place?: string;
+}
+const {
+  preset = "nyc",
+  heading = "FIELD NOTES / NYC",
+  frames = "23 FRAMES",
+  note = "Twenty-three frames from New York · Pins show GPS positions or approximate caption locations.",
+  label = "New York photo map",
+  place = "New York",
+} = Astro.props;
 ---
 <div class="mx-auto max-w-6xl px-6 sm:px-10">
-  <section id="map-panel" class="map-panel" hidden aria-label="New York photo map">
-    <div class="atlas-heading"><span>FIELD NOTES / NYC</span><span>23 FRAMES</span></div>
+  <section id="map-panel" class="map-panel" hidden aria-label={label} data-preset={preset} data-place={place}>
+    <div class="atlas-heading"><span>{heading}</span><span>{frames}</span></div>
     <div id="photo-map" aria-label="Interactive map of photo locations"></div>
-    <p class="atlas-note">Twenty-three frames from New York · Pins show GPS positions or approximate caption locations.</p>
+    <p class="atlas-note">{note}</p>
     <p id="map-error" hidden>Map tiles could not load. You can still select a photo pin or return to the gallery.</p>
   </section>
 </div>
@@ -17,7 +36,9 @@ import "leaflet/dist/leaflet.css";
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-expand-portrait]"));
   // GPS for the two iPhone photos; other points approximate the caption location.
   // Order matches the `photos` array in new-york.astro — index-matched to the gallery cards.
-  const positions: [number, number, string][] = [
+  const preset = panel.dataset.preset ?? "nyc";
+  const place = panel.dataset.place ?? "New York";
+  const positions: [number, number, string][] = preset !== "nyc" ? [] : [
     [40.73123, -73.99710, "Approximate location"], // Washington Square Park
     [40.737056, -73.986664, "Photo GPS"], // E 19th & Irving Place
     [40.742308, -73.979386, "Photo GPS"], // E 29th & 3rd Av
@@ -128,7 +149,7 @@ import "leaflet/dist/leaflet.css";
       image.src = source.currentSrc || source.src;
       image.alt = source.alt;
       const title = document.createElement("strong");
-      title.textContent = card.dataset.caption || source.alt || "New York";
+      title.textContent = card.dataset.caption || source.alt || place;
       const note = document.createElement("small");
       note.textContent = precision;
       const button = document.createElement("button");
@@ -165,7 +186,8 @@ import "leaflet/dist/leaflet.css";
         attributeFilter: ["hidden"],
       });
     });
-    map.fitBounds(locations.map(({lat, lng}) => [lat, lng] as [number, number]), { padding: [48, 48] });
+    map.fitBounds(locations.map(({lat, lng}) => [lat, lng] as [number, number]), { padding: [48, 48], maxZoom: 15 });
+    if (preset !== "nyc") return;
     // Recenter on the Manhattan pins (excluding Court Square in Long Island City and the two
     // DUMBO/Brooklyn pins across the river, which otherwise skew the fitted view east/south)
     // and back off a level so the island reads centered.

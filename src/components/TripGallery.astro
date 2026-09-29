@@ -3,12 +3,15 @@
 // toggle, image count, viewfinder selection, keyboard navigation and the
 // enlarged viewer. Markup, styles and scripts are copied from the NYC page
 // (src/pages/photos/new-york.astro) so trips look and behave the same.
-// Used by Japan, New Zealand and Melbourne. The map toggle is inert for now.
-// Categories are optional: without them the dial has a single "all" position;
-// with them, "all" stays first (and selected on load) and each category follows
-// in the order given. Captions are optional too: "Place, Neighbourhood", with
-// date and time shown either side of the neighbourhood, as on the NYC page.
+// Used by Japan, New Zealand and Melbourne. Optional per trip:
+// - categories: without them the dial has a single "all" position; with them,
+//   "all" stays first (and selected on load) and each category follows in order.
+// - captions: "Place, Neighbourhood", with date and time either side of the
+//   neighbourhood, as on the NYC page.
+// - map: turns on the gallery/map switch; only photos with GPS get a pin.
+//   Without it the map toggle is inert.
 import LanguageToggle from "./LanguageToggle.astro";
+import PhotoMap from "./PhotoMap.astro";
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { wordsAttr, cityTitles } from "../data/i18n";
@@ -21,6 +24,7 @@ export type TripPhoto = {
   date?: string; // e.g. "Sep 19 '26"
   time?: string; // e.g. "18:09", local time
   category?: string; // one of the page's categories (Notion "Category")
+  gps?: [number, number]; // photo GPS only; leave out when unknown
 };
 
 interface Props {
@@ -33,9 +37,14 @@ interface Props {
   accent?: { onDark: string; onLight: string };
   // Dial categories in dial order (Travel page setup "Category order").
   categories?: string[];
+  // Turns on the gallery/map switch. Only photos with `gps` get a pin.
+  map?: { place: string; code: string };
 }
 
 const { title, slug, season, accent = { onDark: "#ffd60a", onLight: "#8a6642" }, categories = [] } = Astro.props;
+const mapSettings = Astro.props.map;
+const pinnedCount = Astro.props.photos.filter((photo) => photo.gps).length;
+const mapEnabled = !!mapSettings && pinnedCount > 0;
 const photos = Astro.props.photos.map((photo) => ({
   ...photo,
   caption: photo.caption ?? "",
@@ -123,7 +132,11 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
     <LanguageToggle />
     <div class="view-selector">
       <span class="gallery-word">gallery</span>
-      <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-disabled="true" aria-label="Map view (coming soon)" title="Map coming soon"><span></span></button>
+      {mapEnabled ? (
+        <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-label="Map view" aria-controls="photo-gallery map-panel"><span></span></button>
+      ) : (
+        <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-disabled="true" aria-label="Map view (coming soon)" title="Map coming soon"><span></span></button>
+      )}
       <span class="map-word">map</span>
     </div>
     <p id="image-count" class="image-count" aria-live="polite" aria-atomic="true">{photos.length} images</p>
@@ -164,12 +177,22 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
     </h1>
   </div>
 
+  {mapEnabled && mapSettings && (
+    <PhotoMap
+      preset="gps"
+      place={mapSettings.place}
+      label={`${mapSettings.place} photo map`}
+      heading={`FIELD NOTES / ${mapSettings.code}`}
+      frames={`${pinnedCount} OF ${photos.length} FRAMES`}
+      note={`${pinnedCount} of ${photos.length} frames from ${mapSettings.place} have photo GPS · Photos without GPS have no pin.`}
+    />
+  )}
   <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
       {galleryColumns.map((column) => (
       <div>
       {column.map((photo, index) => (
-        <figure data-expand-portrait="true" data-caption={photo.caption} data-photo-id={photo.id} data-tags={photo.tags.join(" ")} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+        <figure data-expand-portrait="true" data-caption={photo.caption} data-photo-id={photo.id} data-tags={photo.tags.join(" ")} data-lat={photo.gps?.[0]} data-lng={photo.gps?.[1]} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
           <Image
             src={photo.image}
             alt={photo.alt}
