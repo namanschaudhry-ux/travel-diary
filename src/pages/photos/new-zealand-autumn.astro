@@ -1,0 +1,88 @@
+---
+// New Zealand, Autumn '26 (Canterbury, April). Layout lives in TripGallery.astro.
+// Dates and times are local capture times from each photo's EXIF, and `gps` is
+// the photo's own GPS. Places are matched from that GPS to the nearest named
+// spot. The race-day photo has no GPS, so it has no map pin or caption.
+import TripGallery from "../../components/TripGallery.astro";
+import photo6082 from "../../assets/photos/new-zealand-autumn-2026/IMG_6082.jpeg";
+import photo6095 from "../../assets/photos/new-zealand-autumn-2026/IMG_6095.jpeg";
+import photo6096 from "../../assets/photos/new-zealand-autumn-2026/IMG_6096.jpeg";
+import photo6098 from "../../assets/photos/new-zealand-autumn-2026/IMG_6098.jpeg";
+import photo6136 from "../../assets/photos/new-zealand-autumn-2026/IMG_6136.jpeg";
+import photo6197 from "../../assets/photos/new-zealand-autumn-2026/IMG_6197.jpeg";
+import photo6207 from "../../assets/photos/new-zealand-autumn-2026/IMG_6207.jpeg";
+import photo6209 from "../../assets/photos/new-zealand-autumn-2026/IMG_6209.jpeg";
+import photo6213 from "../../assets/photos/new-zealand-autumn-2026/IMG_6213.jpeg";
+import photo6249 from "../../assets/photos/new-zealand-autumn-2026/IMG_6249.jpeg";
+import photo6252 from "../../assets/photos/new-zealand-autumn-2026/IMG_6252.jpeg";
+import photo6270 from "../../assets/photos/new-zealand-autumn-2026/IMG_6270.jpeg";
+import photo6280 from "../../assets/photos/new-zealand-autumn-2026/IMG_6280.jpeg";
+import photo6285 from "../../assets/photos/new-zealand-autumn-2026/IMG_6285.jpeg";
+import photo6287 from "../../assets/photos/new-zealand-autumn-2026/IMG_6287.jpeg";
+import photo6289 from "../../assets/photos/new-zealand-autumn-2026/IMG_6289.jpeg";
+import photo6297 from "../../assets/photos/new-zealand-autumn-2026/IMG_6297.jpeg";
+import photo6298 from "../../assets/photos/new-zealand-autumn-2026/IMG_6298.jpeg";
+import photo6301 from "../../assets/photos/new-zealand-autumn-2026/IMG_6301.jpeg";
+import photo6307 from "../../assets/photos/new-zealand-autumn-2026/IMG_6307.jpeg";
+import photo6315 from "../../assets/photos/new-zealand-autumn-2026/IMG_6315.jpeg";
+import photo6316 from "../../assets/photos/new-zealand-autumn-2026/IMG_6316.jpeg";
+import photo6327 from "../../assets/photos/new-zealand-autumn-2026/IMG_6327.jpeg";
+import photo6341 from "../../assets/photos/new-zealand-autumn-2026/IMG_6341.jpeg";
+import photo6397 from "../../assets/photos/new-zealand-autumn-2026/IMG_6397.jpeg";
+import photo6409 from "../../assets/photos/new-zealand-autumn-2026/IMG_6409.jpeg";
+import photo6413 from "../../assets/photos/new-zealand-autumn-2026/IMG_6413.jpeg";
+import photo6419 from "../../assets/photos/new-zealand-autumn-2026/IMG_6419.jpeg";
+import photo6421 from "../../assets/photos/new-zealand-autumn-2026/IMG_6421.jpeg";
+import photo6425 from "../../assets/photos/new-zealand-autumn-2026/IMG_6425.jpeg";
+import photo6430 from "../../assets/photos/new-zealand-autumn-2026/IMG_6430.jpeg";
+import photo6433 from "../../assets/photos/new-zealand-autumn-2026/IMG_6433.jpeg";
+import photo6435 from "../../assets/photos/new-zealand-autumn-2026/IMG_6435.jpeg";
+import photo6437 from "../../assets/photos/new-zealand-autumn-2026/IMG_6437.jpeg";
+import photo6455 from "../../assets/photos/new-zealand-autumn-2026/IMG_6455.jpeg";
+import photo6469 from "../../assets/photos/new-zealand-autumn-2026/IMG_6469.jpeg";
+import raceDay from "../../assets/photos/new-zealand-autumn-2026/race-day-group.jpeg";
+
+const categories = ["mountains", "beach", "harbour", "green", "buildings", "cafes"];
+
+const photos = [
+  { id: "nz-autumn-6082", image: photo6082, alt: "A weeping willow beside a stream on a sunny lawn.", caption: "Avon River, Christchurch Central", category: "green", date: "Apr 8 '26", time: "15:16", gps: [-43.528678, 172.635025] },
+  { id: "nz-autumn-6095", image: photo6095, alt: "An orange sunrise glowing over a quiet street of villas and parked cars.", caption: "Christchurch Central", category: "buildings", date: "Apr 9 '26", time: "06:48", gps: [-43.530956, 172.644897] },
+  { id: "nz-autumn-6096", image: photo6096, alt: "Walkers on the sand below a long pier as the sun rises over the sea.", caption: "New Brighton Pier, New Brighton", category: "beach", date: "Apr 9 '26", time: "07:03", gps: [-43.506225, 172.731125] },
+  { id: "nz-autumn-6098", image: photo6098, alt: "Waves washing onto a misty beach under a streaky blue sky.", caption: "New Brighton Beach, New Brighton", category: "beach", date: "Apr 9 '26", time: "07:07", gps: [-43.506467, 172.732819] },
+  { id: "nz-autumn-6136", image: photo6136, alt: "The sun rising over Christchurch, seen from a grassy hillside.", caption: "Dyers Pass Road, Cashmere", category: "green", date: "Apr 10 '26", time: "07:16", gps: [-43.579808, 172.633867] },
+  { id: "nz-autumn-6197", image: photo6197, alt: "Two people walking a gravel path through golden grass towards limestone boulders and mountains.", caption: "Kura Tāwhiti, Castle Hill", category: "mountains", date: "Apr 11 '26", time: "12:32", gps: [-43.232319, 171.720611] },
+  { id: "nz-autumn-6207", image: photo6207, alt: "A path winding through a boulder-strewn valley below bare grey mountains.", caption: "Kura Tāwhiti, Castle Hill", category: "mountains", date: "Apr 11 '26", time: "12:42", gps: [-43.229808, 171.715667] },
+  { id: "nz-autumn-6209", image: photo6209, alt: "A wide valley of green and golden fields beneath a mountain range and blue sky.", caption: "Kura Tāwhiti, Castle Hill", category: "mountains", date: "Apr 11 '26", time: "12:42", gps: [-43.229794, 171.715653] },
+  { id: "nz-autumn-6213", image: photo6213, alt: "A walker between two huge rounded limestone boulders.", caption: "Kura Tāwhiti, Castle Hill", category: "mountains", date: "Apr 11 '26", time: "12:45", gps: [-43.23, 171.714858] },
+  { id: "nz-autumn-6249", image: photo6249, alt: "Beech trees framing a forested mountain valley under a blue sky.", caption: "Avalanche Peak Track, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "15:16", gps: [-42.929756, 171.551728] },
+  { id: "nz-autumn-6252", image: photo6252, alt: "A braided river winding through a deep forested valley between mountains.", caption: "Avalanche Peak Track, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "15:21", gps: [-42.931039, 171.551819] },
+  { id: "nz-autumn-6270", image: photo6270, alt: "A rocky ridge looking out over layered mountain ranges.", caption: "Avalanche Peak Track, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:16", gps: [-42.938739, 171.542375] },
+  { id: "nz-autumn-6280", image: photo6280, alt: "A panorama of jagged peaks from a stony ridge with a track marker pole.", caption: "Avalanche Peak Track, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:24", gps: [-42.940164, 171.54065] },
+  { id: "nz-autumn-6285", image: photo6285, alt: "The sun shining over a mountain with patches of snow.", caption: "Avalanche Peak Track, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:38", gps: [-42.9414, 171.537964] },
+  { id: "nz-autumn-6287", image: photo6287, alt: "Two small figures standing on top of a dark rocky summit ridge.", caption: "Avalanche Peak, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:42", gps: [-42.942181, 171.537064] },
+  { id: "nz-autumn-6289", image: photo6289, alt: "Jagged dark rock pinnacles below a sky of wispy clouds.", caption: "Avalanche Peak, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:42", gps: [-42.942192, 171.537064] },
+  { id: "nz-autumn-6297", image: photo6297, alt: "A hiker in a green jacket standing on a rocky summit above mountain ranges.", caption: "Avalanche Peak, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:49", gps: [-42.943144, 171.536072] },
+  { id: "nz-autumn-6298", image: photo6298, alt: "A hiker sitting on a rock on the summit, smiling, with peaks behind.", caption: "Avalanche Peak, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:49", gps: [-42.943158, 171.536072] },
+  { id: "nz-autumn-6301", image: photo6301, alt: "A hiker with arms spread wide on the summit, above a deep valley.", caption: "Avalanche Peak, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:49", gps: [-42.943142, 171.536072] },
+  { id: "nz-autumn-6307", image: photo6307, alt: "A hiker with hands on hips, smiling on the summit in front of mountain ranges.", caption: "Avalanche Peak, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:50", gps: [-42.943144, 171.536072] },
+  { id: "nz-autumn-6315", image: photo6315, alt: "Looking down from the summit into a shadowed valley ringed by peaks.", caption: "Avalanche Peak, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:51", gps: [-42.943131, 171.536225] },
+  { id: "nz-autumn-6316", image: photo6316, alt: "A sharp rocky ridge running away from the summit under a blue sky.", caption: "Avalanche Peak, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "16:51", gps: [-42.943142, 171.536103] },
+  { id: "nz-autumn-6327", image: photo6327, alt: "A grassy ridge in late light, with a mountain range across the valley.", caption: "Avalanche Peak Track, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "17:09", gps: [-42.941067, 171.538544] },
+  { id: "nz-autumn-6341", image: photo6341, alt: "A hiker heading down a narrow track at dusk between dark mountains.", caption: "Avalanche Peak Track, Arthur's Pass", category: "mountains", date: "Apr 11 '26", time: "17:49", gps: [-42.936222, 171.548339] },
+  { id: "nz-autumn-6397", image: photo6397, alt: "Low cloud drifting over green farmland and a harbour below a winding road.", caption: "Christchurch Akaroa Road, Banks Peninsula", category: "green", date: "Apr 12 '26", time: "16:22", gps: [-43.762183, 172.893433] },
+  { id: "nz-autumn-race-day", image: raceDay, alt: "Five friends posing together on a crowded field at a running event, one wearing a finisher's medal.", date: "Apr 12 '26", time: "17:24" },
+  { id: "nz-autumn-6409", image: photo6409, alt: "Boats moored on a calm harbour below hills wrapped in low cloud.", caption: "Akaroa Harbour, Akaroa", category: "harbour", date: "Apr 12 '26", time: "17:42", gps: [-43.808772, 172.962264] },
+  { id: "nz-autumn-6413", image: photo6413, alt: "A golden evening sky over a wharf and boats on a misty harbour.", caption: "Akaroa Harbour, Akaroa", category: "harbour", date: "Apr 12 '26", time: "17:58", gps: [-43.809033, 172.962006] },
+  { id: "nz-autumn-6419", image: photo6419, alt: "Streaks of orange cloud above the dark hills and a wharf on the harbour.", caption: "Akaroa Harbour, Akaroa", category: "harbour", date: "Apr 12 '26", time: "17:59", gps: [-43.809058, 172.961883] },
+  { id: "nz-autumn-6421", image: photo6421, alt: "A yellow two-storey wooden building with French and New Zealand flags and hanging flower baskets.", caption: "Beach Road, Akaroa", category: "buildings", date: "Apr 12 '26", time: "18:01", gps: [-43.809617, 172.962556] },
+  { id: "nz-autumn-6425", image: photo6425, alt: "A fiery sunset reflected in the still harbour beside a wharf and moored boats.", caption: "Akaroa Harbour, Akaroa", category: "harbour", date: "Apr 12 '26", time: "18:10", gps: [-43.809033, 172.961869] },
+  { id: "nz-autumn-6430", image: photo6430, alt: "Lyttelton Harbour and its hills at sunrise, seen from high above.", caption: "Summit Road, Port Hills", category: "green", date: "Apr 13 '26", time: "06:58", gps: [-43.603489, 172.654494] },
+  { id: "nz-autumn-6433", image: photo6433, alt: "Christchurch spread across the plains below the tussock hills at dawn.", caption: "Summit Road, Port Hills", category: "green", date: "Apr 13 '26", time: "06:59", gps: [-43.603261, 172.654511] },
+  { id: "nz-autumn-6435", image: photo6435, alt: "An orange dawn glow behind silhouetted hills.", caption: "Summit Road, Port Hills", category: "green", date: "Apr 13 '26", time: "07:03", gps: [-43.597911, 172.662231] },
+  { id: "nz-autumn-6437", image: photo6437, alt: "The sun rising over the hills, with the harbour below.", caption: "Summit Road, Port Hills", category: "green", date: "Apr 13 '26", time: "07:05", gps: [-43.59575, 172.665694] },
+  { id: "nz-autumn-6455", image: photo6455, alt: "A cricket ground with white sail-roofed stands and a picket fence on a sunny morning.", caption: "Hagley Oval, Hagley Park", category: "green", date: "Apr 14 '26", time: "08:16", gps: [-43.533803, 172.619583] },
+  { id: "nz-autumn-6469", image: photo6469, alt: "A plate of salmon with green beans and pea purée on a sunny restaurant table.", caption: "Christchurch Central", category: "cafes", date: "Apr 14 '26", time: "13:35", gps: [-43.530761, 172.630906] },
+];
+---
+
+<TripGallery title="New Zealand Autumn — Naman" slug="new-zealand-autumn" season="autumn ’26" photos={photos} categories={categories} map={{ place: "Canterbury", code: "CHC" }} accent={{ onDark: "#f4a259", onLight: "#a8521a" }} />

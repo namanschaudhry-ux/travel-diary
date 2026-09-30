@@ -3,7 +3,7 @@
 // toggle, image count, viewfinder selection, keyboard navigation and the
 // enlarged viewer. Markup, styles and scripts are copied from the NYC page
 // (src/pages/photos/new-york.astro) so trips look and behave the same.
-// Used by Japan, New Zealand and Melbourne. Optional per trip:
+// Used by Japan, New Zealand (winter and autumn) and Melbourne. Optional per trip:
 // - categories: without them the dial has a single "all" position; with them,
 //   "all" stays first (and selected on load) and each category follows in order.
 // - captions: "Place, Neighbourhood", with date and time either side of the
@@ -102,6 +102,8 @@ const categoryNames: Record<string, { en: string; es: string; fr: string }> = {
   green: { en: "green", es: "naturaleza", fr: "nature" },
   tennis: { en: "tennis", es: "tenis", fr: "tennis" },
   beach: { en: "beach", es: "playa", fr: "plage" },
+  mountains: { en: "mountains", es: "montañas", fr: "montagnes" },
+  harbour: { en: "harbour", es: "puerto", fr: "port" },
 };
 const dialIcons: Record<string, string> = {
   all: `<path d="M2 20 9 8l4 6 3-4 6 10Z"/><path d="M7.5 10.5 9 12l1.5-1.5"/>`,
@@ -110,6 +112,8 @@ const dialIcons: Record<string, string> = {
   bridges: `<path d="M2 19h20"/><path d="M6 19V6M18 19V6"/><path d="M6 6Q12 14 18 6"/><path d="M9 8V19M12 10.5V19M15 8V19"/>`,
   green: `<path d="M12 3 6 12h3l-4 6h5v3h4v-3h5l-4-6h3L12 3Z"/>`,
   buildings: `<path d="M3 21V9l5-3v15M8 21V6l5-3v18M13 21V11l5-4v14"/><path d="M3 21h18"/>`,
+  mountains: `<path d="M2 20 8.5 8l3.5 6.5L15 10l7 10Z"/><path d="m6.6 11.5 1.9-3.5 1.9 3.5"/>`,
+  harbour: `<path d="M12 3v12"/><path d="M12 4 18 13h-6"/><path d="M4 15h16l-2.5 3.5h-11Z"/><path d="M2 21c1.7 0 1.7-1 3.3-1s1.7 1 3.4 1 1.6-1 3.3-1 1.7 1 3.3 1 1.7-1 3.4-1 1.6 1 3.3 1"/>`,
   beach: `<path d="M4 12a8 8 0 0 1 16 0Z"/><path d="M12 12v6"/><path d="M2 20c1.7 0 1.7-1.2 3.3-1.2s1.7 1.2 3.4 1.2 1.6-1.2 3.3-1.2 1.7 1.2 3.3 1.2 1.7-1.2 3.4-1.2 1.6 1.2 3.3 1.2"/>`,
 };
 const photoCategories = ["all", ...categories];
