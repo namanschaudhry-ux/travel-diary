@@ -15,16 +15,17 @@ const {
   preset = "nyc",
   heading = "FIELD NOTES / NYC",
   frames = "23 FRAMES",
-  note = "Twenty-three frames from New York · Pins show GPS positions or approximate caption locations.",
+  note = "Pins show photo GPS positions or approximate caption locations. Photos without a known location stay in the gallery.",
   label = "New York photo map",
   place = "New York",
 } = Astro.props;
 ---
 <div class="mx-auto max-w-6xl px-6 sm:px-10">
   <section id="map-panel" class="map-panel" hidden aria-label={label} data-preset={preset} data-place={place}>
-    <div class="atlas-heading"><span>{heading}</span><span>{frames}</span></div>
+    <div class="atlas-heading"><span>{heading}</span><span id="map-frame-count">{frames}</span></div>
     <div id="photo-map" aria-label="Interactive map of photo locations"></div>
     <p class="atlas-note">{note}</p>
+    <p id="map-empty" class="atlas-note" hidden>No mapped locations for this selection yet.</p>
     <p id="map-error" hidden>Map tiles could not load. You can still select a photo pin or return to the gallery.</p>
   </section>
 </div>
@@ -34,38 +35,24 @@ const {
   const panel = document.querySelector<HTMLElement>("#map-panel")!;
   const gallery = document.querySelector<HTMLElement>("#photo-gallery")!;
   const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-expand-portrait]"));
-  // GPS for the two iPhone photos; other points approximate the caption location.
-  // Order matches the `photos` array in new-york.astro — index-matched to the gallery cards.
+  // Keep coordinates attached to each card, independent of column packing.
   const preset = panel.dataset.preset ?? "nyc";
   const place = panel.dataset.place ?? "New York";
-  const positions: [number, number, string][] = preset !== "nyc" ? [] : [
-    [40.73123, -73.99710, "Approximate location"], // Washington Square Park
-    [40.737056, -73.986664, "Photo GPS"], // E 19th & Irving Place
-    [40.742308, -73.979386, "Photo GPS"], // E 29th & 3rd Av
-    [40.7471, -73.9450, "Approximate location"], // Court Square Station
-    [40.7125, -73.9878, "Approximate location"], // 219 Madison Street
-    [40.7208, -73.9983, "Approximate location"], // Lafayette St & Prince St
-    [40.7323, -73.9866, "Approximate location"], // E14th & 2nd Av
-    [40.7150, -74.0021, "Approximate location"], // Centre Street, Civic Center
-    [40.7168, -73.9975, "Approximate location"], // PARK at KIMS, Chinatown
-    [40.7163, -73.9999, "Approximate location"], // Centre Street, Chinatown
-    [40.7033, -73.9903, "Approximate location"], // Brooklyn Bridge, DUMBO
-    [40.7128, -74.0060, "Approximate location"], // City Hall Park, Civic Center
-    [40.7712, -73.9740, "Approximate location"], // Sheep Meadow, Central Park
-    [40.7357, -73.9986, "Approximate location"], // Jefferson Market Garden, West Village
-    [40.7027, -73.9903, "Approximate location"], // Manhattan Bridge, DUMBO
-  ];
-  const locations = positions.map(([lat, lng, precision], index) => ({ lat, lng, precision, index }));
-  cards.forEach((card, index) => {
-    if (!card.dataset.lat || !card.dataset.lng) return;
-    const lat = Number(card.dataset.lat);
-    const lng = Number(card.dataset.lng);
-    if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)) return;
-    locations.push({ lat, lng, precision: card.dataset.precision || "Photo GPS", index });
+  const locations = cards.flatMap((card, index) => {
+    if (!card.dataset.lat || !card.dataset.lng) return [];
+    const lat = Number(card.dataset.lat), lng = Number(card.dataset.lng);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180 || (lat === 0 && lng === 0)) return [];
+    return [{lat, lng, precision: card.dataset.locationSource || card.dataset.precision || "Photo GPS", index}];
   });
   let map: L.Map | undefined;
   const markers: L.Marker[] = [];
+  function updateMapCount() {
+    const count = locations.filter(({index}) => !cards[index].hidden).length;
+    document.getElementById("map-frame-count")!.textContent = `${count} MAPPED FRAMES`;
+    document.getElementById("map-empty")!.hidden = count > 0;
+  }
   function syncMarkerVisibility(card: HTMLElement, index: number) {
+    updateMapCount();
     const marker = markers[index];
     if (!marker || !map) return;
     if (card.hidden) {
@@ -188,18 +175,11 @@ const {
         attributeFilter: ["hidden"],
       });
     });
-    map.fitBounds(locations.map(({lat, lng}) => [lat, lng] as [number, number]), { padding: [48, 48], maxZoom: 15 });
-    if (preset !== "nyc") return;
-    // Recenter on the Manhattan pins (excluding Court Square in Long Island City and the two
-    // DUMBO/Brooklyn pins across the river, which otherwise skew the fitted view east/south)
-    // and back off a level so the island reads centered.
-    const nonManhattanIndexes = new Set([3, 10, 14]);
-    const manhattanPositions = positions.filter((_, index) => !nonManhattanIndexes.has(index));
-    const manhattanCenter: [number, number] = [
-      manhattanPositions.reduce((sum, [lat]) => sum + lat, 0) / manhattanPositions.length,
-      manhattanPositions.reduce((sum, [, lng]) => sum + lng, 0) / manhattanPositions.length,
-    ];
-    map.setView(manhattanCenter, map.getZoom() - 1);
+    updateMapCount();
+    if (locations.length) {
+      map.fitBounds(locations.map(({lat, lng}) => [lat, lng] as [number, number]), { padding: [48, 48], maxZoom: 15 });
+    } else { map.setView([0, 0], 2); }
+
   }
   toggle.addEventListener("click", () => {
     if (toggle.getAttribute("aria-checked") === "true") { showGallery(); return; }
@@ -252,7 +232,7 @@ const {
   #photo-map .leaflet-popup-content-wrapper, #photo-map .leaflet-popup-tip { background: #f4edda; color: #34362c; }
   .photo-postcard img { display: block; width: 210px; max-height: 160px; object-fit: cover; margin-bottom: 10px; }
   .photo-postcard strong { display: block; font: 14px/1.4 Georgia, serif; }
-  .photo-postcard small { display: block; margin-top: 4px; font: 10px monospace; color: #74705f; }
+  .photo-postcard small { display: block; margin-top: 4px; font: 10px monospace; color: #656150; }
   .photo-postcard button { margin-top: 12px; font: 11px monospace; color: #355d4c; cursor: pointer; text-decoration: underline; }
   @media (max-width: 640px) { .map-panel { padding: 12px; } }
   @media (prefers-reduced-motion: reduce) { #map-toggle span { transition: none; } }

@@ -1,7 +1,8 @@
 ---
 import activity from '../data/strava-export.json';
 import { cityActivity } from '../data/activity-summary';
-const images = import.meta.glob(['../assets/photos/new-york/**/*.{jpg,jpeg,png,webp}', '../assets/photos/featured/*.{jpg,jpeg,png,webp}'], { eager: false });
+// Count trip assets, excluding unused starter destination galleries.
+const images = import.meta.glob(['../assets/photos/**/*.{jpg,jpeg,JPG,JPEG,png,webp}', '!../assets/photos/{japan,italy,iceland}/**/*'], { eager: false });
 const sum = (types: string[]) => activity.activities.filter(a => types.includes(a.sport_type)).reduce((n, a) => n + a.distance_km, 0);
 const number = (n: number) => new Intl.NumberFormat('en', { maximumFractionDigits: 1 }).format(n);
 const stats = [
