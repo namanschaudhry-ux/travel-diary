@@ -81,10 +81,12 @@ const {
   }
   function createMap() {
     map = L.map("photo-map", { scrollWheelZoom: false });
-    const tiles = L.tileLayer("https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png", {
+    // Wikimedia's tile server refuses requests from this site (HTTP 503), so use CARTO's free basemap.
+    const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      subdomains: "abcd",
       maxZoom: 19,
       detectRetina: true,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     }).addTo(map);
     tiles.on("tileerror", () => { document.querySelector<HTMLElement>("#map-error")!.hidden = false; });
     // Trackpad pinch reaches the browser as a wheel event with ctrlKey set, distinct from a
