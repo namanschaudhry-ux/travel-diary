@@ -211,12 +211,12 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
               <figcaption class="photo-caption pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-black/60 to-transparent px-6 pt-5 pb-14 text-center font-sans text-sm font-light text-white/90">
                 {splitCaption(photo.caption).top}
               </figcaption>
-              {splitCaption(photo.caption).bottom && (
+              {(splitCaption(photo.caption).bottom || photo.time) && (
                 <figcaption class="photo-caption pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-6 pt-14 pb-5 font-sans text-sm font-light text-white/90">
                   {photo.time ? (
                     <div class="grid grid-cols-3 items-center">
                       <span class="text-left">{photo.date}</span>
-                      <span class="text-center">{splitCaption(photo.caption).bottom}</span>
+                      <span class="text-center">{splitCaption(photo.caption).bottom ?? ""}</span>
                       <span class="text-right">{photo.time}</span>
                     </div>
                   ) : (
@@ -225,6 +225,15 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
                 </figcaption>
               )}
             </>
+          )}
+          {!photo.caption && photo.time && (
+            <figcaption class="photo-caption pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-6 pt-14 pb-5 font-sans text-sm font-light text-white/90">
+              <div class="grid grid-cols-3 items-center">
+                <span class="text-left">{photo.date}</span>
+                <span></span>
+                <span class="text-right">{photo.time}</span>
+              </div>
+            </figcaption>
           )}
           <span class="viewfinder-corner viewfinder-corner--tl" aria-hidden="true"></span>
           <span class="viewfinder-corner viewfinder-corner--tr" aria-hidden="true"></span>
