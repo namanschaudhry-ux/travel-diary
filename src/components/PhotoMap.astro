@@ -61,7 +61,7 @@ const {
     const lat = Number(card.dataset.lat);
     const lng = Number(card.dataset.lng);
     if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)) return;
-    locations.push({ lat, lng, precision: "Photo GPS", index });
+    locations.push({ lat, lng, precision: card.dataset.precision || "Photo GPS", index });
   });
   let map: L.Map | undefined;
   const markers: L.Marker[] = [];

@@ -13,13 +13,13 @@ import lakeDaylight from "../../assets/photos/featured/lake-daylight.jpg";
 import lakeDusk from "../../assets/photos/featured/lake-dusk.jpg";
 
 const photos = [
-  { id: "nz-mountain-road", image: mountainRoad, alt: "A winding mountain road above a broad valley beneath a cloudy sky.", caption: "Crown Range Road, Queenstown → Wanaka", date: "Jul 23 '26", time: "12:57" },
-  { id: "nz-mountain-trail", image: mountainTrail, alt: "A hillside trail overlooking a valley and snow-dusted mountain peaks.", caption: "Crown Range Road, Queenstown → Wanaka", date: "Jul 23 '26", time: "12:58" },
-  { id: "nz-suspension-bridge", image: suspensionBridge, alt: "A suspension bridge tower in front of snowy mountains and bare trees.", caption: "Rob Roy Glacier Track, Mount Aspiring National Park", date: "Jul 25 '26", time: "11:53" },
-  { id: "nz-bridge-view", image: bridgeView, alt: "A wooden suspension bridge crossing a river toward a mountain meadow.", caption: "Rob Roy Glacier Track, Mount Aspiring National Park", date: "Jul 25 '26", time: "11:56" },
-  { id: "nz-forest-ridge", image: forestRidge, alt: "A steep forest-covered rocky ridge against a clear blue sky.", caption: "Rob Roy Glacier Track, Mount Aspiring National Park", date: "Jul 25 '26", time: "13:09" },
-  { id: "nz-lake-daylight", image: lakeDaylight, alt: "Snow-dusted mountains above a blue lake, with trees in the foreground under a clear sky.", caption: "Lake Hāwea, Near Wanaka", date: "Jul 26 '26", time: "12:18" },
-  { id: "nz-lake-dusk", image: lakeDusk, alt: "A lakeside beach and snow-capped mountains beneath a soft pink evening sky.", caption: "Lake Hāwea, Near Wanaka", date: "Jul 26 '26", time: "17:47" },
+  { id: "nz-mountain-road", image: mountainRoad, alt: "A winding mountain road above a broad valley beneath a cloudy sky.", caption: "Crown Range Road, Queenstown → Wanaka", date: "Jul 23 '26", time: "12:57", approxLocation: [-44.933, 168.917] },
+  { id: "nz-mountain-trail", image: mountainTrail, alt: "A hillside trail overlooking a valley and snow-dusted mountain peaks.", caption: "Crown Range Road, Queenstown → Wanaka", date: "Jul 23 '26", time: "12:58", approxLocation: [-44.933, 168.917] },
+  { id: "nz-suspension-bridge", image: suspensionBridge, alt: "A suspension bridge tower in front of snowy mountains and bare trees.", caption: "Rob Roy Glacier Track, Mount Aspiring National Park", date: "Jul 25 '26", time: "11:53", approxLocation: [-44.497, 168.735] },
+  { id: "nz-bridge-view", image: bridgeView, alt: "A wooden suspension bridge crossing a river toward a mountain meadow.", caption: "Rob Roy Glacier Track, Mount Aspiring National Park", date: "Jul 25 '26", time: "11:56", approxLocation: [-44.497, 168.735] },
+  { id: "nz-forest-ridge", image: forestRidge, alt: "A steep forest-covered rocky ridge against a clear blue sky.", caption: "Rob Roy Glacier Track, Mount Aspiring National Park", date: "Jul 25 '26", time: "13:09", approxLocation: [-44.4667, 168.7167] },
+  { id: "nz-lake-daylight", image: lakeDaylight, alt: "Snow-dusted mountains above a blue lake, with trees in the foreground under a clear sky.", caption: "Lake Hāwea, Near Wanaka", date: "Jul 26 '26", time: "12:18", approxLocation: [-44.6114, 169.2633] },
+  { id: "nz-lake-dusk", image: lakeDusk, alt: "A lakeside beach and snow-capped mountains beneath a soft pink evening sky.", caption: "Lake Hāwea, Near Wanaka", date: "Jul 26 '26", time: "17:47", approxLocation: [-44.6114, 169.2633] },
 ];
 ---
 
@@ -28,5 +28,6 @@ const photos = [
   slug="new-zealand"
   season="winter ’26"
   photos={photos}
+  map={{ place: "New Zealand", code: "NZ" }}
   accent={{ onDark: "#8fd4ff", onLight: "#1a73a8" }}
 />

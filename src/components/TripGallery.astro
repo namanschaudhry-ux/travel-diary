@@ -25,6 +25,7 @@ export type TripPhoto = {
   time?: string; // e.g. "18:09", local time
   category?: string; // one of the page's categories (Notion "Category")
   gps?: [number, number]; // photo GPS only; leave out when unknown
+  approxLocation?: [number, number]; // estimated from the caption when there is no GPS
 };
 
 interface Props {
@@ -43,7 +44,8 @@ interface Props {
 
 const { title, slug, season, accent = { onDark: "#ffd60a", onLight: "#8a6642" }, categories = [] } = Astro.props;
 const mapSettings = Astro.props.map;
-const pinnedCount = Astro.props.photos.filter((photo) => photo.gps).length;
+const pinnedCount = Astro.props.photos.filter((photo) => photo.gps || photo.approxLocation).length;
+const hasApprox = Astro.props.photos.some((photo) => !photo.gps && photo.approxLocation);
 const mapEnabled = !!mapSettings && pinnedCount > 0;
 const photos = Astro.props.photos.map((photo) => ({
   ...photo,
@@ -188,7 +190,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
       label={`${mapSettings.place} photo map`}
       heading={`FIELD NOTES / ${mapSettings.code}`}
       frames={`${pinnedCount} OF ${photos.length} FRAMES`}
-      note={`${pinnedCount} of ${photos.length} frames from ${mapSettings.place} have photo GPS · Photos without GPS have no pin.`}
+      note={hasApprox ? `Pins show photo GPS or approximate caption locations.` : `${pinnedCount} of ${photos.length} frames from ${mapSettings.place} have photo GPS · Photos without GPS have no pin.`}
     />
   )}
   <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
@@ -196,7 +198,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
       {galleryColumns.map((column) => (
       <div>
       {column.map((photo, index) => (
-        <figure data-expand-portrait="true" data-caption={photo.caption} data-photo-id={photo.id} data-tags={photo.tags.join(" ")} data-lat={photo.gps?.[0]} data-lng={photo.gps?.[1]} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+        <figure data-expand-portrait="true" data-caption={photo.caption} data-photo-id={photo.id} data-tags={photo.tags.join(" ")} data-lat={(photo.gps ?? photo.approxLocation)?.[0]} data-lng={(photo.gps ?? photo.approxLocation)?.[1]} data-precision={photo.gps ? "Photo GPS" : photo.approxLocation ? "Approximate location" : undefined} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
           <Image
             src={photo.image}
             alt={photo.alt}
