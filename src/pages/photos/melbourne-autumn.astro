@@ -1,0 +1,63 @@
+---
+// Melbourne, Autumn '26 (29 Apr to 17 Jul). Layout lives in TripGallery.astro.
+// Dates and times are local capture times from each photo's EXIF, and `gps` is
+// the photo's own GPS. Places are matched from that GPS to the nearest named
+// spot. IMG_7153 and IMG_7234 have GPS but it is left off the map on purpose
+// (residential area). Captions and categories are drafts to confirm in Notion.
+import TripGallery from "../../components/TripGallery.astro";
+import photo0217 from "../../assets/photos/melbourne-autumn-2026/IMG_0217.jpeg";
+import photo6508 from "../../assets/photos/melbourne-autumn-2026/IMG_6508.jpeg";
+import photo6664 from "../../assets/photos/melbourne-autumn-2026/IMG_6664.jpeg";
+import photo6676 from "../../assets/photos/melbourne-autumn-2026/IMG_6676.jpeg";
+import photo6790 from "../../assets/photos/melbourne-autumn-2026/IMG_6790.jpeg";
+import photo6819 from "../../assets/photos/melbourne-autumn-2026/IMG_6819.jpeg";
+import photo6823 from "../../assets/photos/melbourne-autumn-2026/IMG_6823.jpeg";
+import photo6825 from "../../assets/photos/melbourne-autumn-2026/IMG_6825.jpeg";
+import photo6919 from "../../assets/photos/melbourne-autumn-2026/IMG_6919.jpeg";
+import photo6923 from "../../assets/photos/melbourne-autumn-2026/IMG_6923.jpeg";
+import photo6954 from "../../assets/photos/melbourne-autumn-2026/IMG_6954.jpeg";
+import photo7012 from "../../assets/photos/melbourne-autumn-2026/IMG_7012.jpeg";
+import photo7097 from "../../assets/photos/melbourne-autumn-2026/IMG_7097.jpeg";
+import photo7153 from "../../assets/photos/melbourne-autumn-2026/IMG_7153.jpeg";
+import photo7218 from "../../assets/photos/melbourne-autumn-2026/IMG_7218.jpeg";
+import photo7220 from "../../assets/photos/melbourne-autumn-2026/IMG_7220.jpeg";
+import photo7234 from "../../assets/photos/melbourne-autumn-2026/IMG_7234.jpeg";
+import photo7255 from "../../assets/photos/melbourne-autumn-2026/IMG_7255.jpeg";
+import photo7302 from "../../assets/photos/melbourne-autumn-2026/IMG_7302.jpeg";
+import photo7336 from "../../assets/photos/melbourne-autumn-2026/IMG_7336.jpeg";
+import photo7346 from "../../assets/photos/melbourne-autumn-2026/IMG_7346.jpeg";
+import photo7435 from "../../assets/photos/melbourne-autumn-2026/IMG_7435.jpeg";
+import photo7508 from "../../assets/photos/melbourne-autumn-2026/IMG_7508.jpeg";
+import photo7512 from "../../assets/photos/melbourne-autumn-2026/IMG_7512.jpeg";
+
+const categories = ["buildings", "green", "beach", "cafes"];
+
+const photos = [
+  { id: "melbourne-autumn-0217", image: photo0217, alt: "Melbourne skyline above the Yarra with walkers on the riverside path.", caption: "Royal Botanic Gardens, Melbourne", category: "buildings", date: "Jun 21 '26", time: "10:23", gps: [-37.827975, 144.984572] },
+  { id: "melbourne-autumn-6508", image: photo6508, alt: "Two friends on the bayside path with the city skyline behind them.", caption: "Point Ormond, Elwood", category: "beach", date: "Jun 8 '26", time: "09:41", gps: [-37.881928, 144.976228] },
+  { id: "melbourne-autumn-6664", image: photo6664, alt: "A bright café interior lit by skylights.", caption: "Toorak Road, Camberwell", category: "cafes", date: "Apr 29 '26", time: "08:30", gps: [-37.850392, 145.094939] },
+  { id: "melbourne-autumn-6676", image: photo6676, alt: "Sunrise over the bay above tyre-marked sand.", caption: "Elwood Beach, Elwood", category: "beach", date: "May 1 '26", time: "07:14", gps: [-37.886344, 144.981217] },
+  { id: "melbourne-autumn-6790", image: photo6790, alt: "A road bike beside Albert Park Lake with the city skyline beyond.", caption: "Albert Park Lake, Albert Park", category: "green", date: "May 11 '26", time: "10:50", gps: [-37.853122, 144.976806] },
+  { id: "melbourne-autumn-6819", image: photo6819, alt: "A bike path leading toward the CBD towers.", caption: "Alexandra Gardens, Melbourne", category: "buildings", date: "May 14 '26", time: "07:52", gps: [-37.822875, 144.97635] },
+  { id: "melbourne-autumn-6823", image: photo6823, alt: "City towers reflected in the still Yarra River.", caption: "Yarra River, Melbourne", category: "buildings", date: "May 14 '26", time: "08:07", gps: [-37.818778, 144.970275] },
+  { id: "melbourne-autumn-6825", image: photo6825, alt: "The Melbourne skyline mirrored in the Yarra in morning light.", caption: "Alexandra Gardens, Melbourne", category: "buildings", date: "May 14 '26", time: "08:21", gps: [-37.823086, 144.976883] },
+  { id: "melbourne-autumn-6919", image: photo6919, alt: "The CBD skyline rising beyond the rail yards.", caption: "Melbourne Park", category: "buildings", date: "May 22 '26", time: "15:03", gps: [-37.822269, 144.984894] },
+  { id: "melbourne-autumn-6923", image: photo6923, alt: "Cyclists riding along a road toward the city skyline.", caption: "Albert Park Lake, Albert Park", category: "buildings", date: "May 22 '26", time: "15:32", gps: [-37.852928, 144.974808] },
+  { id: "melbourne-autumn-6954", image: photo6954, alt: "A bike leaning on a seawall with the city across the bay.", caption: "Point Ormond, Elwood", category: "beach", date: "May 26 '26", time: "11:47", gps: [-37.881672, 144.975814] },
+  { id: "melbourne-autumn-7012", image: photo7012, alt: "Sunset glowing over a sports field.", caption: "Terrara Park, Vermont South", category: "green", date: "Jun 1 '26", time: "07:24", gps: [-37.854247, 145.190856] },
+  { id: "melbourne-autumn-7097", image: photo7097, alt: "A latte on a wooden table.", caption: "North Melbourne", category: "cafes", date: "Jun 9 '26", time: "09:55", gps: [-37.800728, 144.953553] },
+  { id: "melbourne-autumn-7153", image: photo7153, alt: "A bike on a hilltop at sunset.", caption: "Vermont South", category: "green", date: "Jun 14 '26", time: "17:04" },
+  { id: "melbourne-autumn-7218", image: photo7218, alt: "Two people walking through a glowing tunnel of lights at night.", caption: "Royal Botanic Gardens, Melbourne", category: "green", date: "Jun 18 '26", time: "18:50", gps: [-37.829597, 144.982161] },
+  { id: "melbourne-autumn-7220", image: photo7220, alt: "A glowing orange light sculpture winding through the dark gardens.", caption: "Royal Botanic Gardens, Melbourne", category: "green", date: "Jun 18 '26", time: "19:33", gps: [-37.830278, 144.980836] },
+  { id: "melbourne-autumn-7234", image: photo7234, alt: "A bike against a timber wall at night.", caption: "Vermont South", category: "buildings", date: "Jun 19 '26", time: "17:37" },
+  { id: "melbourne-autumn-7255", image: photo7255, alt: "An avenue of cypress trees leading from the Shrine of Remembrance toward the city.", caption: "Shrine of Remembrance, Melbourne", category: "buildings", date: "Jun 21 '26", time: "11:18", gps: [-37.829064, 144.972778] },
+  { id: "melbourne-autumn-7302", image: photo7302, alt: "Sunset over a park with the city skyline on the horizon.", caption: "Anderson Park, Hawthorn East", category: "green", date: "Jun 25 '26", time: "17:34", gps: [-37.839942, 145.049317] },
+  { id: "melbourne-autumn-7336", image: photo7336, alt: "The city skyline beyond a park at dusk.", caption: "Anderson Park, Hawthorn East", category: "green", date: "Jun 27 '26", time: "17:07", gps: [-37.840092, 145.049653] },
+  { id: "melbourne-autumn-7346", image: photo7346, alt: "A runner beside Albert Park Lake.", caption: "Albert Park Lake, Albert Park", category: "green", date: "Jun 28 '26", time: "10:31", gps: [-37.853006, 144.977647] },
+  { id: "melbourne-autumn-7435", image: photo7435, alt: "Dawn breaking over a quiet park.", caption: "Terrara Park, Vermont South", category: "green", date: "Jul 6 '26", time: "07:11", gps: [-37.854286, 145.190947] },
+  { id: "melbourne-autumn-7508", image: photo7508, alt: "The city skyline silhouetted against a winter sunset.", caption: "Anderson Park, Hawthorn East", category: "green", date: "Jul 17 '26", time: "17:31", gps: [-37.839961, 145.049575] },
+  { id: "melbourne-autumn-7512", image: photo7512, alt: "The last light of sunset behind the city skyline.", caption: "Anderson Park, Hawthorn East", category: "green", date: "Jul 17 '26", time: "17:42", gps: [-37.839958, 145.049561] },
+];
+---
+
+<TripGallery title="Melbourne Autumn — Naman" slug="melbourne-autumn" season="autumn ’26" photos={photos} categories={categories} map={{ place: "Melbourne", code: "MEL" }} accent={{ onDark: "#b8a4ff", onLight: "#6d58ab" }} />

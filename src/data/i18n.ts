@@ -31,6 +31,16 @@ export const cityTitles: Record<string, Record<Lang, string[]>> = {
     es: ["melbourne"],
     fr: ["melbourne"],
   },
+  "melbourne-autumn": {
+    en: ["melbourne"],
+    es: ["melbourne"],
+    fr: ["melbourne"],
+  },
+  "san-francisco": {
+    en: ["san", "francisco"],
+    es: ["san", "francisco"],
+    fr: ["san", "francisco"],
+  },
   japan: {
     en: ["japan"],
     es: ["japón"],
