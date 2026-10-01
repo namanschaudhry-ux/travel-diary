@@ -1,0 +1,235 @@
+---
+// Homepage intro: photos from every trip float onto a dark screen, pile up
+// into a collage, "Welcome" appears midway, then the photos drift
+// away and the intro fades to reveal the watch. It cannot be skipped by
+// clicking, scrolling or keys. Plays once per browser
+// session (add ?intro to the URL to replay). Skipped for reduced motion and
+// when JavaScript is off.
+import { getImage } from "astro:assets";
+
+// Same photo set as the homepage "photos uploaded" count: every trip folder,
+// minus the unused starter galleries.
+const modules = import.meta.glob<{ default: ImageMetadata }>(
+  [
+    "../assets/photos/**/*.{jpg,jpeg,JPG,JPEG,png,webp}",
+    "!../assets/photos/{japan,italy,iceland}/**/*",
+  ],
+  { eager: true },
+);
+
+// Use 70% of the photos, spread evenly across the folders.
+const KEEP = 0.7;
+const chosen = Object.values(modules).filter((_, i) => Math.floor((i + 1) * KEEP) > Math.floor(i * KEEP));
+
+const tiles = await Promise.all(
+  chosen.map(async (mod) => {
+    const thumb = await getImage({ src: mod.default, width: 320, format: "webp", quality: 60 });
+    return {
+      src: thumb.src,
+      width: Number(thumb.attributes.width ?? 320),
+      height: Number(thumb.attributes.height ?? 213),
+    };
+  }),
+);
+---
+
+<div class="home-intro" aria-label="Intro" hidden>
+  <div class="intro-tiles" aria-hidden="true">
+    {tiles.map((t) => (
+      <img src={t.src} width={t.width} height={t.height} alt="" decoding="async" />
+    ))}
+  </div>
+  <div class="intro-scrim" aria-hidden="true"></div>
+  <p class="intro-title">Welcome</p>
+</div>
+
+<script is:inline>
+  // Decide before first paint whether the intro shows, so the watch never
+  // flashes underneath it.
+  (function () {
+    var intro = document.currentScript && document.currentScript.previousElementSibling;
+    if (!intro) return;
+    var replay = /[?&]intro\b/.test(location.search);
+    var seen = false;
+    try { seen = sessionStorage.getItem("introSeen") === "1"; } catch (e) {}
+    var calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if ((seen && !replay) || calm) return;
+    intro.hidden = false;
+    document.documentElement.classList.add("intro-playing");
+  })();
+</script>
+
+<script>
+  const intro = document.querySelector<HTMLElement>(".home-intro");
+
+  if (intro && !intro.hidden) {
+    try { sessionStorage.setItem("introSeen", "1"); } catch {}
+
+    const tiles = Array.from(intro.querySelectorAll<HTMLImageElement>(".intro-tiles img"));
+    const scrim = intro.querySelector<HTMLElement>(".intro-scrim")!;
+    const title = intro.querySelector<HTMLElement>(".intro-title")!;
+    const animations: Animation[] = [];
+    let finished = false;
+
+    // Timeline in milliseconds.
+    const ARRIVE_END = 4200; // last photo lands
+    const TITLE_IN = 3600; // text arrives midway, while photos still pile up
+    const LEAVE_START = 5600; // photos start drifting away
+    const LEAVE_END = 7800;
+    const FADE_OUT = 8400; // whole intro fades to the homepage
+    const FADE_LEN = 700;
+
+    const shuffle = <T,>(list: T[]) => {
+      for (let i = list.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [list[i], list[j]] = [list[j], list[i]];
+      }
+      return list;
+    };
+
+    const end = () => {
+      if (finished) return;
+      finished = true;
+      animations.forEach((a) => a.cancel());
+      document.documentElement.classList.remove("intro-playing");
+      intro.remove();
+    };
+
+    const layout = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      // Grid with one cell per photo, then jitter inside each cell so the
+      // collage feels scattered but never leaves big holes.
+      const cols = Math.max(4, Math.round(Math.sqrt((tiles.length * w) / h)));
+      const rows = Math.ceil(tiles.length / cols);
+      const cellW = w / cols;
+      const cellH = h / rows;
+      const cells = shuffle(Array.from({ length: cols * rows }, (_, i) => i)).slice(0, tiles.length);
+      const base = Math.min(Math.max(w / 11, 64), 150);
+
+      tiles.forEach((img, i) => {
+        const cell = cells[i];
+        const ratio = (img.width || 3) / (img.height || 2);
+        const size = base * (0.7 + Math.random() * 0.6);
+        const tw = ratio >= 1 ? size : size * ratio;
+        const th = tw / ratio;
+        const cx = (cell % cols) * cellW + cellW / 2 + (Math.random() - 0.5) * cellW * 0.7;
+        const cy = Math.floor(cell / cols) * cellH + cellH / 2 + (Math.random() - 0.5) * cellH * 0.7;
+        img.style.width = `${tw}px`;
+        img.style.height = `${th}px`;
+        img.style.left = `${cx - tw / 2}px`;
+        img.style.top = `${cy - th / 2}px`;
+      });
+    };
+
+    const play = () => {
+      layout();
+      const order = shuffle(tiles.slice());
+      const n = order.length;
+      const total = FADE_OUT + FADE_LEN;
+
+      order.forEach((img, i) => {
+        // Few photos at first, then a rush: arrival spacing shrinks over time.
+        const arrive = ARRIVE_END * Math.pow(i / n, 0.6);
+        const leave = LEAVE_START + Math.random() * (LEAVE_END - LEAVE_START);
+        const dx = (Math.random() - 0.5) * 60;
+        const dy = (Math.random() - 0.5) * 40;
+        const outX = dx * 2.5;
+        const outY = dy * 2.5;
+        const a = img.animate(
+          [
+            { offset: 0, opacity: 0, transform: "translate(0, 0) scale(0.85)" },
+            { offset: arrive / total, opacity: 0, transform: "translate(0, 0) scale(0.85)" },
+            { offset: Math.min((arrive + 450) / total, 1), opacity: 1, transform: `translate(${dx * 0.15}px, ${dy * 0.15}px) scale(1)` },
+            { offset: leave / total, opacity: 1, transform: `translate(${dx}px, ${dy}px) scale(1)` },
+            { offset: Math.min((leave + 700) / total, 1), opacity: 0, transform: `translate(${outX}px, ${outY}px) scale(0.95)` },
+            { offset: 1, opacity: 0, transform: `translate(${outX}px, ${outY}px) scale(0.95)` },
+          ],
+          { duration: total, easing: "linear", fill: "forwards" },
+        );
+        animations.push(a);
+      });
+
+      animations.push(
+        scrim.animate(
+          [{ opacity: 0 }, { opacity: 1 }],
+          { delay: TITLE_IN - 200, duration: 900, easing: "ease-out", fill: "forwards" },
+        ),
+        title.animate(
+          [
+            { opacity: 0, transform: "translateY(12px)", filter: "blur(6px)" },
+            { opacity: 1, transform: "translateY(0)", filter: "blur(0)" },
+          ],
+          { delay: TITLE_IN, duration: 1000, easing: "cubic-bezier(.2,.7,.2,1)", fill: "forwards" },
+        ),
+      );
+
+      const fade = intro.animate([{ opacity: 1 }, { opacity: 0 }], {
+        delay: FADE_OUT,
+        duration: FADE_LEN,
+        easing: "ease-in",
+        fill: "forwards",
+      });
+      animations.push(fade);
+      fade.finished.then(end).catch(() => {});
+    };
+
+    window.addEventListener("resize", () => { if (!finished) layout(); });
+
+    // Wait for the thumbnails (briefly) so photos don't land as empty boxes.
+    const ready = Promise.all(tiles.map((img) => img.decode().catch(() => {})));
+    const timeout = new Promise((resolve) => setTimeout(resolve, 1500));
+    Promise.race([ready, timeout]).then(play);
+  }
+</script>
+
+<style>
+  .home-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    overflow: hidden;
+    background: #050505;
+  }
+  .home-intro[hidden] { display: none; }
+
+  :global(html.intro-playing) { overflow: hidden; }
+
+  .intro-tiles img {
+    position: absolute;
+    object-fit: cover;
+    opacity: 0;
+    border-radius: 2px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+    will-change: transform, opacity;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .intro-scrim {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 46% 26% at 50% 50%, rgba(5, 5, 5, 0.95), rgba(5, 5, 5, 0.7) 55%, rgba(5, 5, 5, 0) 100%);
+  }
+
+  .intro-title {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 0 16px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(2.75rem, 8vw, 6.5rem);
+    line-height: 1;
+    color: #f4f1ea;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
+  }
+
+</style>
