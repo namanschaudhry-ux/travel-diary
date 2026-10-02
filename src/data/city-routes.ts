@@ -80,7 +80,7 @@ export const raceIds = new Set([
 ]);
 
 // Cities whose page draws all routes on one shared map instead of a card each.
-export const overlayCities = new Set(["San Francisco", "New York", "Melbourne", "Tokyo"]);
+export const overlayCities = new Set(["San Francisco", "New York", "Melbourne", "Tokyo", "Sydney"]);
 
 const featuredRoutes: Record<string, string[]> = {
   // Each city page lists its routes newest first (sorted in code below).
