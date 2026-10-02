@@ -46,6 +46,18 @@ interface Props {
 }
 
 const { title, slug, season, accent = { onDark: "#ffd60a", onLight: "#8a6642" }, categories = [] } = Astro.props;
+// The season label follows the language filter too ("winter ’25" -> "invierno ’25" / "hiver ’25").
+const seasonNames: Record<string, { es: string; fr: string }> = {
+  spring: { es: "primavera", fr: "printemps" },
+  summer: { es: "verano", fr: "été" },
+  autumn: { es: "otoño", fr: "automne" },
+  winter: { es: "invierno", fr: "hiver" },
+};
+const [seasonWord, ...seasonRest] = season.split(" ");
+const seasonIn = (lang: "es" | "fr") => {
+  const name = seasonNames[seasonWord.toLowerCase()];
+  return name ? [name[lang], ...seasonRest].join(" ") : season;
+};
 const mapSettings = Astro.props.map;
 const track = Astro.props.track;
 const pinnedCount = Astro.props.photos.filter((photo) => photo.gps || photo.approxLocation).length;
@@ -189,7 +201,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
       </div>
     )}
     <h1 class="city-title" aria-label={`${season} — ${headingWords.join(" ")}`}>
-      <span class="city-season">{season}</span>
+      <span class="city-season" data-i18n-en={season} data-i18n-es={seasonIn("es")} data-i18n-fr={seasonIn("fr")}>{season}</span>
       <span
         class="city-words"
         data-i18n-words
