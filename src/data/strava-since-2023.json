@@ -418,6 +418,8 @@
     }
   ],
   "cityGroups": {
+    "Thuy Khue Ward": "Hanoi",
+    "Phường Hàng Trống": "Hanoi",
     "Manhattan": "New York",
     "Brooklyn": "New York",
     "Staten Island": "New York",

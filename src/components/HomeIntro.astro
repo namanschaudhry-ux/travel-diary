@@ -1,5 +1,5 @@
 ---
-// Homepage intro: photos from every trip float onto a dark screen, pile up
+// Homepage intro: 8 hand-picked large photos from the trips float onto a dark screen, pile up
 // into a collage, "Welcome" appears midway, then the photos drift
 // away and the intro fades to reveal the watch. It cannot be skipped by
 // clicking, scrolling or keys. Plays once per browser
@@ -7,27 +7,31 @@
 // when JavaScript is off.
 import { getImage } from "astro:assets";
 
-// Same photo set as the homepage "photos uploaded" count: every trip folder,
-// minus the unused starter galleries.
+// Hand-picked: the 8 most striking photos across the trips. Paths are
+// relative to src/assets/photos/. Swap entries here to change the intro.
+const PICKS = [
+  "new-zealand-autumn-2026/IMG_6425.jpeg", // orange sunrise reflected in a still harbour
+  "japan-2025/japan-5407e7de-029a-43d4-bf92-52fccebffae8.jpg", // Fuji with a cap cloud
+  "new-york/bridges/dji_20260829224820_0146_d.jpg", // Brooklyn Bridge at sunset
+  "featured/lake-daylight.jpg", // lake and snowy peaks, New Zealand winter
+  "melbourne-2026/IMG_9248.jpeg", // sunset over the bay, Melbourne
+  "new-zealand-autumn-2026/IMG_6252.jpeg", // Arthur's Pass valley
+  "japan-2025/japan-252826d4-17a6-4ff2-9ad4-c59f61365695.jpg", // Senso-ji at dusk
+  "new-york/bridges/dji_20260829122046_0138_d.jpg", // the Oculus and One WTC at night
+];
 const modules = import.meta.glob<{ default: ImageMetadata }>(
-  [
-    "../assets/photos/**/*.{jpg,jpeg,JPG,JPEG,png,webp}",
-    "!../assets/photos/{japan,italy,iceland}/**/*",
-  ],
+  "../assets/photos/**/*.{jpg,jpeg,JPG,JPEG,png,webp}",
   { eager: true },
 );
-
-// Use 70% of the photos, spread evenly across the folders.
-const KEEP = 0.7;
-const chosen = Object.values(modules).filter((_, i) => Math.floor((i + 1) * KEEP) > Math.floor(i * KEEP));
+const chosen = PICKS.map((pick) => modules[`../assets/photos/${pick}`]).filter(Boolean);
 
 const tiles = await Promise.all(
   chosen.map(async (mod) => {
-    const thumb = await getImage({ src: mod.default, width: 320, format: "webp", quality: 60 });
+    const thumb = await getImage({ src: mod.default, width: Math.min(1400, mod.default.width), format: "webp", quality: 72 });
     return {
       src: thumb.src,
-      width: Number(thumb.attributes.width ?? 320),
-      height: Number(thumb.attributes.height ?? 213),
+      width: Number(thumb.attributes.width ?? 1400),
+      height: Number(thumb.attributes.height ?? 933),
     };
   }),
 );
@@ -100,21 +104,27 @@ const tiles = await Promise.all(
       const h = window.innerHeight;
       // Grid with one cell per photo, then jitter inside each cell so the
       // collage feels scattered but never leaves big holes.
-      const cols = Math.max(4, Math.round(Math.sqrt((tiles.length * w) / h)));
+      // Few, large photos: each one roughly fills its cell and overlaps its
+      // neighbours a little, so the collage reads as a handful of big prints.
+      const cols = Math.max(2, Math.round(Math.sqrt((tiles.length * w) / h)));
       const rows = Math.ceil(tiles.length / cols);
       const cellW = w / cols;
       const cellH = h / rows;
       const cells = shuffle(Array.from({ length: cols * rows }, (_, i) => i)).slice(0, tiles.length);
-      const base = Math.min(Math.max(w / 11, 64), 150);
 
       tiles.forEach((img, i) => {
         const cell = cells[i];
         const ratio = (img.width || 3) / (img.height || 2);
-        const size = base * (0.7 + Math.random() * 0.6);
-        const tw = ratio >= 1 ? size : size * ratio;
-        const th = tw / ratio;
-        const cx = (cell % cols) * cellW + cellW / 2 + (Math.random() - 0.5) * cellW * 0.7;
-        const cy = Math.floor(cell / cols) * cellH + cellH / 2 + (Math.random() - 0.5) * cellH * 0.7;
+        const grow = 1.05 + Math.random() * 0.2;
+        // Fit the photo to its cell, then enlarge it so neighbours overlap.
+        let tw = cellW * grow;
+        let th = tw / ratio;
+        if (th > cellH * grow) {
+          th = cellH * grow;
+          tw = th * ratio;
+        }
+        const cx = (cell % cols) * cellW + cellW / 2 + (Math.random() - 0.5) * cellW * 0.25;
+        const cy = Math.floor(cell / cols) * cellH + cellH / 2 + (Math.random() - 0.5) * cellH * 0.25;
         img.style.width = `${tw}px`;
         img.style.height = `${th}px`;
         img.style.left = `${cx - tw / 2}px`;
@@ -224,8 +234,10 @@ const tiles = await Promise.all(
     text-align: center;
     opacity: 0;
     pointer-events: none;
-    font-family: var(--font-heading);
-    font-weight: 600;
+    /* Same face as the "Naman" wordmark in the navbar. */
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.04em;
     font-size: clamp(2.75rem, 8vw, 6.5rem);
     line-height: 1;
     color: #f4f1ea;

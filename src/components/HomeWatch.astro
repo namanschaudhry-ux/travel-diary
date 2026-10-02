@@ -1,21 +1,25 @@
 ---
-import activity from '../data/strava-export.json';
-import { cityActivity } from '../data/activity-summary';
+import NameArc from './NameArc.astro';
+import { cityActivity, activityTotals as totals } from '../data/activity-summary';
 // Count trip assets, excluding unused starter destination galleries.
 const images = import.meta.glob(['../assets/photos/**/*.{jpg,jpeg,JPG,JPEG,png,webp}', '!../assets/photos/{japan,italy,iceland}/**/*'], { eager: false });
-const sum = (types: string[]) => activity.activities.filter(a => types.includes(a.sport_type)).reduce((n, a) => n + a.distance_km, 0);
 const number = (n: number) => new Intl.NumberFormat('en', { maximumFractionDigits: 1 }).format(n);
+// Distance totals are the same ones shown on the moving page.
+const totalNote = 'same totals as the moving page';
 const stats = [
- { label: 'photos uploaded', value: String(Object.keys(images).length), unit: 'frames', note: 'in the photo collection', href: '/photos/new-york/' },
- { label: 'kms run · 2026', value: number(sum(['Run', 'TrailRun', 'VirtualRun'])), unit: 'km', note: '15 Jun–15 Sep · partial year', href: '/moving/' },
- { label: 'kms cycled · 2026', value: number(sum(['Ride', 'VirtualRide', 'GravelRide', 'MountainBikeRide'])), unit: 'km', note: '15 Jun–15 Sep · partial year', href: '/moving/' },
- { label: 'kms swum · 2026', value: number(sum(['Swim'])), unit: 'km', note: '15 Jun–15 Sep · partial year', href: '/moving/' },
+ { label: 'photos uploaded', value: String(Object.keys(images).length), unit: 'frames', note: 'across every trip page', href: '/photos/' },
+ { label: 'kms run · all time', value: number(totals.run), unit: 'km', note: totalNote, href: '/moving/' },
+ { label: 'kms cycled · all time', value: number(totals.cycle), unit: 'km', note: totalNote, href: '/moving/' },
+ { label: 'kms swum · all time', value: number(totals.swim), unit: 'km', note: totalNote, href: '/moving/' },
  { label: 'cities visited', value: String(cityActivity.length), unit: 'places', note: 'recorded locations since 2023', href: '/moving/' },
 ];
 ---
 <section class="watch-home" aria-label="Naman's watch">
   <h1 class="sr-only">Naman</h1>
   <div class="watch-body" data-stats={JSON.stringify(stats)}>
+    <span class="watch-cap cap-previous" aria-hidden="true"></span>
+    <span class="watch-cap cap-next" aria-hidden="true"></span>
+    <NameArc />
     <img class="watch-product" src="/images/instinct-teal-front.png" alt="Garmin Instinct watch with a teal strap" width="1254" height="1254" fetchpriority="high" />
     <button class="watch-button previous" aria-label="Previous statistic" title="Previous statistic"></button>
     <button class="watch-button next" aria-label="Next statistic" title="Next statistic"></button>
@@ -51,8 +55,24 @@ const stats = [
    watch.querySelector<HTMLAnchorElement>('.watch-stat')!.href = stat.href;
    watch.querySelectorAll('.watch-dots span').forEach((dot, i) => dot.classList.toggle('active', i === index));
   };
-  watch.querySelector('.previous')?.addEventListener('click', () => change(-1));
-  watch.querySelector('.next')?.addEventListener('click', () => change(1));
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Push the physical-looking button cap in and back out.
+  const press = (cap: Element | null) => {
+   if (!cap) return;
+   cap.classList.remove('pressing');
+   void (cap as HTMLElement).offsetWidth;
+   cap.classList.add('pressing');
+  };
+  watch.querySelectorAll('.watch-cap').forEach((cap) => cap.addEventListener('animationend', () => cap.classList.remove('pressing')));
+  const statEl = watch.querySelector<HTMLElement>('.watch-stat')!;
+  const rotate = (step: number) => {
+   if (calm) { change(step); return; }
+   change(step);
+   statEl.getAnimations().forEach((a) => a.cancel());
+   statEl.animate([{ opacity: 0, transform: `translateY(${step * 8}px)` }, { opacity: 1, transform: 'translateY(0)' }], { duration: 260, easing: 'cubic-bezier(.2,.7,.2,1)' });
+  };
+  watch.querySelector('.previous')?.addEventListener('click', () => { press(watch.querySelector('.cap-previous')); rotate(-1); });
+  watch.querySelector('.next')?.addEventListener('click', () => { press(watch.querySelector('.cap-next')); rotate(1); });
   const tick = () => {
    const now = new Date();
    watch.querySelector('.hours')!.textContent = now.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
@@ -71,8 +91,8 @@ const stats = [
 <style>
  .watch-home { min-height:80vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 12px; gap:12px; }
  .watch-body { position:relative; width:min(720px,100%); aspect-ratio:1; container-type:inline-size; }
- .watch-product { display:block; width:100%; height:auto; }
- .watch-bezel,.watch-screen { position:absolute; inset:0; pointer-events:none; font-family:"Arial Narrow",Arial,sans-serif; color:#d3d5d0; }
+ .watch-product { position:relative; z-index:1; display:block; width:100%; height:auto; }
+ .watch-bezel,.watch-screen { position:absolute; inset:0; z-index:2; pointer-events:none; font-family:"Arial Narrow",Arial,sans-serif; color:#d3d5d0; }
  .watch-date { position:absolute; left:54.5%; top:33.3%; width:10%; height:8%; margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#141916; font-weight:800; font-style:italic; line-height:1;  }
  .weekday { text-transform:uppercase; font-size:2.5cqw; } .day { font-size:4.5cqw; }
  .watch-clock { position:absolute; left:35%; top:45%; width:30%; white-space:nowrap; font-size:8.5cqw; font-weight:800; font-stretch:condensed; line-height:1; letter-spacing:-.055em;  font-variant-numeric:tabular-nums; }
@@ -86,8 +106,21 @@ const stats = [
  .watch-dots { position:absolute; top:37%; left:42%; display:flex; gap:.6cqw;  }
  .watch-dots span { width:.5cqw; height:.5cqw; border-radius:50%; background:#59605a; } .watch-dots .active { background:#d3d5d0; }
  .watch-button { position:absolute; z-index:3; padding:0; border:0; background:transparent; cursor:pointer; min-width:34px; min-height:44px; touch-action:manipulation; border-radius:12px; }
- .previous { left:18%; top:42%; width:6%; height:10%; } .next { left:77%; top:34%; width:6%; height:10%; }
- .watch-button:hover { background:#ffffff0a; } .watch-button:active { background:#0002; }
+ .previous { left:15%; top:40.5%; width:7%; height:10.5%; } .next { left:78%; top:40.5%; width:7%; height:10.5%; }
+ /* Middle side buttons: a cap sits under the case and pokes out past the edge. */
+ .watch-cap { position:absolute; z-index:0; top:41.8%; height:7.8%; width:3.4%; pointer-events:none;
+  background:repeating-linear-gradient(0deg,#ffffff0d 0 .22cqw,transparent .22cqw .5cqw),linear-gradient(90deg,#3b3f3d,#1c1f1e 55%,#0d0f0e);
+  box-shadow:0 .4cqw .9cqw #0007, inset 0 .15cqw .1cqw #ffffff1f, inset 0 -.2cqw .2cqw #0008;
+  transition:transform .18s ease, filter .18s ease; }
+ .cap-previous { left:16.6%; border-radius:1.2cqw .4cqw .4cqw 1.2cqw; }
+ .cap-next { left:79.6%; border-radius:.4cqw 1.2cqw 1.2cqw .4cqw; background:repeating-linear-gradient(0deg,#ffffff0d 0 .22cqw,transparent .22cqw .5cqw),linear-gradient(270deg,#3b3f3d,#1c1f1e 55%,#0d0f0e); }
+ .watch-body:has(.previous:hover) .cap-previous { transform:translateX(-.25cqw); filter:brightness(1.25); }
+ .watch-body:has(.next:hover) .cap-next { transform:translateX(.25cqw); filter:brightness(1.25); }
+ .cap-previous.pressing { animation:press-previous .28s cubic-bezier(.3,.7,.3,1); }
+ .cap-next.pressing { animation:press-next .28s cubic-bezier(.3,.7,.3,1); }
+ @keyframes press-previous { 0% { transform:translateX(0); } 35% { transform:translateX(1.3cqw); filter:brightness(.75); } 100% { transform:translateX(0); } }
+ @keyframes press-next { 0% { transform:translateX(0); } 35% { transform:translateX(-1.3cqw); filter:brightness(.75); } 100% { transform:translateX(0); } }
+ @media (prefers-reduced-motion: reduce) { .watch-cap { transition:none; } .watch-cap.pressing { animation-duration:.01s; } }
  .watch-button:focus-visible,.watch-stat:focus-visible { outline:2px solid #65aaa3; outline-offset:3px; }
  .home-links { display:flex; gap:28px; font:12px monospace; color:var(--color-paper-dim); } .home-links a:hover { color:var(--color-accent); }
 </style>

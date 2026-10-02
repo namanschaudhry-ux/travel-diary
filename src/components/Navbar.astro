@@ -5,12 +5,17 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 <header class="sticky top-0 z-50 border-b border-line/70 bg-ink/90 backdrop-blur-sm">
   <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-10">
-    <a
-      href="/"
-      class="font-display text-lg font-extrabold tracking-[-0.04em] text-paper transition-colors hover:text-accent"
-    >
-      Naman
-    </a>
+    {/* The homepage has the arched name over the watch, so the brand only shows on other pages. */}
+    {path === "/" ? (
+      <span aria-hidden="true"></span>
+    ) : (
+      <a
+        href="/"
+        class="font-display text-lg font-extrabold tracking-[-0.04em] text-paper transition-colors hover:text-accent"
+      >
+        Naman
+      </a>
+    )}
 
     <input type="checkbox" id="nav-toggle" class="peer hidden" />
     <label

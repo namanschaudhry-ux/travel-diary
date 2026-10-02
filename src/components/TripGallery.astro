@@ -40,10 +40,14 @@ interface Props {
   categories?: string[];
   // Turns on the gallery/map switch. Only photos with `gps` get a pin.
   map?: { place: string; code: string };
+  // Optional soundtrack: a Spotify track embedded above the season label,
+  // with a short note under the player.
+  track?: { spotifyId: string; label: string; note: { en: string; es: string; fr: string } };
 }
 
 const { title, slug, season, accent = { onDark: "#ffd60a", onLight: "#8a6642" }, categories = [] } = Astro.props;
 const mapSettings = Astro.props.map;
+const track = Astro.props.track;
 const pinnedCount = Astro.props.photos.filter((photo) => photo.gps || photo.approxLocation).length;
 const hasApprox = Astro.props.photos.some((photo) => !photo.gps && photo.approxLocation);
 const mapEnabled = !!mapSettings && pinnedCount > 0;
@@ -169,6 +173,21 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
       <div class="camera-dial-hub" aria-hidden="true">FILM</div>
       <p class="dial-category" id="dial-category" aria-live="polite" data-i18n-en="all" data-i18n-es="todas" data-i18n-fr="toutes">all</p>
     </div>
+    <div class="title-column">
+    {track && (
+      <div class="trip-soundtrack">
+        <iframe
+          title={`Spotify player: ${track.label}`}
+          src={`https://open.spotify.com/embed/track/${track.spotifyId}?utm_source=generator&theme=0`}
+          width="100%"
+          height="80"
+          frameborder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
+        <p class="soundtrack-note" data-i18n-en={track.note.en} data-i18n-es={track.note.es} data-i18n-fr={track.note.fr}>{track.note.en}</p>
+      </div>
+    )}
     <h1 class="city-title" aria-label={`${season} — ${headingWords.join(" ")}`}>
       <span class="city-season">{season}</span>
       <span
@@ -181,6 +200,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
         {headingWords.map((word) => <span>{word}</span>)}
       </span>
     </h1>
+    </div>
   </div>
 
   {mapEnabled && mapSettings && (
@@ -802,7 +822,10 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
       grid-row: 1;
       justify-self: start;
     }
+    .top-controls .title-column { display: contents; }
     .top-controls .city-title { grid-column: 2; grid-row: 1; }
+    .top-controls .trip-soundtrack { grid-column: 1 / -1; grid-row: 3; justify-self: stretch; align-items: center; }
+    .top-controls .soundtrack-note { text-align: center; }
     .top-controls .filter-dial-wrap {
       grid-column: 1 / -1;
       justify-self: center;
@@ -931,6 +954,23 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
     pointer-events: none;
   }
 
+  .title-column {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .trip-soundtrack {
+    width: min(300px, 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .trip-soundtrack iframe { display: block; width: 100%; height: 80px; border: 0; border-radius: 12px; }
+  .soundtrack-note { margin: 0; font: 11px / 1.4 monospace; letter-spacing: .06em; color: var(--color-paper-dim); text-align: right; }
   .city-title {
     grid-column: 3;
     justify-self: end;

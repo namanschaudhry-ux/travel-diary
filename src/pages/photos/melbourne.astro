@@ -23,6 +23,17 @@ import dji0048 from "../../assets/photos/melbourne-2026/DJI_20260928163402_0048_
 // photos have none, so they have no map pin.
 const categories = ["beach", "buildings", "green", "cafes"];
 
+// Soundtrack shown above the season label: "Tomorrow's Dust" by Tame Impala, from The Slow Rush.
+const track = {
+  spotifyId: "666PdikRnUzdvjT9p5wWND",
+  label: "Tomorrow's Dust by Tame Impala",
+  note: {
+    en: "track of the season",
+    es: "canción de la temporada",
+    fr: "morceau de la saison",
+  },
+};
+
 const photos = [
   { id: "melbourne-9247", image: photo9247, alt: "Melbourne skyline across the bay beneath a pastel sunset.", caption: "Point Ormond, Elwood", category: "beach", date: "Sep 19 '26", time: "18:09", gps: [-37.881936, 144.975906] },
   { id: "melbourne-9248", image: photo9248, alt: "An orange sunset over the bay with people on the grassy foreshore.", caption: "Point Ormond, Elwood", category: "beach", date: "Sep 19 '26", time: "18:09", gps: [-37.881939, 144.975906] },
@@ -42,4 +53,4 @@ const photos = [
 ];
 ---
 
-<TripGallery title="Melbourne — Naman" slug="melbourne" season="spring ’26" photos={photos} categories={categories} map={{ place: "Melbourne", code: "MEL" }} accent={{ onDark: "#c5e063", onLight: "#4f7a12" }} />
+<TripGallery title="Melbourne — Naman" slug="melbourne" season="spring ’26" photos={photos} categories={categories} map={{ place: "Melbourne", code: "MEL" }} accent={{ onDark: "#c5e063", onLight: "#4f7a12" }} track={track} />
