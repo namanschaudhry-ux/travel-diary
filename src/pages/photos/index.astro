@@ -14,10 +14,15 @@ import nzAutumnCover from "../../assets/photos/new-zealand-autumn-2026/IMG_6280.
 const japanFiles = import.meta.glob<{ default: ImageMetadata }>("/src/assets/photos/japan-2025/*.jpg", { eager: true });
 const japanCover = japanFiles[`/src/assets/photos/japan-2025/${japanPhotos[0].id}.jpg`]?.default;
 
+import melbourneAutumnCover from "../../assets/photos/melbourne-autumn-2026/IMG_7508.jpeg";
+import sanFranciscoCover from "../../assets/photos/san-francisco-2026/IMG_9083.jpeg";
+
 const trips = [
   { href: "/photos/melbourne/", place: "Melbourne", season: "Spring ’26", image: melbourneCover, alt: "Melbourne skyline across the bay at sunset.", accent: "#c5e063", title: "#8eaf62", focus: "50% 80%" },
+  { href: "/photos/san-francisco/", place: "San Francisco", season: "Summer ’26", image: sanFranciscoCover, alt: "A corner bookshop in San Francisco.", accent: "#ffd60a", title: "#b9ac48" },
   { href: "/photos/new-york/", place: "New York", season: "Summer ’26", image: nycCover, alt: "Walkers on the Brooklyn Bridge promenade toward its stone tower.", accent: "#ffd60a", title: "#b9ac48" },
   { href: "/photos/new-zealand/", place: "New Zealand", season: "Winter ’26", image: nzWinterCover, alt: "A lakeside beach and snow-capped mountains at dusk.", accent: "#8fd4ff", title: "#78a0c2" },
+  { href: "/photos/melbourne-autumn/", place: "Melbourne", season: "Autumn ’26", image: melbourneAutumnCover, alt: "Melbourne skyline at sunset.", accent: "#f4a259", title: "#af7e45" },
   { href: "/photos/new-zealand-autumn/", place: "New Zealand", season: "Autumn ’26", image: nzAutumnCover, alt: "A panorama of jagged peaks from a stony ridge in Arthur's Pass.", accent: "#f4a259", title: "#af7e45" },
   { href: "/photos/japan/", place: "Japan", season: "Winter ’25", image: japanCover, alt: japanPhotos[0].alt, accent: "#8fd4ff", title: "#78a0c2" },
 ].filter((trip) => trip.image);

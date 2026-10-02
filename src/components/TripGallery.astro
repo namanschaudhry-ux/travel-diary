@@ -196,9 +196,9 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
   <section id="photo-gallery" aria-label="Photos" class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
       {galleryColumns.map((column) => (
-      <div>
+      <div data-gallery-column>
       {column.map((photo, index) => (
-        <figure data-expand-portrait="true" data-caption={photo.caption} data-photo-id={photo.id} data-tags={photo.tags.join(" ")} data-lat={(photo.gps ?? photo.approxLocation)?.[0]} data-lng={(photo.gps ?? photo.approxLocation)?.[1]} data-precision={photo.gps ? "Photo GPS" : photo.approxLocation ? "Approximate location" : undefined} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
+        <figure data-expand-portrait="true" data-caption={photo.caption} data-photo-id={photo.id} data-photo-order={photos.indexOf(photo)} data-tags={photo.tags.join(" ")} data-lat={(photo.gps ?? photo.approxLocation)?.[0]} data-lng={(photo.gps ?? photo.approxLocation)?.[1]} data-precision={photo.gps ? "Photo GPS" : photo.approxLocation ? "Approximate location" : undefined} role="button" aria-label={`Enlarge ${photo.caption || photo.alt}`} aria-haspopup="dialog" tabindex="0" class="photo-card relative mb-6 overflow-hidden sm:mb-8 rounded-[12px] bg-ink-soft">
           <Image
             src={photo.image}
             alt={photo.alt}
@@ -569,6 +569,25 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
   if (dial) {
     const items = Array.from(dial.querySelectorAll<HTMLElement>(".camera-dial-item"));
     const cards = Array.from(document.querySelectorAll<HTMLElement>("#photo-gallery [data-expand-portrait]"));
+    const columns = Array.from(document.querySelectorAll<HTMLElement>("[data-gallery-column]"));
+    const rebalance = () => {
+      const heights = columns.map(() => 0);
+      const placed: { top: number; bottom: number; portrait: boolean }[][] = [[], []];
+      const ratio = (card: HTMLElement) => {
+        const image = card.querySelector("img")!;
+        return Number(image.getAttribute("height")) / Math.max(Number(image.getAttribute("width")), 1);
+      };
+      const queue = cards.filter(card => !card.hidden).sort((a, b) => Number(a.dataset.photoOrder) - Number(b.dataset.photoOrder));
+      while (queue.length) {
+        const target = heights[0] <= heights[1] ? 0 : 1;
+        const safe = queue.findIndex(card => ratio(card) <= 1 || !placed[1 - target].some(other => other.portrait && other.top < heights[target] + ratio(card) && heights[target] < other.bottom));
+        const [card] = queue.splice(safe < 0 ? 0 : safe, 1);
+        const span = ratio(card);
+        columns[target].append(card);
+        placed[target].push({ top: heights[target], bottom: heights[target] + span, portrait: span > 1 });
+        heights[target] += span;
+      }
+    };
     // "all" is selected on load, so every photo starts visible.
     const reducedMotionFilter = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -623,11 +642,12 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
       if (reducedMotionFilter.matches) {
         toHide.forEach((card) => { card.hidden = true; });
         toShow.forEach((card) => { card.hidden = false; });
+        rebalance();
         return;
       }
 
       // Cards that stay visible still shift position, because hiding/showing others
-      // rebalances the CSS-columns masonry. Record where they are now (FLIP's "First")
+      // changes the column heights. Record where they are now (FLIP's "First")
       // so that shift can be animated instead of snapping instantly.
       const staying = cards.filter(
         (card) => !card.hidden && !toHide.includes(card) && !toShow.includes(card)
@@ -688,6 +708,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
           card.hidden = true;
           card.style.opacity = "";
         });
+        rebalance();
         pendingToHide = [];
         pendingToShow = [];
         pendingStaying = [];

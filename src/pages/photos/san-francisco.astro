@@ -1,0 +1,25 @@
+---
+import TripGallery from "../../components/TripGallery.astro";
+import photo0 from "../../assets/photos/san-francisco-2026/IMG_9083.jpeg";
+import photo1 from "../../assets/photos/san-francisco-2026/IMG_9084.jpeg";
+import photo2 from "../../assets/photos/san-francisco-2026/IMG_9086.jpeg";
+import photo3 from "../../assets/photos/san-francisco-2026/IMG_9096.jpeg";
+import photo4 from "../../assets/photos/san-francisco-2026/IMG_9119.jpeg";
+import photo5 from "../../assets/photos/san-francisco-2026/IMG_9129.jpeg";
+import photo6 from "../../assets/photos/san-francisco-2026/IMG_9176.jpeg";
+import photo7 from "../../assets/photos/san-francisco-2026/IMG_9189.jpeg";
+
+// Editorial fields and order mirror the matching Notion Photo library view.
+const photos = [
+{ image: photo0, "id": "san-francisco-9083", "alt": "A corner bookshop on a quiet San Francisco street.", "caption": "Books & Bookshelves, Duboce Triangle", "category": "buildings", "date": "Sep 7 '26", "time": "17:31", "gps": [37.767678, -122.431144]},
+{ image: photo1, "id": "san-francisco-9084", "alt": "A tree wrapped in ivy on a city sidewalk.", "caption": "Sanchez Street, Duboce Triangle", "category": "green", "date": "Sep 7 '26", "time": "17:31", "gps": [37.767717, -122.431175]},
+{ image: photo2, "id": "san-francisco-9086", "alt": "A tree-lined street with a bike lane.", "caption": "Lower Haight", "category": "green", "date": "Sep 7 '26", "time": "17:37", "gps": [37.771, -122.432281]},
+{ image: photo3, "id": "san-francisco-9096", "alt": "Inside a bright Blue Bottle café.", "caption": "Blue Bottle Coffee, South Park", "category": "cafes", "date": "Sep 8 '26", "time": "07:17", "gps": [37.7825, -122.393136]},
+{ image: photo4, "id": "san-francisco-9119", "alt": "The Ferry Building and its clock tower across the water at sunset.", "caption": "Pier 14, Embarcadero", "category": "harbour", "date": "Sep 9 '26", "time": "19:39", "gps": [37.793931, -122.390739]},
+{ image: photo5, "id": "san-francisco-9129", "alt": "People outside a café storefront in the morning.", "caption": "SoMa", "category": "cafes", "date": "Sep 10 '26", "time": "09:03", "gps": [37.780494, -122.394394]},
+{ image: photo6, "id": "san-francisco-9176", "alt": "The California coastline seen from a plane window.", "caption": "Above Santa Cruz County", "category": "beach", "date": "Sep 12 '26", "time": "17:33"},
+{ image: photo7, "id": "san-francisco-9189", "alt": "Los Angeles spread out below a plane window.", "caption": "Above Los Angeles", "category": "buildings", "date": "Sep 12 '26", "time": "18:13"}
+];
+---
+
+<TripGallery title="San Francisco — Naman" slug="san-francisco" season="summer ’26" photos={photos} categories={["buildings", "green", "cafes", "harbour", "beach"]} map={{ place: "San Francisco", code: "SFO" }} accent={{ onDark: "#ffd60a", onLight: "#806600" }} />
