@@ -112,6 +112,15 @@ const trips = [
     select(event.key === "Home" ? 0 : event.key === "End" ? stops.length - 1 : selected + (["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1));
     stops[selected].focus({ preventScroll: true });
   });
+  // Arrow keys turn the dial from anywhere on the page, not only when it has focus.
+  document.addEventListener("keydown", event => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+    const target = event.target;
+    if (target instanceof Element && target.closest("input, textarea, select, [contenteditable], details[open]")) return;
+    event.preventDefault();
+    select(selected + (event.key === "ArrowRight" ? 1 : -1));
+  });
 </script>
 
 <style>
