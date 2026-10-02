@@ -1,0 +1,99 @@
+{
+  "exported_at": "2026-10-03",
+  "range": {
+    "start": "2025-12-06",
+    "end": "2025-12-16"
+  },
+  "source": "manual export via Claude's Strava connector (temporary, pre-live-API); summary polylines",
+  "filter": "Every Run and Ride Naman recorded in Japan, 7 to 15 Dec 2025 (Tokyo and Fujikawaguchiko). Left out: three GPS tracks saved as runs that were walks and a train ride while sightseeing (16671923707 and 16675892317 on 7 Dec, 16682671786 on 8 Dec; average pace 41 to 80 min/km, the last tops out at 63 km/h).",
+  "activities": [
+    {
+      "id": "16670999507",
+      "name": "TOKYO",
+      "sport_type": "Run",
+      "start_local": "2025-12-07T09:05:30",
+      "distance_km": 7.1,
+      "moving_time_s": 2765,
+      "elevation_gain_m": 44,
+      "location": "Shibuya, Japan",
+      "polyline": "_lxxEymtsY\\?LGJWZKAC@ED[EUIoCOWAAS@cAR_@QQYm@o@u@a@}AaAGQGCBAAEISWc@`@_ATa@TWl@qAvAmBZo@F_@R]Zu@b@g@d@[\\s@~@_CR{@HULOJWLSBOu@}@z@oA`@e@?AP?DCPi@R{AFuFLuBOmAGMY]UWWO@WOuABwBCSQc@SuAUWUIOAg@Sc@GWHQJKBgAj@i@`@i@XYHODQCeA_@uBdAO`@@FQFBBBA@CKFWFQNAXF_@GKAWM?SNQZMJ}@ZO?GBAJ`@j@L`@@tAEf@Mb@w@fBEj@?j@Vn@ITMRK`@KhBMl@[t@[h@y@|@{@p@GNgArDK|@ITEd@AdAJdCRf@d@v@PP^j@~[eRBD@E@@CAHCRU\\Sd@a@|@PVNf@h@b@^R\\@v@Fj@@~@Bf@@d@Aj@e@~A[d@h@d@j@^PX`Az@VT@DL?JCL`@PIl@ID@GJ@PETGF_@dAC?CHJALNBPHLD@DLRBL`@LRHzB^B?RFj@^jAHLz@Dm@[@BOKw@gE~@c@dAQn@YV[RM?Eh@_@`@a@BGPQV_@Tg@RbAHrABHH@`@GVKj@]d@KbAITGRDL?bAWfAQv@CZINAHFHN?VJHn@B`@M^Vb@B`@LRJv@R\\RLh@R`@ZHb@Fd@J`@RR\\RNrBZlA\\n@EFCTJl@LfAF`@EXKV?|BfCOTC^a@JFCbAKV@j@XPZJj@Ft@Nv@Dj@GrBGn@oBpAc@h@]X[`@Wj@IV?DCCKHa@p@}A`BQLc@~@Yx@e@jAm@z@iAz@w@LuAb@i@TYTQd@S|@Ep@@^Lx@Vn@Nj@v@|Ab@j@ZPd@NXDPPDVBdABb@BDLF`@D|@Ej@MXELLVh@Pv@FNRX\\v@PLRa@HAh@TD?ZQNEt@Av@JPEf@c@NU\\gBAs@Fy@EWECEQ?IIa@wAcBIGMSAGTcBFcAJ{@AcBDSTOJMBmAMYY[_@GkB}AYc@IUOiAEeAGKKk@@O`@kATk@Zc@XQ^c@`Am@TYFe@@kA"
+    },
+    {
+      "id": "16680558599",
+      "name": "Imperial Palace + Meiji Jingu Gaien",
+      "sport_type": "Run",
+      "start_local": "2025-12-08T09:12:52",
+      "distance_km": 7.27,
+      "moving_time_s": 2656,
+      "elevation_gain_m": 76,
+      "location": "Minato, Japan",
+      "polyline": "ekvxEayxsYNBf@@b@]TAB@DHVx@PpA?h@Vt@FX`@`AHp@MhAAt@Yb@_QvHKBg@A{@gAQOi@Yw@O_BCHXUJQBGb@_Dx@k@RSFoAh@y@Vc@TcAZc@Ro@j@]l@Uz@Ij@@f@BRCB?DLp@d@fAV\\PPf@Vb@Lf@@\\?LCxCgAVOHGNGN?LCpCiApC}@b@WZUX[Zm@Lc@F]B{@Cc@K{@K[oAgBIIg@I_@Cs@Dq@PK@AAIm@ZWAC_@O]YIOKYAQMSM_@[e@e@wA[u@W_AsAyCQk@_@o@Y}@g@iA_@gAg@w@FBTf@GQKUKECCM_@GWIy@Q}@Wu@Wa@QU[Yy@CKAe@QqAo@aBa@k@U_@IcA_@OI[Ys@e@_@KgEoDkAm@s@OIKAcAt@InBo@h@_@H?b@Uv@YrCwA`C}@f@a@r@eAP[uAuCQq@BCL\\QYRXt@eCk@h@OXCL?Jp@vA~@|ADAx@iAfAiAv@e@t@W`@IXI\\ETMLU^eAHONs@NuABy@F]@e@s@mC?BAO@EFACNAC@KCSDm@HQGKMkABOB@@HEZGDQ@c@HdAm@@c@MyAB_@CwAEGq@?c@IKIWGN]IUTALMHoABi@b@sAHe@HiAWwAKiBUcAg@cAOKQa@EgANa@MgBAAm@?EkAFmACoAW}BAi@Gi@Iq@KK?IRqCFO\\}APeA^sAr@cA~@aAt@q@\\St@i@~@_A^e@Tk@Ps@P{ADaAN}@?m@GS]eCB@?RGa@@D@DEME_@s@cCa@aCBa@^_AjA_EtAcEyFyDiE_CJ}@Qb@GFG@ICiBiAgAk@u@e@kDeB{@i@y@a@iBgAg@_@{@c@MQKGkGwAcBk@SMHIRBNCQGIKK[}@IqA]cAMgB[iA[c@EOFi@h@_@L_@?g@FgCt@iAL"
+    },
+    {
+      "id": "16700916246",
+      "name": "Fuji Cycling",
+      "sport_type": "Ride",
+      "start_local": "2025-12-10T14:21:49",
+      "distance_km": 15.63,
+      "moving_time_s": 4855,
+      "elevation_gain_m": 161,
+      "location": "Fujikawaguchiko, Japan",
+      "polyline": "qmtwEg{}mYBCCC_@@CEdBOJQV_EEwCIS[BkAp@U@{BSSKg@m@]Di@n@_AvDYd@c@Vk@Eq@_@iBuA_@e@sA_DSgAgAsB_BkEe@w@q@s@sBiAiBc@iDK]P[b@YBUY@_@R_AG]mAuCw@aAu@a@iA]yRaC{AF_AR{@^w@h@m@h@i@z@q@~AMp@ItAHvA`@vBDHdCbRObAsAfELGRg@BQC?ERR_@KZRe@IBi@lAYHkB|BgAc@FLbC|AMBWQgDsCkBqByBsCiAaA{AeA]]o@qB_@iDsAi@YC[FYIwA`AeD\\uCh@kClAmCdB[Ni@?WH@TQZyBfC]X]?[QSXGPPPHf@Y`BUMb@QHOHcAS_@yBcB]Ga@`B}@dF_@dAiCfGK|@IfEWrBu@X{@p@mAxAERi@h@NAAEONDBBMEDDTV`@VXr@h@~AhJb@bBXn@\\b@tAnA`Ab@vA`@~C`@nC@d@HRHNXJh@Br@GJGQB[dAa@z@FGDs@G_@Dk@^DXDSXa@d@MODr@CJx@H_AKBKNF@@MPMSz@CC?YPCMBJ@CFBEk@Mb@MIHkANc@XCZD?@JFAId@m@lA{BlCQb@Gl@@`ARnBLrDKnDIp@_@fAw@bAoBxBYf@Qn@GlA`@lDCtA]hCo@nBUrAHz@lBxGT@l@Wn@m@a@m@WTMZJa@V]RDX\\`AMvBrCG^HVFdAFVP@HJd@@n@QFFu@NgAUc@oBH]e@iA]c@MCWa@U@kAd@a@EGFOKFJE@JGHHi@g@Z^?FAGIDJKGDTN@L]Zc@Jm@wAw@qCWgA?mAHc@z@gC^yDAqAYmCHiA\\_AvDgE`@yAPiB?k@MoAGcBWuBCs@JmBFGLD\\i@fAcAn@cA^yAQiAOc@S]YSkAQsCCmCk@gAg@kCiCs@{AqAmJG_BLm@pA_CRy@XyBh@qHRqAhBkEj@aBdBkITc@r@{@nBcBfDeD`DkBrE{B`HaCZG^FZj@P`AX`@XJfALZ`@Tx@x@xERp@d@x@b@j@`DlCrBfCLXnArA|[nXfDzC|A`B|@h@fA|@bKbHXVHRhAd@tDbCfD`C^^LWt@o@bGoHN[Hi@BaBRO^AHKd@}A\\s@pFoHN_@j@_CVeCB_Ax@cIJcEBOPW@PKVGn@gANCJ@TQMAUz@KTKLoBQ[UM"
+    },
+    {
+      "id": "16717494894",
+      "name": "FUJI",
+      "sport_type": "Run",
+      "start_local": "2025-12-11T12:37:37",
+      "distance_km": 5.19,
+      "moving_time_s": 2050,
+      "elevation_gain_m": 23.3,
+      "location": "Fujikawaguchiko, Japan",
+      "polyline": "kdvwEwb}mY]LOPC@OMQKwAMk@@_@Hg@AKGI?EFDJLFA@GAUW}@{@eBwAeAq@iAaAcDgCeDuCcEyDHGP@PDTJRd@I^GBE@QIk@c@MMK[i@]i@i@{DyEs@u@[YyAcA_@_@Yc@m@yA]gBYcAcAHm@Dy@?m@HwCNwCn@_A\\iAj@IJqCxAa@Pe@@YLAVGPIJiBnBu@j@WASOKHIPAJRPLR@ZMdAMLM\\SZOlAa@~BMRg@FCBE\\?JHJJn@OZaAxA}@fAyAvBINBFAXIPYP{@XWfA_AjBg@nAA^@t@t@rCHl@@ZNn@Fl@Jp@b@tAHPnBnBf@^\\Lz@ZpATLHHBhH|A@ZBV@f@ERO\\EPS`@CAJ_@NgAJSFSFAZHD?MKWEOe@O[WUYMiAA_@CME?EM@o@@yBc@OAWEu@Um@[UESKGGYSu@_AIMUq@QcAMg@U{AMk@GkAOU@OW{AEm@@OJi@Tk@jAgBLg@VkBHqAJJ@AKw@TwDXmA|@_CPYDAVDrBt@h@J\\ALWh@iETi@Nm@Hs@?UAKUg@Vm@RAVJTMNWTQHOdAkAd@u@b@QZD\\IpA}@@GSJ@?"
+    },
+    {
+      "id": "16709838614",
+      "name": "Course à pied dans l'après-midi",
+      "sport_type": "Run",
+      "start_local": "2025-12-11T13:34:00",
+      "distance_km": 1.85,
+      "moving_time_s": 638,
+      "elevation_gain_m": 11.3,
+      "location": "Fujikawaguchiko, Japan",
+      "polyline": "{qxwEel~mYf@[h@SPKf@SPCXKb@GfAWFE?EFGCDHBLBP?HEZCFBn@MpAEh@IHBDEHBx@CBCX@XGR?Jh@FJBXFRCRNv@Pl@Rh@LPl@l@JFH@DH\\RBDJBNNHDBJ\\TDJ`@ZP\\LJrAjBHFv@|@n@f@f@j@CN|@p@DHNNDQFC@QCIQMQYKGOAKB?Ft@b@JNjA|@RTjDrCj@l@dAx@PR^XnAhAn@b@HJtAhAn@h@AHJJTHDHLF^ZF@CIKOBI\\@JBL?HAPITAd@IP?b@JH?l@\\HP@A"
+    },
+    {
+      "id": "16717502217",
+      "name": "Imperial Place Loop",
+      "sport_type": "Run",
+      "start_local": "2025-12-12T07:03:45",
+      "distance_km": 7.19,
+      "moving_time_s": 2526,
+      "elevation_gain_m": 80.8,
+      "location": "Chuo, Japan",
+      "polyline": "qcvxE{xbtYDAHP?HEZIR?t@I\\Yl@Oj@B`@Nr@CZ[V_@rBITe@VQ^_@UGAq@NoApA}@v@GTB?Rb@?v@SBKCOB_AUWI}@c@c@[SIE@Yf@QJK@YNSLs@z@e@Xs@t@Sh@DNGXCx@Uv@Cb@Kb@CDGr@H^GVg@j@OX_@HwEN_BGLQZj@`AvBF\\Z\\tAn@nAMXQFW@?@D_@fAO|@Ql@]z@CLBPGRKPMQURDx@s@`BKn@IROH[XOXG\\Dd@\\t@KTCVMRIj@AJNrAAJIZKRQHQP[t@M^Ld@BRQNMlAQn@C^D??DSxAg@nAOf@WrAo@fCILK?WKqC_BaCeAoBqAuAu@i@e@_Aq@g@WWI@@KDSp@GBKAqA[w@Wg@IoA_@e@Iy@i@OGWa@{@YgAUa@?c@GI?i@Tg@\\[Lw@OQISC]N_@Hc@Ae@Qa@?eALsBZGBgB|Ba@`@S`@[~DBj@AJObAI~@@XKj@A^Qp@QpAGh@?`@XjAbB~FXz@Vh@RVl@rAPv@DT@n@Gl@Ol@GJSTKXDd@VhBTr@`A|BJb@Xt@X`ATf@`A~Dd@tDB`AJfBDdBAXMJGfAA`ATXdB^dAJ`@Np@Hh@Pp@Fl@NnAPd@L^B\\DpA^d@Bl@Cd@@f@FbASb@?ZCb@@JCx@M`@Kb@OrBeA|CaBhCoAZSPWVy@He@Tu@XqARe@PYRW~@_A|@y@~@o@tAwAl@y@V}@Hi@FuANqA@SCm@Ks@S_Cg@kCa@aBIm@?]^eBh@kAb@wAXs@R{@X_AVsAJYHKN]T{@fBeFbAgDj@_CB@Lc@JCS[kCq@J@|Bf@`@PHHLFKCh@s@BMACOAs@Um@K[HK?s@O"
+    },
+    {
+      "id": "16727024077",
+      "name": "Meguro River",
+      "sport_type": "Run",
+      "start_local": "2025-12-13T11:00:33",
+      "distance_km": 7.08,
+      "moving_time_s": 2655,
+      "elevation_gain_m": 33,
+      "location": "Meguro, Japan",
+      "polyline": "szpxEwctsYADGBCJc@j@c@|@[XoAfBw@`Ac@p@e@hAo@hA[b@Uf@Yf@Ul@{@dAO`@Kh@Yr@Y\\a@NAf@g@r@Sj@GT?Fq@lAk@v@AZqAtBaAvB]pAYrAQBCA?IR_AL]RcALSVi@Va@Lk@Zg@H]b@_@DQNa@b@u@La@JSL]d@aANUFWb@w@\\_@^m@B[X_@`AoBl@w@Zy@n@qAHYT[p@aBP[nAcBv@y@NS`@y@VYb@c@La@R[XNHAT_@HKp@WHGXe@BCG?Hq@AK@IAEG@HENYTIJIh@E~DiBb@c@NEXQFYLQ\\ApAq@PMtAsANk@Xc@bA}@x@m@`AkANWd@WVUR]z@gANc@D_@FQT_@r@k@BAJBb@v@h@h@Ie@n@q@|@s@j@u@Rm@NSnAgA^UPg@z@{@v@k@d@UFGJm@Li@Zc@\\e@fBuAVWLc@XOLw@\\u@JMAIb@DTKNAJSv@s@`@W^e@PIXa@ZU|@g@p@[AGHU\\i@ZU\\QTgANWZ]d@Uj@e@RQF]\\Y^U`@_@`@SF@vAg@~@a@PCvBq@rAq@j@a@Py@R]?Eg@]G?SLa@f@q@bAYXaAxAm@l@[N_@Zk@X]b@e@b@]ViAb@y@n@_@NYR_@HWLwAnAWN_@n@y@XSPQl@UNK@UN_E~CTb@?DEJQLAPi@d@Q\\aAz@[P[\\W`@_ChCk@|@i@lAUZy@d@g@j@SNWJQZaBlB]Pi@h@Sl@GVJRH\\EFI?YIQSQAk@`@qAbBSl@[RUTMVa@ZU\\w@t@a@v@[`@g@\\Yb@e@`@WZWd@]XS`@g@^[NiAb@IJH^AF_CHSFWLg@\\UJ_B`@IFEb@CBUCc@MIE@EGDMv@EBAADGL?RFJJ@LMZ]HKRWx@?Bm@f@_@BGVg@AMPMJUj@Wd@e@p@_@^CL]r@a@d@KPKh@Sb@c@f@QDORGTUb@Oh@KPWPi@z@WVQ`@[lAVo@No@P[@IQS"
+    },
+    {
+      "id": "16745426346",
+      "name": "Yoyogi Park",
+      "sport_type": "Run",
+      "start_local": "2025-12-15T10:14:49",
+      "distance_km": 5.06,
+      "moving_time_s": 1935,
+      "elevation_gain_m": 50.2,
+      "location": "Shinjuku, Japan",
+      "polyline": "{byxEsbrsYFD`@GTW`@U^_@XKTr@LBRQREXMVE~@c@bAUFQb@s@`ASTKp@l@ASFOGGAKZ}@t@q@Hg@Ra@z@a@tAeA~Au@XG^Sb@[NUTSdAc@ZS^k@h@K`@ORWTGRMDAH@POfAeALGVK`AOPIPSPKf@U`Ay@F?CBWHcAn@w@h@{@f@CHNCL?N\\b@HbBf@ZRV\\TL`BpATHt@L^RjATbCp@z@Dd@Lf@TVZ~BdA^\\`A`@n@Ptc@ODEJE@D?CCEZGl@a@n@W\\i@RIbAu@^a@PWB[Ha@b@c@|@iAh@UVOTm@Z_Bv@yBTK`BCZKp@i@PKz@_@VC]f@g@i@MUUy@Sg@_@g@IYAIQi@Ek@Im@I_A?}@EIW}@Qw@Yu@a@y@U]y@w@aAu@[[uAiB]m@G_@IcAIa@YWsBQcA?MC_BGqAOKBEF@Pb@jAn@hCDl@T`@EJ@\\Fd@FtA?jDDjD?ZWD]AIMG_@ASBYBQ@i@Ic@?o@Gg@@m@?y@BcAMmAAk@Mi@Us@a@mBWq@@MDI\\QHF`@KrBLpA@l@FhCHPPDPPGVYBAJ?VBz@Eh@FdATvAJj@Jh@KSTGn@Np@Aj@LjAOd@?PHFR?ZD^?RNL@FAZQH?PLr@DVC^k@DBFPLL\\xAGHAH]\\]GM?e@z@SLI@e@K"
+    }
+  ]
+}
