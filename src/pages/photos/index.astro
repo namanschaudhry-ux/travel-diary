@@ -42,14 +42,14 @@ const trips = [
         <span class="orbit-track" aria-hidden="true"></span>
         <div class="dial-wrap">
           <span class="dial-pointer" aria-hidden="true"></span>
-          <div class="camera-dial" role="group" aria-label="Choose a trip" aria-describedby="dial-help">
+          <div class="camera-dial" role="group" aria-label="Choose a trip">
             {trips.map((trip, index) => (
               <div class="dial-position" style={`--position: ${index * 360 / trips.length}deg`}>
                 <button class="dial-stop" data-trip={index} data-accent={trip.accent} data-label={`${trip.place} · ${trip.season}`} aria-pressed={index === 0} aria-label={`${trip.place}, ${trip.season}`}><span>{trip.code}</span></button>
               </div>
             ))}
           </div>
-          <div class="dial-hub" aria-hidden="true"><span>TRIPS</span><span class="frame-number">{`01 / ${String(trips.length).padStart(2, "0")}`}</span></div>
+          <div class="dial-hub" aria-hidden="true">TRIPS</div>
         </div>
         {trips.map((trip, index) => (
           <button class="mini-trip" data-mini={index} style={`--position: ${index * 360 / trips.length}deg; --trip-accent: ${trip.accent}; --trip-title: ${trip.title};`} aria-pressed={index === 0} aria-hidden={index === 0 ? "true" : undefined} tabindex={index === 0 ? -1 : 0} aria-label={`Select ${trip.place}, ${trip.season}`}>
@@ -60,12 +60,8 @@ const trips = [
           </button>
         ))}
       </div>
-      <div class="dial-controls">
-        <button class="step" data-step="-1" aria-label="Previous trip">←</button>
-        <p class="selected-label" aria-live="polite" aria-atomic="true">{trips[0].place} · {trips[0].season}</p>
-        <button class="step" data-step="1" aria-label="Next trip">→</button>
-      </div>
-      <p id="dial-help">Turn the dial. Find a memory.</p>
+      {/* Announces the selected trip to screen readers; the dial and card show it visually. */}
+      <p class="selected-label sr-only" aria-live="polite" aria-atomic="true">{trips[0].place} · {trips[0].season}</p>
     </div>
   </section>
 </Layout>
@@ -101,7 +97,6 @@ const trips = [
       card.tabIndex = i === next ? 0 : -1;
     });
     picker.querySelector(".selected-label")!.textContent = stops[next].dataset.label!;
-    picker.querySelector(".frame-number")!.textContent = `${String(next + 1).padStart(2, "0")} / ${String(stops.length).padStart(2, "0")}`;
   }
   stops.forEach((stop, i) => stop.addEventListener("click", () => select(i)));
   minis.forEach((mini, i) => mini.addEventListener("click", () => select(i)));
@@ -111,6 +106,15 @@ const trips = [
     event.preventDefault();
     select(event.key === "Home" ? 0 : event.key === "End" ? stops.length - 1 : selected + (["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1));
     stops[selected].focus({ preventScroll: true });
+  });
+  // Arrow keys turn the dial from anywhere on the page, not only when it has focus.
+  document.addEventListener("keydown", event => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+    const target = event.target;
+    if (target instanceof Element && target.closest("input, textarea, select, [contenteditable], details[open]")) return;
+    event.preventDefault();
+    select(selected + (event.key === "ArrowRight" ? 1 : -1));
   });
 </script>
 
@@ -134,28 +138,43 @@ const trips = [
      clear the trip card above, for any number of trips. */
   .dial-orbit { --rotation: 0deg; --radius: 190px; --card-w: 128px; --card-h: 92px; --cy: max(112px, calc(var(--radius) * cos(360deg / var(--count)) + var(--card-h) / 2 + 6px)); position: relative; height: calc(var(--cy) + var(--radius) + var(--card-h) / 2 + 8px); margin-top: 22px; }
   .orbit-track { position: absolute; left: 50%; top: var(--cy); width: calc(var(--radius) * 2); height: calc(var(--radius) * 2); translate: -50% -50%; border-radius: 50%; border: 1px dashed #ffffff14; pointer-events: none; mask: linear-gradient(transparent 0 22%, #000 34%); }
-  .dial-controls { display: flex; align-items: center; justify-content: center; gap: 22px; margin-top: 4px; }
   .dial-wrap { position: absolute; left: calc(50% - 95px); top: calc(var(--cy) - 95px); width: 190px; height: 190px; z-index: 1; }
-  .dial-pointer { position: absolute; top: -10px; left: calc(50% - 4px); border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 7px solid var(--active-accent); }
-  .camera-dial { --rotation: 0deg; position: absolute; inset: 0; border-radius: 50%; border: 5px solid #202020; background: radial-gradient(circle at 38% 30%, #373737, #111 58%, #000); box-shadow: inset 0 0 0 1px #ffffff20, inset 0 -6px 14px #000, 0 8px 20px #0005; transform: rotate(var(--rotation)); transition: transform .5s cubic-bezier(.22,1,.36,1); }
-  .camera-dial::before { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: repeating-conic-gradient(#ffffff35 0deg 1deg, transparent 1deg 6deg); mask: radial-gradient(transparent 65%, #000 66%); }
+  /* Modelled on the Fujifilm FILM dial: a black disc with a knurled rim,
+     thick white labels fixed to the disc (they turn with it, so the selected
+     trip reads level at the top), the selected one boxed in white, and a
+     fixed black hub with a white oval index pointing at it. */
+  .dial-pointer { position: absolute; top: calc(50% - 34px + 7px); left: 50%; z-index: 2; width: 12px; height: 6px; margin-left: -6px; border-radius: 3px; background: #fff; box-shadow: 0 0 0 1px #000; }
+  .camera-dial { --rotation: 0deg; position: absolute; inset: 0; border-radius: 50%; background: #050505; box-shadow: 0 0 0 1px #000, 0 10px 22px rgba(0,0,0,.6); transform: rotate(var(--rotation)); transition: transform 420ms cubic-bezier(.22,1,.36,1); }
+  /* Outer ring in pebbled dark brown leather, textured like the Instax Mini
+     Evo body (grain drawn with an SVG noise filter). */
+  .camera-dial::before { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(closest-side, transparent 88.6%, rgba(0,0,0,.55) 89.4%, transparent 91.5%), url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90'><filter id='p' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='2' seed='7' stitchTiles='stitch'/><feDiffuseLighting surfaceScale='1.3' lighting-color='%23fff'><feDistantLight azimuth='225' elevation='62'/></feDiffuseLighting><feComponentTransfer><feFuncR type='linear' slope='.45' intercept='.6'/><feFuncG type='linear' slope='.45' intercept='.6'/><feFuncB type='linear' slope='.45' intercept='.6'/></feComponentTransfer><feBlend in2='SourceGraphic' mode='multiply'/></filter><rect width='90' height='90' fill='%234a2a1a' filter='url(%23p)'/></svg>") 0 0 / 90px 90px, #45271a;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.45), inset 0 2px 3px rgba(255,220,190,.18);
+    mask: radial-gradient(closest-side, transparent 88.6%, #000 89%); }
+  /* Polished silver bezel around the leather, like the Instax's metal trim.
+     Fixed (it sits on .dial-wrap), so the sheen stays put while the dial turns. */
+  .dial-wrap::before { content: ""; position: absolute; inset: -5px; border-radius: 50%; pointer-events: none;
+    background: conic-gradient(from 20deg, #f4f4f2, #a3a3a0 12%, #e9e9e6 24%, #8f8f8c 37%, #f7f7f5 50%, #a0a09d 62%, #e4e4e1 75%, #8d8d8a 88%, #f4f4f2);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.35), 0 10px 22px rgba(0,0,0,.55);
+    mask: radial-gradient(closest-side, transparent calc(100% - 5.5px), #000 calc(100% - 5px)); }
   .dial-position { position: absolute; inset: 0; transform: rotate(var(--position)); pointer-events: none; }
-  .dial-stop { position: absolute; top: 9px; left: calc(50% - 24px); width: 48px; height: 44px; color: #a4a4a4; background: transparent; border: 0; pointer-events: auto; cursor: pointer; font: 10px monospace; }
-  .dial-stop span { display: block; transform: rotate(calc(-1 * (var(--position) + var(--rotation)))); transition: transform .5s cubic-bezier(.22,1,.36,1); }
-  .dial-stop[aria-pressed="true"] { color: var(--active-accent); text-shadow: 0 0 12px var(--active-accent); }
-  .dial-hub { position: absolute; inset: 61px; border-radius: 50%; background: radial-gradient(circle at 35% 25%, #303030, #090909 75%); border: 1px solid #080808; box-shadow: 0 3px 8px #0009, inset 0 1px 1px #ffffff1a; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; pointer-events: none; font: 10px monospace; letter-spacing: .1em; color: #ddd; }
-  .frame-number { font-size: 8px; color: #929292; letter-spacing: 0; }
-  .step { border: 1px solid color-mix(in srgb, var(--color-paper) 20%, transparent); color: var(--color-paper-dim); background: transparent; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
-  .selected-label { min-width: 190px; text-align: center; font: 11px monospace; color: var(--color-paper); margin: 0; }
-  #dial-help { text-align: center; font: 10px monospace; color: var(--color-paper-dim); margin: 10px 0 0; }
-  .mini-trip { --angle: calc(var(--position) + var(--rotation)); position: absolute; left: calc(50% - var(--card-w) / 2); top: calc(var(--cy) - var(--card-h) / 2); width: var(--card-w); height: var(--card-h); padding: 0; border: 0; background: none; cursor: pointer; transform: rotate(var(--angle)) translateY(calc(-1 * var(--radius))) rotate(calc(-1 * var(--angle))); transition: transform .5s cubic-bezier(.22,1,.36,1), opacity .35s; }
+  /* Labels run along the radius and read outwards, ending at the rim. */
+  .dial-stop { position: absolute; top: 15px; left: calc(50% - 13px); width: 26px; height: 46px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: none; border: 0; pointer-events: auto; cursor: pointer; color: #fff; }
+  .dial-stop span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); padding: 4px 2px 4px 1px; border-radius: 2px; white-space: nowrap; font: 800 12px / 1 "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; letter-spacing: .01em; transition: background-color 200ms ease, color 200ms ease; }
+  .dial-stop[aria-pressed="true"] span { background: #fff; color: #050505; }
+  @media (hover: hover) and (pointer: fine) { .dial-stop:not([aria-pressed="true"]):hover span { box-shadow: inset 0 0 0 1.5px #fff; } }
+  .dial-hub { position: absolute; top: 50%; left: 50%; width: 68px; height: 68px; transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 40% 30%, #161616 0%, #000 65%); border: 1px solid #000; box-shadow: 0 0 0 1px #1a1a1a, 0 3px 8px rgba(0,0,0,.7); font: 800 14px / 1 "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; letter-spacing: .03em; color: #fff; pointer-events: none; }
+  .mini-trip { --angle: calc(var(--position) + var(--rotation)); position: absolute; left: calc(50% - var(--card-w) / 2); top: calc(var(--cy) - var(--card-h) / 2); width: var(--card-w); height: var(--card-h); padding: 0; border: 0; background: none; cursor: pointer; transform: rotate(var(--angle)) translateY(calc(-1 * var(--radius))) rotate(calc(-1 * var(--angle))); transition: transform 420ms cubic-bezier(.22,1,.36,1), opacity .35s; }
   .mini-card { position: absolute; inset: 0; display: block; border: 1px solid #ffffff14; border-radius: 8px; overflow: hidden; background: #111; text-align: left; transition: border-color .3s, scale .3s; }
-  .mini-card img { width: 100%; height: 100%; object-fit: cover; opacity: .35; transition: opacity .3s; }
+  .mini-card img { width: 100%; height: 100%; object-fit: cover; opacity: .2; transition: opacity .3s; }
   .mini-card > span { position: absolute; inset: auto 10px 9px; display: flex; flex-direction: column; gap: 3px; color: #ddd; }
-  .mini-trip strong { font: 700 12px "Inter Tight", "Inter", sans-serif; color: var(--trip-title); }
-  .mini-trip small { font: 9px monospace; color: var(--trip-accent); }
+  /* Trips out of focus stay dim; the trip colours are muted toward grey until hover. */
+  .mini-trip strong { font: 700 12px "Inter Tight", "Inter", sans-serif; color: color-mix(in srgb, var(--trip-title) 45%, #3a3a3a); transition: color .3s; }
+  .mini-trip small { font: 9px monospace; color: color-mix(in srgb, var(--trip-accent) 40%, #3a3a3a); transition: color .3s; }
   .mini-trip:hover .mini-card { border-color: color-mix(in srgb, var(--active-accent) 60%, transparent); scale: 1.05; }
-  .mini-trip:hover img { opacity: .6; }
+  .mini-trip:hover img { opacity: .55; }
+  .mini-trip:hover strong { color: var(--trip-title); }
+  .mini-trip:hover small { color: var(--trip-accent); }
   .mini-trip[aria-pressed="true"] { opacity: 0; pointer-events: none; }
   button:focus-visible, a:focus-visible { outline: 2px solid var(--active-accent); outline-offset: 5px; }
   @media (max-width: 600px) {

@@ -1,6 +1,20 @@
 ---
+import NameArc from "./NameArc.astro";
 
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+// Photos menu, newest first. Each link takes its own trip page's accent
+// (dark and light theme values from that page), whatever page you're on.
+const photoLinks = [
+  { slug: "melbourne", label: "Melbourne Spring '26", dark: "#c5e063", light: "#4f7a12" },
+  { slug: "san-francisco", label: "San Francisco Summer '26", dark: "#ffd60a", light: "#806600" },
+  { slug: "new-york", label: "New York City Summer '26", dark: "#ffd60a", light: "#8a6642" },
+  { slug: "nyc-preview", label: "NYC Preview", dark: "#ffd60a", light: "#8a6642" },
+  { slug: "new-zealand", label: "New Zealand Winter '26", dark: "#8fd4ff", light: "#1a73a8" },
+  { slug: "melbourne-autumn", label: "Melbourne Autumn '26", dark: "#f4a259", light: "#95501a" },
+  { slug: "new-zealand-autumn", label: "New Zealand Autumn '26", dark: "#f4a259", light: "#a8521a" },
+  { slug: "japan", label: "Japan Winter '25", dark: "#8fd4ff", light: "#1a73a8" },
+];
 ---
 
 <header class="sticky top-0 z-50 border-b border-line/70 bg-ink/90 backdrop-blur-sm">
@@ -11,9 +25,10 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
     ) : (
       <a
         href="/"
-        class="font-display text-lg font-extrabold tracking-[-0.04em] text-paper transition-colors hover:text-accent"
+        aria-label="Naman, home"
+        class="-my-2 block text-paper transition-colors hover:text-accent"
       >
-        Naman
+        <NameArc variant="logo" />
       </a>
     )}
 
@@ -38,14 +53,9 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
           <svg class="country-chevron h-3 w-3 transition-transform" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.2" /></svg>
         </summary>
         <div class="mt-3 min-w-40 rounded-[12px] border border-line bg-ink p-2 shadow-lg sm:absolute sm:left-0 sm:top-full">
-          <a href="/photos/melbourne/" aria-current={path === "/photos/melbourne" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">Melbourne Spring '26</a>
-          <a href="/photos/melbourne-autumn/" aria-current={path === "/photos/melbourne-autumn" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">Melbourne Autumn '26</a>
-          <a href="/photos/san-francisco/" aria-current={path === "/photos/san-francisco" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">San Francisco Summer '26</a>
-          <a href="/photos/new-york/" aria-current={path === "/photos/new-york" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">New York City Summer '26</a>
-          <a href="/photos/nyc-preview/" aria-current={path === "/photos/nyc-preview" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">NYC Preview</a>
-          <a href="/photos/new-zealand/" aria-current={path === "/photos/new-zealand" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">New Zealand Winter '26</a>
-          <a href="/photos/new-zealand-autumn/" aria-current={path === "/photos/new-zealand-autumn" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">New Zealand Autumn '26</a>
-          <a href="/photos/japan/" aria-current={path === "/photos/japan" ? "page" : undefined} class="block whitespace-nowrap rounded-lg px-4 py-2 transition-colors hover:text-accent focus-visible:text-accent">Japan Winter '25</a>
+          {photoLinks.map((link) => (
+            <a href={`/photos/${link.slug}/`} aria-current={path === `/photos/${link.slug}` ? "page" : undefined} style={`--item-dark: ${link.dark}; --item-light: ${link.light};`} class="trip-link block whitespace-nowrap rounded-lg px-4 py-2 transition-colors">{link.label}</a>
+          ))}
         </div>
       </details>
       <a
@@ -65,6 +75,9 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 <style>
   summary::-webkit-details-marker { display: none; }
   details[open] .country-chevron { transform: rotate(180deg); }
+  .trip-link { --item: var(--item-dark); }
+  :global(:root[data-theme="light"]) .trip-link { --item: var(--item-light); }
+  .trip-link:hover, .trip-link:focus-visible, .trip-link[aria-current="page"] { color: var(--item); }
 </style>
 <script>
   const countryDropdown = document.querySelector<HTMLDetailsElement>(".photos-dropdown");

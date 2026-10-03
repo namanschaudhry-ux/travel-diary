@@ -6,7 +6,8 @@
 // Route geometry comes from Strava's summary polylines in strava-export.json
 // (Jun to Sep 2026), strava-runs-over-25km.json and strava-runs-20-to-25km.json
 // (all-time runs of 20 km and up), strava-race-runs.json (shorter run races) and strava-rides-over-40km.json (all-time
-// rides over 40 km) and strava-swims-melbourne.json (open water swims), decoded
+// rides over 40 km), strava-swims-melbourne.json (open water swims) and
+// strava-japan-2025.json (every run and ride in Japan, Dec 2025), decoded
 // at build time. Routes are shown in full, start and finish included.
 import stravaExport from "./strava-export.json";
 import longRuns from "./strava-runs-over-25km.json";
@@ -14,6 +15,7 @@ import halfRuns from "./strava-runs-20-to-25km.json";
 import longRides from "./strava-rides-over-40km.json";
 import swims from "./strava-swims-melbourne.json";
 import raceRuns from "./strava-race-runs.json";
+import japanRuns from "./strava-japan-2025.json";
 
 type ExportActivity = {
   id: string;
@@ -78,7 +80,7 @@ export const raceIds = new Set([
 ]);
 
 // Cities whose page draws all routes on one shared map instead of a card each.
-export const overlayCities = new Set(["San Francisco", "New York", "Melbourne"]);
+export const overlayCities = new Set(["San Francisco", "New York", "Melbourne", "Tokyo", "Sydney"]);
 
 const featuredRoutes: Record<string, string[]> = {
   // Each city page lists its routes newest first (sorted in code below).
@@ -169,10 +171,25 @@ const featuredRoutes: Record<string, string[]> = {
   "Great Ocean Road": [
     "9109465613", // Great Ocean Road Half, 21 May 2023
   ],
+  // Japan, Dec 2025: every run recorded there (see strava-japan-2025.json).
+  Tokyo: [
+    "16745426346", // Yoyogi Park, 15 Dec 2025
+    "16727024077", // Meguro River, 13 Dec 2025
+    "16717502217", // Imperial Place Loop, 12 Dec 2025
+    "16680558599", // Imperial Palace + Meiji Jingu Gaien, 8 Dec 2025
+    "16670999507", // TOKYO, 7 Dec 2025
+  ],
+  "Mount Fuji": [
+    "16717494894", // FUJI, 11 Dec 2025
+    "16709838614", // Course à pied dans l'après-midi, 11 Dec 2025
+  ],
 };
 
 // Rides, drawn on their own map per city (/moving/<city>/cycle/).
 const featuredRides: Record<string, string[]> = {
+  "Mount Fuji": [
+    "16700916246", // Fuji Cycling, 10 Dec 2025
+  ],
   Melbourne: [
     "18459129560", // Touring, 11 May 2026
     "17631489969", // Lunch Ride, 7 Mar 2026
@@ -256,6 +273,7 @@ const activities = [
   ...(longRides as { activities: ExportActivity[] }).activities,
   ...(swims as { activities: ExportActivity[] }).activities,
   ...(raceRuns as { activities: ExportActivity[] }).activities,
+  ...(japanRuns as { activities: ExportActivity[] }).activities,
 ];
 
 const shortDate = (iso: string) =>
