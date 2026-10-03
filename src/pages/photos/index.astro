@@ -42,7 +42,7 @@ const trips = [
         <span class="orbit-track" aria-hidden="true"></span>
         <div class="dial-wrap">
           <span class="dial-pointer" aria-hidden="true"></span>
-          <div class="camera-dial" role="group" aria-label="Choose a trip" aria-describedby="dial-help">
+          <div class="camera-dial" role="group" aria-label="Choose a trip">
             {trips.map((trip, index) => (
               <div class="dial-position" style={`--position: ${index * 360 / trips.length}deg`}>
                 <button class="dial-stop" data-trip={index} data-accent={trip.accent} data-label={`${trip.place} · ${trip.season}`} aria-pressed={index === 0} aria-label={`${trip.place}, ${trip.season}`}><span>{trip.code}</span></button>
@@ -60,12 +60,8 @@ const trips = [
           </button>
         ))}
       </div>
-      <div class="dial-controls">
-        <button class="step" data-step="-1" aria-label="Previous trip">←</button>
-        <p class="selected-label" aria-live="polite" aria-atomic="true">{trips[0].place} · {trips[0].season}</p>
-        <button class="step" data-step="1" aria-label="Next trip">→</button>
-      </div>
-      <p id="dial-help">Turn the dial. Find a memory.</p>
+      {/* Announces the selected trip to screen readers; the dial and card show it visually. */}
+      <p class="selected-label sr-only" aria-live="polite" aria-atomic="true">{trips[0].place} · {trips[0].season}</p>
     </div>
   </section>
 </Layout>
@@ -143,7 +139,6 @@ const trips = [
      clear the trip card above, for any number of trips. */
   .dial-orbit { --rotation: 0deg; --radius: 190px; --card-w: 128px; --card-h: 92px; --cy: max(112px, calc(var(--radius) * cos(360deg / var(--count)) + var(--card-h) / 2 + 6px)); position: relative; height: calc(var(--cy) + var(--radius) + var(--card-h) / 2 + 8px); margin-top: 22px; }
   .orbit-track { position: absolute; left: 50%; top: var(--cy); width: calc(var(--radius) * 2); height: calc(var(--radius) * 2); translate: -50% -50%; border-radius: 50%; border: 1px dashed #ffffff14; pointer-events: none; mask: linear-gradient(transparent 0 22%, #000 34%); }
-  .dial-controls { display: flex; align-items: center; justify-content: center; gap: 22px; margin-top: 4px; }
   .dial-wrap { position: absolute; left: calc(50% - 95px); top: calc(var(--cy) - 95px); width: 190px; height: 190px; z-index: 1; }
   .dial-pointer { position: absolute; top: -10px; left: calc(50% - 4px); border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 7px solid var(--active-accent); }
   .camera-dial { --rotation: 0deg; position: absolute; inset: 0; border-radius: 50%; border: 5px solid #202020; background: radial-gradient(circle at 38% 30%, #373737, #111 58%, #000); box-shadow: inset 0 0 0 1px #ffffff20, inset 0 -6px 14px #000, 0 8px 20px #0005; transform: rotate(var(--rotation)); transition: transform .5s cubic-bezier(.22,1,.36,1); }
@@ -154,9 +149,6 @@ const trips = [
   .dial-stop[aria-pressed="true"] { color: var(--active-accent); text-shadow: 0 0 12px var(--active-accent); }
   .dial-hub { position: absolute; inset: 61px; border-radius: 50%; background: radial-gradient(circle at 35% 25%, #303030, #090909 75%); border: 1px solid #080808; box-shadow: 0 3px 8px #0009, inset 0 1px 1px #ffffff1a; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; pointer-events: none; font: 10px monospace; letter-spacing: .1em; color: #ddd; }
   .frame-number { font-size: 8px; color: #929292; letter-spacing: 0; }
-  .step { border: 1px solid color-mix(in srgb, var(--color-paper) 20%, transparent); color: var(--color-paper-dim); background: transparent; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
-  .selected-label { min-width: 190px; text-align: center; font: 11px monospace; color: var(--color-paper); margin: 0; }
-  #dial-help { text-align: center; font: 10px monospace; color: var(--color-paper-dim); margin: 10px 0 0; }
   .mini-trip { --angle: calc(var(--position) + var(--rotation)); position: absolute; left: calc(50% - var(--card-w) / 2); top: calc(var(--cy) - var(--card-h) / 2); width: var(--card-w); height: var(--card-h); padding: 0; border: 0; background: none; cursor: pointer; transform: rotate(var(--angle)) translateY(calc(-1 * var(--radius))) rotate(calc(-1 * var(--angle))); transition: transform .5s cubic-bezier(.22,1,.36,1), opacity .35s; }
   .mini-card { position: absolute; inset: 0; display: block; border: 1px solid #ffffff14; border-radius: 8px; overflow: hidden; background: #111; text-align: left; transition: border-color .3s, scale .3s; }
   .mini-card img { width: 100%; height: 100%; object-fit: cover; opacity: .35; transition: opacity .3s; }
