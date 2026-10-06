@@ -170,6 +170,7 @@ const dialIcons: Record<string, string> = {
   green: `<path d="M12 3 6 12h3l-4 6h5v3h4v-3h5l-4-6h3L12 3Z"/>`,
   buildings: `<path d="M3 21V9l5-3v15M8 21V6l5-3v18M13 21V11l5-4v14"/><path d="M3 21h18"/>`,
 };
+const initialCount = photos.filter(photo => photo.tags.includes("buildings")).length;
 ---
 
 <Layout title="New York — Naman">
@@ -189,7 +190,7 @@ const dialIcons: Record<string, string> = {
       <button id="map-toggle" type="button" role="switch" aria-checked="false" aria-label="Map view" aria-controls="photo-gallery map-panel"><span></span></button>
       <span class="map-word">map</span>
     </div>
-    <p id="image-count" class="image-count" aria-live="polite" aria-atomic="true">{photos.filter(photo => photo.tags.includes("buildings")).length} images</p>
+    <p id="image-count" class="image-count" aria-live="polite" aria-atomic="true" data-i18n-en={`${initialCount} ${initialCount === 1 ? "image" : "images"}`} data-i18n-es={`${initialCount} ${initialCount === 1 ? "imagen" : "imágenes"}`} data-i18n-fr={`${initialCount} ${initialCount === 1 ? "image" : "images"}`}>{initialCount} images</p>
     </div>
     <div class="filter-dial-wrap">
       <div class="camera-dial-pointer" aria-hidden="true"></div>
@@ -220,6 +221,19 @@ const dialIcons: Record<string, string> = {
         ))}
       </div>
     </div>
+    <div class="title-column">
+      <div class="trip-soundtrack">
+        <iframe
+          title="Spotify player: Purple Rain by Prince"
+          src="https://open.spotify.com/embed/track/1uvyZBs4IZYRebHIB1747m?utm_source=generator&theme=0"
+          width="100%"
+          height="80"
+          frameborder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
+        <p class="soundtrack-note" data-i18n-en="track of the season" data-i18n-es="canción de la temporada" data-i18n-fr="morceau de la saison">track of the season</p>
+      </div>
     <h1 class="city-title" aria-label="Summer ’26 — New York City">
       <span class="city-season" data-i18n-en="summer ’26" data-i18n-es="verano ’26" data-i18n-fr="été ’26">summer ’26</span>
       <span
@@ -232,6 +246,7 @@ const dialIcons: Record<string, string> = {
         <span>new</span><span>york</span><span>city</span>
       </span>
     </h1>
+    </div>
   </div>
 
   <PhotoMap />
@@ -658,7 +673,12 @@ const dialIcons: Record<string, string> = {
     const applyFilter = (tag: string | undefined, landmark?: string) => {
       const count = cards.filter(card => matches(card, tag, landmark)).length;
       const counter = document.getElementById("image-count");
-      if (counter) counter.textContent = `${count} ${count === 1 ? "image" : "images"}`;
+      if (counter) {
+        // "N images" follows the language toggle like the rest of the page.
+        const words = { en: ["image", "images"], es: ["imagen", "imágenes"], fr: ["image", "images"] };
+        for (const [lang, [one, many]] of Object.entries(words)) counter.setAttribute(`data-i18n-${lang}`, `${count} ${count === 1 ? one : many}`);
+        counter.textContent = counter.getAttribute(`data-i18n-${document.documentElement.dataset.lang ?? "en"}`) ?? `${count} images`;
+      }
       version += 1;
       const myVersion = version;
       finalizePending();
@@ -898,7 +918,10 @@ const dialIcons: Record<string, string> = {
       grid-row: 1;
       justify-self: start;
     }
+    .top-controls .title-column { display: contents; }
     .top-controls .city-title { grid-column: 2; grid-row: 1; }
+    .top-controls .trip-soundtrack { grid-column: 1 / -1; grid-row: 3; justify-self: stretch; align-items: center; }
+    .top-controls .soundtrack-note { text-align: center; }
     .top-controls .filter-dial-wrap {
       grid-column: 1 / -1;
       justify-self: center;
@@ -1091,6 +1114,23 @@ const dialIcons: Record<string, string> = {
     .landmark-panel { transition: none; }
   }
 
+  .title-column {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .trip-soundtrack {
+    width: min(300px, 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .trip-soundtrack iframe { display: block; width: 100%; height: 80px; border: 0; border-radius: 12px; }
+  .soundtrack-note { margin: 0; font: 11px / 1.4 monospace; letter-spacing: .06em; color: var(--color-paper-dim); text-align: right; }
   .city-title {
     grid-column: 3;
     justify-self: end;
