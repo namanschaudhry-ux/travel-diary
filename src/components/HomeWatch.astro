@@ -124,12 +124,8 @@ const stats = [
  @media (prefers-reduced-motion: reduce) { .watch-cap { transition:none; } .watch-cap.pressing { animation-duration:.01s; } }
  .watch-button:focus-visible,.watch-stat:focus-visible { outline:2px solid #65aaa3; outline-offset:3px; }
  .home-links { display:flex; gap:28px; font:12px monospace; color:var(--color-paper-dim); } .home-links a:hover { color:var(--color-accent); }
- /* Slow turtle crawling under the watch: own your slow. Coloured by the theme via a mask. */
- .turtle-track { position:relative; width:min(720px,100%); height:clamp(44px,9vw,72px); overflow:hidden; }
- .turtle { position:absolute; bottom:0; left:0; height:100%; aspect-ratio:610/270; background:var(--color-paper); opacity:.9;
-  -webkit-mask:url('/images/turtle.png') center/contain no-repeat; mask:url('/images/turtle.png') center/contain no-repeat;
-  animation:turtle-crawl 60s linear infinite, turtle-bob 1.6s ease-in-out infinite; }
- @keyframes turtle-crawl { from { left:-25%; } to { left:100%; } }
- @keyframes turtle-bob { 0%,100% { translate:0 0; } 50% { translate:0 -2px; } }
- @media (prefers-reduced-motion: reduce) { .turtle { animation:none; left:50%; transform:translateX(-50%); } }
+ /* Turtle under the watch: own your slow. Coloured by the theme via a mask. */
+ .turtle-track { display:flex; justify-content:center; width:min(720px,100%); height:clamp(44px,9vw,72px); }
+ .turtle { display:block; height:100%; aspect-ratio:610/270; background:var(--color-paper); opacity:.9;
+  -webkit-mask:url('/images/turtle.png') center/contain no-repeat; mask:url('/images/turtle.png') center/contain no-repeat; }
 </style>
