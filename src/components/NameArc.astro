@@ -25,7 +25,8 @@ const { variant = "watch" } = Astro.props;
     z-index: 2;
     overflow: visible;
     pointer-events: none;
-    fill: var(--color-paper);
+    fill: var(--name-hover, var(--color-paper));
+    transition: fill 0.25s ease;
   }
   .name-logo {
     display: block;
