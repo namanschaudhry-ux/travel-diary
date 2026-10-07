@@ -151,9 +151,9 @@ const defaultAccent = "#ffd60a";
 const categoryAccents: Record<string, { onDark: string; onLight: string }> = {
   tennis: { onDark: "#5b9bff", onLight: "#1a56c4" },    // blue
   buildings: { onDark: "#e0605a", onLight: "#9e1b1b" }, // dark red
-  bridges: { onDark: "#8fd4ff", onLight: "#1a73a8" },   // light blue
+  bridges: { onDark: "#8fd4ff", onLight: "#166592" },   // light blue
   cafes: { onDark: "#c08a5b", onLight: "#6b4226" },     // dark brown
-  green: { onDark: "#5cc47a", onLight: "#2a7a3b" },     // nature, green
+  green: { onDark: "#5cc47a", onLight: "#236b32" },     // nature, green
 };
 // A photo's brackets use its own primary category colour. When a filter is
 // active, the brackets of every visible photo use that filter's colour instead.
@@ -178,7 +178,7 @@ const initialCount = photos.filter(photo => photo.tags.includes("buildings")).le
        matching the season label. Light theme uses a darker gold to stay readable. -->
   <style is:inline>
     :root { --color-accent: #ffd60a; }
-    :root[data-theme="light"] { --color-accent: #806600; }
+    :root[data-theme="light"] { --color-accent: #735b00; }
   </style>
   <Fragment set:html={`<style>${accentCss}</style>`} />
   <MapIntro />
@@ -1141,5 +1141,5 @@ const initialCount = photos.filter(photo => photo.tags.includes("buildings")).le
     text-align: right;
   }
   .city-title span { display: block; }
-  .city-title .city-season { color: #ffd60a; margin-bottom: 8px; white-space: nowrap; }
+  .city-title .city-season { color: var(--color-accent); margin-bottom: 8px; white-space: nowrap; }
 </style>
