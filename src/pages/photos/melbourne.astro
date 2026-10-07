@@ -20,7 +20,7 @@ import dji0048 from "../../assets/photos/melbourne-2026/DJI_20260928163402_0048_
 // neighbourhoods and categories come from Notion; dates and times are local
 // capture times from each photo's EXIF. Category order follows the Melbourne
 // row in Travel page setup. `gps` is photo GPS only (iPhone photos); the DJI
-// photos have none, so they have no map pin.
+// photos have none, so they use `approxLocation` from the caption place.
 const categories = ["beach", "buildings", "green", "cafes"];
 
 // Soundtrack shown above the season label: "Tomorrow's Dust" by Tame Impala, from The Slow Rush.
@@ -42,14 +42,14 @@ const photos = [
   { id: "melbourne-9374", image: photo9374, alt: "A lakeside park below a wooded hillside on a sunny day.", caption: "Quarry Reserve, Ferntree Gully", category: "green", date: "Sep 27 '26", time: "16:25", gps: [-37.888675, 145.300203] },
   { id: "melbourne-9380", image: photo9380, alt: "A person holding a camera on steps beside a lake and rocky cliffs.", caption: "Quarry Reserve, Ferntree Gully", category: "green", date: "Sep 27 '26", time: "16:49", gps: [-37.888681, 145.301147] },
   { id: "melbourne-9382", image: photo9382, alt: "Sunlit rocky cliffs and trees above a lake.", caption: "Quarry Reserve, Ferntree Gully", category: "green", date: "Sep 27 '26", time: "16:52", gps: [-37.8889, 145.301528] },
-  { id: "melbourne-dji-0008", image: dji0008, alt: "A green park with tall pines and a row of palms under a clear blue sky.", caption: "Riversdale Park, Camberwell", category: "green", date: "Sep 28 '26", time: "13:08" },
-  { id: "melbourne-dji-0011", image: dji0011, alt: "A broad leafy tree in a suburban park beside a playground.", caption: "Riversdale Park, Camberwell", category: "green", date: "Sep 28 '26", time: "13:09" },
-  { id: "melbourne-dji-0033", image: dji0033, alt: "Looking up at a palm tree framed by leafy branches against a blue sky.", caption: "Riversdale Park, Camberwell", category: "green", date: "Sep 28 '26", time: "13:35" },
-  { id: "melbourne-dji-0034", image: dji0034, alt: "Looking up into the spreading branches of a large tree in fresh spring leaf.", caption: "Riversdale Park, Camberwell", category: "green", date: "Sep 28 '26", time: "13:40" },
-  { id: "melbourne-dji-0036", image: dji0036, alt: "Colourful graffiti on a green brick wall in a laneway beside a parked van.", caption: "Laneway, Cremorne", category: "buildings", date: "Sep 28 '26", time: "16:22" },
-  { id: "melbourne-dji-0040", image: dji0040, alt: "A lime green four-wheel drive parked outside Bench Coffee Co. in a red brick building.", caption: "Bench Coffee Co., Cremorne", category: "cafes", date: "Sep 28 '26", time: "16:26" },
-  { id: "melbourne-dji-0044", image: dji0044, alt: "Inside a café with a long counter, a barista at the machine and people at tables.", caption: "Bench Coffee Co., Cremorne", category: "cafes", date: "Sep 28 '26", time: "16:29" },
-  { id: "melbourne-dji-0048", image: dji0048, alt: "A vintage Rosella tomato sauce mural on the side of a brick building.", caption: "Rosella mural, Cremorne", category: "buildings", date: "Sep 28 '26", time: "16:34" },
+  { id: "melbourne-dji-0008", image: dji0008, alt: "A green park with tall pines and a row of palms under a clear blue sky.", caption: "Riversdale Park, Camberwell", category: "green", date: "Sep 28 '26", time: "13:08", approxLocation: [-37.8306, 145.0708] },
+  { id: "melbourne-dji-0011", image: dji0011, alt: "A broad leafy tree in a suburban park beside a playground.", caption: "Riversdale Park, Camberwell", category: "green", date: "Sep 28 '26", time: "13:09", approxLocation: [-37.8306, 145.0708] },
+  { id: "melbourne-dji-0033", image: dji0033, alt: "Looking up at a palm tree framed by leafy branches against a blue sky.", caption: "Riversdale Park, Camberwell", category: "green", date: "Sep 28 '26", time: "13:35", approxLocation: [-37.8306, 145.0708] },
+  { id: "melbourne-dji-0034", image: dji0034, alt: "Looking up into the spreading branches of a large tree in fresh spring leaf.", caption: "Riversdale Park, Camberwell", category: "green", date: "Sep 28 '26", time: "13:40", approxLocation: [-37.8306, 145.0708] },
+  { id: "melbourne-dji-0036", image: dji0036, alt: "Colourful graffiti on a green brick wall in a laneway beside a parked van.", caption: "Laneway, Cremorne", category: "buildings", date: "Sep 28 '26", time: "16:22", approxLocation: [-37.829317, 144.994349] },
+  { id: "melbourne-dji-0040", image: dji0040, alt: "A lime green four-wheel drive parked outside Bench Coffee Co. in a red brick building.", caption: "Bench Coffee Co., Cremorne", category: "cafes", date: "Sep 28 '26", time: "16:26", approxLocation: [-37.829317, 144.994349] },
+  { id: "melbourne-dji-0044", image: dji0044, alt: "Inside a café with a long counter, a barista at the machine and people at tables.", caption: "Bench Coffee Co., Cremorne", category: "cafes", date: "Sep 28 '26", time: "16:29", approxLocation: [-37.829317, 144.994349] },
+  { id: "melbourne-dji-0048", image: dji0048, alt: "A vintage Rosella tomato sauce mural on the side of a brick building.", caption: "Rosella mural, Cremorne", category: "buildings", date: "Sep 28 '26", time: "16:34", approxLocation: [-37.8305, 144.9941] },
 ];
 ---
 
