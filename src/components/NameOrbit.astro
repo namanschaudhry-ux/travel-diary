@@ -1,0 +1,25 @@
+---
+// "NAMAN" as a wide, high-contrast serif wordmark with two orbit swashes: the first N
+// sweeps up and over the word, the last N sweeps down and under it. Used as the nav logo
+// on the Moving pages only. Inspired by the NYON wordmark on the mood board; the letters
+// are drawn here by hand (thick and hairline strokes on a 100-unit cap height), not a font.
+const N = "M12 0h5v100h-5zM93 0h5v100h-5zM10 0h23l65 88v12h-10zM0 0h20v4H0zM2 96h26v4H2zM82 0h28v4H82z";
+const A = "M46 0h5L12 100H7zM46 0h12l43 100H78zM24 62h43v4H24zM-2 96h26v4H-2zM66 96h46v4H66z";
+const M = "M14 0h5v100h-5zM100 0h22v100h-22zM12 0h24l32 82-6 18zM62 100l-2-8L97 0h5zM2 0h16v4H2zM2 96h28v4H2zM90 96h42v4H90z";
+// Swash grown from the top of an N's diagonal; the last N reuses it turned half a turn.
+const swash = "M10 0C-40-40 120-62 340-42 150-50 20-34 33 0z";
+// Fine horizontal rules behind the word, like the striped ground on the poster.
+const rules = Array.from({ length: 12 }, (_, i) => `M-40 ${-54 + i * 14}h692`).join("");
+---
+<svg class="name-orbit" viewBox="-40 -62 692 224" aria-hidden="true" focusable="false">
+  <path d={rules} fill="none" stroke="currentColor" stroke-width="3" opacity="0.3" />
+  <path d={N} /><path d={swash} />
+  <path d={A} transform="translate(122 0)" />
+  <path d={M} transform="translate(240 0)" />
+  <path d={A} transform="translate(378 0)" />
+  <g transform="translate(502 0)"><path d={N} /><path d={swash} transform="rotate(180 55 50)" /></g>
+</svg>
+
+<style>
+  .name-orbit { display: block; height: 34px; width: auto; overflow: visible; fill: currentColor; }
+</style>

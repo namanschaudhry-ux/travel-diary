@@ -35,7 +35,46 @@ const stats = [
       </div>
     </div>
   </div>
-  <div class="turtle-track" aria-hidden="true"><span class="turtle"></span></div>
+  <div class="turtle-track" aria-hidden="true">
+    <span class="relay"></span>
+    <span class="turtle"></span>
+    <svg class="globe-flower" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="round">
+      <g stroke-width="7"><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(0 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(45 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(90 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(135 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(180 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(225 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(270 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(315 50 50)"/></g>
+      <circle cx="50" cy="50" r="17" stroke-width="6"/>
+      <g stroke-width="2"><ellipse cx="50" cy="50" rx="5.5" ry="13"/><path d="M50 37v26M38.5 44h23M37 50h26M38.5 56h23"/></g>
+    </svg>
+    <span class="nyc-runners"></span>
+    <svg class="metro" viewBox="0 0 370 220" fill="none" stroke-width="32" aria-hidden="true">
+      <filter id="metro-grain" filterUnits="userSpaceOnUse" x="0" y="0" width="370" height="220">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="3" result="blotch"/>
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="11" result="fine"/>
+        <feDisplacementMap in="SourceGraphic" in2="fine" scale="4" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+        <feComposite in="fine" in2="blotch" operator="arithmetic" k1="0" k2="1" k3="1.6" k4="-1.42" result="mix"/>
+        <feColorMatrix in="mix" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 12 -2.4" result="holes"/>
+        <feComposite in="rough" in2="holes" operator="out"/>
+      </filter>
+      <g filter="url(#metro-grain)">
+      <path class="g3" d="M25 220V155Q25 120 60 120H150"/>
+      <path class="g2" d="M58 220V187Q58 152 93 152H150"/>
+      <path class="g5" d="M297 0V120Q297 155 262 155H215"/>
+      <path class="g1" d="M165 0V220"/>
+      <path class="g4" d="M200 0V220"/>
+      <path class="g6" d="M200 120H370"/>
+      <path class="g5" d="M100 0V85Q100 120 135 120H215"/>
+      </g>
+      <circle class="dot" cx="200" cy="120" r="9"/>
+      <g class="codes">
+        <text x="183" y="125" text-anchor="end">NYC</text>
+        <text x="338" y="125" text-anchor="middle">BOS</text>
+        <text transform="translate(105 28) rotate(-90)" text-anchor="middle">CHI</text>
+        <text transform="translate(302 28) rotate(-90)" text-anchor="middle">LDN</text>
+        <text transform="translate(30 192) rotate(-90)" text-anchor="middle">TYO</text>
+        <text transform="translate(63 196) rotate(-90)" text-anchor="middle">CMX</text>
+        <text transform="translate(170 192) rotate(-90)" text-anchor="middle">BER</text>
+        <text transform="translate(205 192) rotate(-90)" text-anchor="middle">CPH</text>
+      </g>
+    </svg>
+  </div>
   <nav class="home-links" aria-label="Explore"><a href="/photos/">photos ↗</a><a href="/moving/">moving ↗</a></nav>
 </section>
 <script>
@@ -121,7 +160,23 @@ const stats = [
  .watch-button:focus-visible,.watch-stat:focus-visible { outline:2px solid #65aaa3; outline-offset:3px; }
  .home-links { display:flex; gap:28px; font:12px monospace; color:var(--color-paper-dim); } .home-links a:hover { color:var(--color-accent); }
  /* Turtle under the watch: own your slow. Coloured by the theme via a mask. */
- .turtle-track { display:flex; justify-content:center; width:min(720px,100%); height:clamp(44px,9vw,72px); }
- .turtle { display:block; height:100%; aspect-ratio:610/270; background:var(--color-paper); opacity:.9;
+ .turtle-track { display:flex; justify-content:center; align-items:flex-end; gap:12px clamp(12px,3vw,22px); flex-wrap:wrap; width:min(720px,100%); --h:clamp(44px,9vw,72px); }
+ .turtle-track > * { flex:none; }
+ /* Relay doodle beside the turtle, traced from Naman's own poster drawing. Coloured by the theme via a mask. */
+ .relay { display:block; height:var(--h); aspect-ratio:1434/602; background:var(--color-paper); opacity:.9;
+  -webkit-mask:url('/images/relay.png') center/contain no-repeat; mask:url('/images/relay.png') center/contain no-repeat; }
+ /* Flower with a globe at its centre, beside the turtle. */
+ .globe-flower { display:block; height:calc(var(--h) * .82); width:auto; aspect-ratio:1; color:var(--color-paper); opacity:.9; }
+ /* Subway-map diagram in off-whites with a grainy print texture: every line meets at NYC. Shades mix the theme's paper and ink. */
+ .metro { display:block; height:var(--h); width:auto; aspect-ratio:370/220; }
+ .metro .g1 { stroke:var(--color-paper); } .metro .g2 { stroke:color-mix(in srgb,var(--color-paper) 92%,var(--color-ink)); }
+ .metro .g3 { stroke:color-mix(in srgb,var(--color-paper) 84%,var(--color-ink)); } .metro .g4 { stroke:color-mix(in srgb,var(--color-paper) 76%,var(--color-ink)); }
+ .metro .g5 { stroke:color-mix(in srgb,var(--color-paper) 68%,var(--color-ink)); } .metro .g6 { stroke:color-mix(in srgb,var(--color-paper) 60%,var(--color-ink)); }
+ .metro .dot { fill:var(--color-ink); stroke:none; }
+ .metro .codes { font:700 13px Inter,system-ui,sans-serif; fill:var(--color-ink); stroke:none; }
+ /* Three runners under the New York skyline with 2024, cut out from Naman's marathon graphic. Coloured by the theme via a mask. */
+ .nyc-runners { display:block; height:calc(var(--h) * 1.5); aspect-ratio:1125/1155; background:var(--color-paper); opacity:.9;
+  -webkit-mask:url('/images/nyc-runners.png') center/contain no-repeat; mask:url('/images/nyc-runners.png') center/contain no-repeat; }
+ .turtle { display:block; height:var(--h); aspect-ratio:610/270; background:var(--color-paper); opacity:.9;
   -webkit-mask:url('/images/turtle.png') center/contain no-repeat; mask:url('/images/turtle.png') center/contain no-repeat; }
 </style>

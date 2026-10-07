@@ -1,5 +1,6 @@
 ---
 import NameArc from "./NameArc.astro";
+import NameOrbit from "./NameOrbit.astro";
 
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 
@@ -31,7 +32,8 @@ const currentTrip = photoLinks.find((link) => path === `/photos/${link.slug}`);
         class="brand-logo -my-2 block transition-colors"
         style={currentTrip ? `--logo-dark: ${currentTrip.dark}; --logo-light: ${currentTrip.light};` : undefined}
       >
-        <NameArc variant="logo" />
+        {/* The Moving pages use the serif orbit wordmark; everywhere else keeps the arched name. */}
+        {path === "/moving" || path.startsWith("/moving/") ? <NameOrbit /> : <NameArc variant="logo" />}
       </a>
     )}
 
