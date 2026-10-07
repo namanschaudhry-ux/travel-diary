@@ -15,6 +15,8 @@ const photoLinks = [
   { slug: "new-zealand-autumn", label: "New Zealand Autumn '26", dark: "#f4a259", light: "#a8521a" },
   { slug: "japan", label: "Japan Winter '25", dark: "#8fd4ff", light: "#1a73a8" },
 ];
+// On a trip page the name logo stays in that trip's colour, not only on hover.
+const currentTrip = photoLinks.find((link) => path === `/photos/${link.slug}`);
 ---
 
 <header class="sticky top-0 z-50 border-b border-line/70 bg-ink/90 backdrop-blur-sm">
@@ -26,7 +28,8 @@ const photoLinks = [
       <a
         href="/"
         aria-label="Naman, home"
-        class="-my-2 block text-paper transition-colors hover:text-accent"
+        class="brand-logo -my-2 block transition-colors"
+        style={currentTrip ? `--logo-dark: ${currentTrip.dark}; --logo-light: ${currentTrip.light};` : undefined}
       >
         <NameArc variant="logo" />
       </a>
@@ -78,6 +81,11 @@ const photoLinks = [
   .trip-link { --item: var(--item-dark); }
   :global(:root[data-theme="light"]) .trip-link { --item: var(--item-light); }
   .trip-link:hover, .trip-link:focus-visible, .trip-link[aria-current="page"] { color: var(--item); }
+  /* Name logo: the current trip's colour on trip pages, otherwise paper.
+     --name-hover is set while a city in the Photos menu is hovered. */
+  .brand-logo { --logo: var(--logo-dark); color: var(--name-hover, var(--logo, var(--color-paper))); }
+  :global(:root[data-theme="light"]) .brand-logo { --logo: var(--logo-light); }
+  .brand-logo:hover { color: var(--color-accent); }
 </style>
 <script>
   const countryDropdown = document.querySelector<HTMLDetailsElement>(".photos-dropdown");
@@ -85,6 +93,16 @@ const photoLinks = [
     if (event.target instanceof Node && !countryDropdown?.contains(event.target)) {
       countryDropdown?.removeAttribute("open");
     }
+  });
+  // Hovering a city in the Photos menu tints the name (homepage arch or logo) in that city's colour.
+  const root = document.documentElement;
+  countryDropdown?.querySelectorAll<HTMLAnchorElement>(".trip-link").forEach((link) => {
+    const preview = () => root.style.setProperty("--name-hover", getComputedStyle(link).getPropertyValue("--item").trim());
+    const clear = () => root.style.removeProperty("--name-hover");
+    link.addEventListener("mouseenter", preview);
+    link.addEventListener("focus", preview);
+    link.addEventListener("mouseleave", clear);
+    link.addEventListener("blur", clear);
   });
   countryDropdown?.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {

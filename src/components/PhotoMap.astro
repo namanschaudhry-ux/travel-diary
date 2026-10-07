@@ -44,6 +44,9 @@ const {
     if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180 || (lat === 0 && lng === 0)) return [];
     return [{lat, lng, precision: card.dataset.locationSource || card.dataset.precision || "Photo GPS", index}];
   });
+  // Trip pages pack photos into two columns, so document order is not photo order.
+  // Number the pins in photo order (data-photo-order) where the page provides it.
+  locations.sort((a, b) => Number(cards[a.index].dataset.photoOrder ?? a.index) - Number(cards[b.index].dataset.photoOrder ?? b.index));
   let map: L.Map | undefined;
   const markers: L.Marker[] = [];
   function updateMapCount() {

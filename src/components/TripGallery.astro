@@ -4,8 +4,9 @@
 // enlarged viewer. Markup, styles and scripts are copied from the NYC page
 // (src/pages/photos/new-york.astro) so trips look and behave the same.
 // Used by Japan, New Zealand (winter and autumn) and Melbourne. Optional per trip:
-// - categories: without them the dial has a single "all" position; with them,
-//   "all" stays first (and selected on load) and each category follows in order.
+// - categories: one dial position per category, in order. As on the NYC page,
+//   there is no "all" position: the FILM hub in the centre of the dial shows
+//   every photo, and it is pressed on load. Without categories the dial is blank.
 // - captions: "Place, Neighbourhood", with date and time either side of the
 //   neighbourhood, as on the NYC page.
 // - map: turns on the gallery/map switch; only photos with GPS get a pin.
@@ -134,14 +135,16 @@ const dialIcons: Record<string, string> = {
   harbour: `<path d="M12 3v12"/><path d="M12 4 18 13h-6"/><path d="M4 15h16l-2.5 3.5h-11Z"/><path d="M2 21c1.7 0 1.7-1 3.3-1s1.7 1 3.4 1 1.6-1 3.3-1 1.7 1 3.3 1 1.7-1 3.4-1 1.6 1 3.3 1"/>`,
   beach: `<path d="M4 12a8 8 0 0 1 16 0Z"/><path d="M12 12v6"/><path d="M2 20c1.7 0 1.7-1.2 3.3-1.2s1.7 1.2 3.4 1.2 1.6-1.2 3.3-1.2 1.7 1.2 3.3 1.2 1.7-1.2 3.4-1.2 1.6 1.2 3.3 1.2"/>`,
 };
-const photoCategories = ["all", ...categories];
-for (const category of photoCategories) {
+// "all" is not a dial position (the FILM hub shows all photos), but its names
+// are still used for the label under the dial.
+const photoCategories = [...categories];
+for (const category of ["all", ...photoCategories]) {
   if (!categoryNames[category] || !dialIcons[category]) throw new Error(`TripGallery: add names and an icon for category "${category}"`);
 }
 for (const photo of photos) {
   if (photo.category && !categories.includes(photo.category)) throw new Error(`TripGallery: ${photo.id} uses category "${photo.category}", which is not in this page's categories`);
 }
-const categoryStep = 360 / photoCategories.length;
+const categoryStep = 360 / Math.max(photoCategories.length, 1);
 const headingWords = cityTitles[slug].en;
 const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${accent.onDark}; --trip-accent-ui: ${accent.onDark}; }
 :root[data-theme="light"] { --color-accent: ${accent.onLight}; --trip-accent: ${accent.onLight}; --trip-accent-ui: ${accent.onLight}; }`;
@@ -172,7 +175,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
               type="button"
               class="camera-dial-label"
               role="tab"
-              aria-selected={index === 0 ? "true" : "false"}
+              aria-selected="false"
               tabindex={index === 0 ? 0 : -1}
               aria-label={label}
               style={`--counter-rot: ${index * -categoryStep}deg;`}
@@ -182,7 +185,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
           </div>
         ))}
       </div>
-      <div class="camera-dial-hub" aria-hidden="true">FILM</div>
+      <button type="button" class="camera-dial-hub" id="dial-hub" aria-pressed="true" aria-label="Show all photos" title="Show all photos">FILM</button>
       <p class="dial-category" id="dial-category" aria-live="polite" data-i18n-en="all" data-i18n-es="todas" data-i18n-fr="toutes">all</p>
     </div>
     <div class="title-column">
@@ -620,7 +623,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
         heights[target] += span;
       }
     };
-    // "all" is selected on load, so every photo starts visible.
+    // The FILM hub is pressed on load, so every photo starts visible.
     const reducedMotionFilter = window.matchMedia("(prefers-reduced-motion: reduce)");
 
     // Guards against rapid successive filter clicks: applyFilter reads each card's
@@ -761,6 +764,7 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
     const selectItem = (item: HTMLElement) => {
       const caption = document.getElementById("dial-category");
       const names = JSON.parse(item.dataset.categoryNames ?? "{}");
+      document.getElementById("dial-hub")?.setAttribute("aria-pressed", "false");
       if (caption) {
         for (const lang of ["en", "es", "fr"]) caption.setAttribute(`data-i18n-${lang}`, names[lang]);
         caption.textContent = names[document.documentElement.dataset.lang ?? "en"] ?? names.en;
@@ -798,6 +802,21 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
         selectItem(item);
         applyFilter(item.dataset.filter);
       });
+    });
+
+    // Clicking the centre of the dial (the FILM hub) shows every photo, as on
+    // the NYC page. No category is selected and the label reads "all".
+    const hub = document.getElementById("dial-hub");
+    hub?.addEventListener("click", () => {
+      const allNames: Record<string, string> = { en: "all", es: "todas", fr: "toutes" };
+      const caption = document.getElementById("dial-category");
+      if (caption) {
+        for (const lang of ["en", "es", "fr"]) caption.setAttribute(`data-i18n-${lang}`, allNames[lang]);
+        caption.textContent = allNames[document.documentElement.dataset.lang ?? "en"] ?? allNames.en;
+      }
+      items.forEach((i) => i.querySelector<HTMLElement>(".camera-dial-label")!.setAttribute("aria-selected", "false"));
+      hub.setAttribute("aria-pressed", "true");
+      applyFilter(undefined);
     });
   }
 </script>
@@ -992,6 +1011,11 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
     .camera-dial-label[aria-selected="true"]:hover { color: #050505; box-shadow: none; }
   }
   .camera-dial-hub { background: radial-gradient(circle at 40% 30%, #161616 0%, #000 65%); box-shadow: 0 0 0 1px #1a1a1a, 0 2px 6px rgba(0, 0, 0, 0.7); font-family: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; font-size: 9px; font-weight: 800; letter-spacing: .04em; color: #fff; }
+  /* The hub is a button (shows all photos), as on the NYC page. */
+  .camera-dial-hub { padding: 0; appearance: none; -webkit-appearance: none; cursor: pointer; pointer-events: auto; z-index: 2; transition: color 200ms ease; }
+  .camera-dial-hub[aria-pressed="false"] { color: rgba(255, 255, 255, 0.7); }
+  .camera-dial-hub:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  @media (hover: hover) and (pointer: fine) { .camera-dial-hub:hover { color: #fff; } }
   .camera-dial-pointer { top: 36px; z-index: 3; width: 8px; height: 4px; border: 0; border-radius: 2px; background: #fff; }
 
   .title-column {

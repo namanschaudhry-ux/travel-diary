@@ -5,13 +5,12 @@ import { cityActivity, activityTotals as totals } from '../data/activity-summary
 const images = import.meta.glob(['../assets/photos/**/*.{jpg,jpeg,JPG,JPEG,png,webp}', '!../assets/photos/{japan,italy,iceland}/**/*'], { eager: false });
 const number = (n: number) => new Intl.NumberFormat('en', { maximumFractionDigits: 1 }).format(n);
 // Distance totals are the same ones shown on the moving page.
-const totalNote = 'same totals as the moving page';
 const stats = [
- { label: 'photos uploaded', value: String(Object.keys(images).length), unit: 'frames', note: 'across every trip page', href: '/photos/' },
- { label: 'kms run · all time', value: number(totals.run), unit: 'km', note: totalNote, href: '/moving/' },
- { label: 'kms cycled · all time', value: number(totals.cycle), unit: 'km', note: totalNote, href: '/moving/' },
- { label: 'kms swum · all time', value: number(totals.swim), unit: 'km', note: totalNote, href: '/moving/' },
- { label: 'cities visited', value: String(cityActivity.length), unit: 'places', note: 'recorded locations since 2023', href: '/moving/' },
+ { label: 'photos uploaded', value: String(Object.keys(images).length), unit: 'frames', href: '/photos/' },
+ { label: 'kms run · all time', value: number(totals.run), unit: 'km', href: '/moving/' },
+ { label: 'kms cycled · all time', value: number(totals.cycle), unit: 'km', href: '/moving/' },
+ { label: 'kms swum · all time', value: number(totals.swim), unit: 'km', href: '/moving/' },
+ { label: 'cities visited', value: String(cityActivity.length), unit: 'places', href: '/moving/' },
 ];
 ---
 <section class="watch-home" aria-label="Naman's watch">
@@ -31,12 +30,12 @@ const stats = [
         <a class="watch-stat" href={stats[0].href} aria-live="polite" aria-atomic="true">
           <span class="stat-label">{stats[0].label}</span>
           <span class="stat-number">{stats[0].value}<small>{stats[0].unit}</small></span>
-          <span class="stat-note">{stats[0].note}</span>
         </a>
         <div class="watch-dots" aria-hidden="true">{stats.map((_, i) => <span class:list={{ active: i === 0 }} />)}</div>
       </div>
     </div>
   </div>
+  <div class="turtle-track" aria-hidden="true"><span class="turtle"></span></div>
   <nav class="home-links" aria-label="Explore"><a href="/photos/">photos ↗</a><a href="/moving/">moving ↗</a></nav>
 </section>
 <script>
@@ -51,7 +50,6 @@ const stats = [
    const value = watch.querySelector('.stat-number')!;
    value.replaceChildren(document.createTextNode(stat.value));
    const unit = document.createElement('small'); unit.textContent = stat.unit; value.append(unit);
-   watch.querySelector('.stat-note')!.textContent = stat.note;
    watch.querySelector<HTMLAnchorElement>('.watch-stat')!.href = stat.href;
    watch.querySelectorAll('.watch-dots span').forEach((dot, i) => dot.classList.toggle('active', i === index));
   };
@@ -99,10 +97,9 @@ const stats = [
  .seconds { font-size:2.8cqw; vertical-align:top; margin-left:1cqw; letter-spacing:0; }
  .clock-zone { position:absolute; top:41.5%; left:36%; margin:0; text-transform:uppercase; font-size:1.5cqw; letter-spacing:.14em;  }
  .watch-stat { position:absolute; top:53.5%; left:37%; width:26%; text-align:center; text-decoration:none; color:inherit; display:flex; flex-direction:column; pointer-events:auto;  }
- .stat-label { font-size:1.65cqw; text-transform:uppercase; letter-spacing:.04em; }
- .stat-number { font-size:3.6cqw; line-height:1.2; font-weight:700; }
- .stat-number :global(small) { font-size:1.5cqw; margin-left:.6cqw; }
- .stat-note { font-size:1.1cqw; white-space:nowrap; }
+ .stat-label { font-size:1.5cqw; text-transform:uppercase; letter-spacing:.04em; opacity:.8; }
+ .stat-number { font-size:5.2cqw; line-height:1; font-weight:800; font-stretch:condensed; letter-spacing:-.04em; font-variant-numeric:tabular-nums; margin-top:.4cqw; }
+ .stat-number :global(small) { font-size:1.6cqw; margin-left:.6cqw; letter-spacing:0; font-weight:700; }
  .watch-dots { position:absolute; top:37%; left:42%; display:flex; gap:.6cqw;  }
  .watch-dots span { width:.5cqw; height:.5cqw; border-radius:50%; background:#59605a; } .watch-dots .active { background:#d3d5d0; }
  .watch-button { position:absolute; z-index:3; padding:0; border:0; background:transparent; cursor:pointer; min-width:34px; min-height:44px; touch-action:manipulation; border-radius:12px; }
@@ -123,4 +120,8 @@ const stats = [
  @media (prefers-reduced-motion: reduce) { .watch-cap { transition:none; } .watch-cap.pressing { animation-duration:.01s; } }
  .watch-button:focus-visible,.watch-stat:focus-visible { outline:2px solid #65aaa3; outline-offset:3px; }
  .home-links { display:flex; gap:28px; font:12px monospace; color:var(--color-paper-dim); } .home-links a:hover { color:var(--color-accent); }
+ /* Turtle under the watch: own your slow. Coloured by the theme via a mask. */
+ .turtle-track { display:flex; justify-content:center; width:min(720px,100%); height:clamp(44px,9vw,72px); }
+ .turtle { display:block; height:100%; aspect-ratio:610/270; background:var(--color-paper); opacity:.9;
+  -webkit-mask:url('/images/turtle.png') center/contain no-repeat; mask:url('/images/turtle.png') center/contain no-repeat; }
 </style>
