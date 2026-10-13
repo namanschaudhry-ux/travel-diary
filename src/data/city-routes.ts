@@ -9,6 +9,11 @@
 // rides over 40 km), strava-swims-melbourne.json (open water swims) and
 // strava-japan-2025.json (every run and ride in Japan, Dec 2025), decoded
 // at build time. Routes are shown in full, start and finish included.
+//
+// strava-city-runs.json is different: it holds every GPS run in a few cities
+// and only feeds the city map tiles on the Moving page (see cityTileLines).
+// Those runs get no card, name or page of their own.
+import { decodePolyline } from "../lib/polyline";
 import stravaExport from "./strava-export.json";
 import longRuns from "./strava-runs-over-25km.json";
 import halfRuns from "./strava-runs-20-to-25km.json";
@@ -16,6 +21,7 @@ import longRides from "./strava-rides-over-40km.json";
 import swims from "./strava-swims-melbourne.json";
 import raceRuns from "./strava-race-runs.json";
 import japanRuns from "./strava-japan-2025.json";
+import cityRuns from "./strava-city-runs.json";
 
 type ExportActivity = {
   id: string;
@@ -81,6 +87,17 @@ export const raceIds = new Set([
 
 // Cities whose page draws all routes on one shared map instead of a card each.
 export const overlayCities = new Set(["San Francisco", "New York", "Melbourne", "Tokyo", "Sydney"]);
+
+// Cities whose map tile on the Moving page draws every run recorded there
+// (strava-city-runs.json), not just the hand-picked ones. Their city pages
+// still list only the hand-picked routes. Melbourne is left out for now.
+export const everyRunCities = new Set(["New York", "San Francisco", "Sydney", "Christchurch", "London"]);
+// Tiles framed on the points within this many km of the city's median point,
+// so one far-off run (Wimbledon, the coast east of Christchurch) can't pull
+// the picture off the centre. Other tiles frame the middle 90% of points.
+export const tileFrameRadiusKm: Record<string, number> = { Christchurch: 4, London: 5 };
+// Cities that get a big map tile at the top of the Moving page's city view.
+export const tileCities = new Set([...overlayCities, ...everyRunCities]);
 
 const featuredRoutes: Record<string, string[]> = {
   // Each city page lists its routes newest first (sorted in code below).
@@ -241,31 +258,6 @@ const featuredSwims: Record<string, string[]> = {
   ],
 };
 
-// Google encoded polyline algorithm (precision 5), as used by Strava.
-function decodePolyline(encoded: string): [number, number][] {
-  const points: [number, number][] = [];
-  let index = 0;
-  let lat = 0;
-  let lng = 0;
-  while (index < encoded.length) {
-    for (const axis of [0, 1]) {
-      let result = 0;
-      let shift = 0;
-      let byte: number;
-      do {
-        byte = encoded.charCodeAt(index++) - 63;
-        result |= (byte & 0x1f) << shift;
-        shift += 5;
-      } while (byte >= 0x20);
-      const delta = result & 1 ? ~(result >> 1) : result >> 1;
-      if (axis === 0) lat += delta;
-      else lng += delta;
-    }
-    points.push([lat / 1e5, lng / 1e5]);
-  }
-  return points;
-}
-
 const activities = [
   ...(stravaExport as { activities: ExportActivity[] }).activities,
   ...(longRuns as { activities: ExportActivity[] }).activities,
@@ -313,6 +305,23 @@ export const cityRoutes = buildRoutes(featuredRoutes);
 export const cityRideRoutes = buildRoutes(featuredRides);
 // Open water swims per city: /moving/<city>/swim/
 export const citySwimRoutes = buildRoutes(featuredSwims, true);
+
+// Lines for a city's map tile on the Moving page, per sport, still encoded
+// (the tile decodes them in the browser). Runs are the hand-picked routes
+// plus, for everyRunCities, every other run recorded in that city.
+const everyRun = (cityRuns as { activities: (ExportActivity & { city: string })[] }).activities;
+export const cityTileLines = (city: string) => {
+  const lines = (ids: string[] = []) => ids.flatMap((id) => activities.find((a) => a.id === id)?.polyline ?? []);
+  const picked = new Set(featuredRoutes[city] ?? []);
+  const others = everyRunCities.has(city)
+    ? everyRun.filter((a) => a.city === city && !picked.has(a.id)).flatMap((a) => a.polyline ?? [])
+    : [];
+  return {
+    run: [...lines(featuredRoutes[city]), ...others],
+    cycle: lines(featuredRides[city]),
+    swim: lines(featuredSwims[city]),
+  };
+};
 
 // Caption helpers shared by the route cards and the shared map.
 export const routeStats = (route: CityRoute) => {

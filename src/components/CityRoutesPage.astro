@@ -5,7 +5,7 @@
 import Layout from "../layouts/Layout.astro";
 import { cityActivity } from "../data/activity-summary";
 import { cityDays } from "../data/city-days";
-import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug, overlayCities, type CityRoute } from "../data/city-routes";
+import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug, tileCities, cityTileLines, tileFrameRadiusKm, type CityRoute } from "../data/city-routes";
 import RouteGrid from "./RouteGrid.astro";
 import RouteOverlay from "./RouteOverlay.astro";
 
@@ -15,7 +15,10 @@ interface Props {
   sport: "run" | "cycle" | "swim";
 }
 
-const { city, routes, sport } = Astro.props;
+const { city, sport } = Astro.props;
+const usesCityMap = tileCities.has(city);
+const routes = sport === "run" && usesCityMap ? Astro.props.routes.filter(route => route.distanceKm >= 19.95) : Astro.props.routes;
+const mapLines = usesCityMap ? cityTileLines(city)[sport] : undefined;
 const country = cityActivity.find((c) => c.city === city)?.country ?? "";
 const slug = citySlug(city);
 const sports = [
@@ -42,13 +45,13 @@ const noun = { run: "routes", cycle: "rides", swim: "swims" }[sport];
         </nav>
       ) : null}
       <p class="mt-2 font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
-        {days ? <>{days} days · </> : null}{routes.length} {routes.length === 1 ? "route" : "routes"}
+        {days ? <>{days} days · </> : null}{routes.length} {sport === "run" && usesCityMap ? "runs of 20 km or more" : routes.length === 1 ? "route" : "routes"}
       </p>
     </div>
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pt-8 pb-16 sm:px-10">
-    {overlayCities.has(city) && routes.length > 1 ? <RouteOverlay routes={routes} frameRadiusKm={sport === "swim" ? 2 : undefined} /> : <RouteGrid routes={routes} />}
+    {usesCityMap ? <RouteOverlay routes={routes} backgroundLines={mapLines} frameRadiusKm={sport === "swim" ? 2 : sport === "run" ? tileFrameRadiusKm[city] : undefined} /> : <RouteGrid routes={routes} />}
   </section>
 </Layout>
 

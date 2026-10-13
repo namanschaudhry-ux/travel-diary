@@ -8,13 +8,14 @@ import { routeStats, type CityRoute } from "../data/city-routes";
 
 interface Props {
   routes: CityRoute[];
+  backgroundLines?: string[];
   // Frame the opening view on the points within this many km of the median
   // point, instead of the middle 90% of all points. For routes that bunch up
   // in one small area, like swims off one beach.
   frameRadiusKm?: number;
 }
 
-const { routes, frameRadiusKm } = Astro.props;
+const { routes, frameRadiusKm, backgroundLines } = Astro.props;
 const routeDate = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
 const details = routes.map((route) => ({
@@ -27,8 +28,8 @@ const details = routes.map((route) => ({
 }));
 ---
 
-<figure class="overlay-card" data-overlay-routes={JSON.stringify(details)} data-frame-radius={frameRadiusKm}>
-  <div class="overlay-map" aria-label={`Map of ${routes.length} routes drawn together`}></div>
+<figure class="overlay-card" data-overlay-routes={JSON.stringify(details)} data-frame-radius={frameRadiusKm} data-background-lines={backgroundLines ? JSON.stringify(backgroundLines) : undefined}>
+  <div class="overlay-map" aria-label={backgroundLines ? "Map of recorded routes" : `Map of ${routes.length} routes drawn together`}></div>
   <figcaption class="route-caption route-caption--top" data-caption-name></figcaption>
   <figcaption class="route-caption route-caption--bottom">
     <div class="route-caption-row">
@@ -45,7 +46,7 @@ const details = routes.map((route) => ({
 
 {/* Works like the language toggle: a radio group. Click a name, or focus the
     row and use the left and right arrow keys to move between routes. */}
-<div class="overlay-names" role="radiogroup" aria-label="Routes on the map">
+<div class="overlay-names" role="radiogroup" aria-label="Routes on the map" hidden={details.length === 0}>
   {details.map((route, index) => (
     <button type="button" role="radio" aria-checked="false" tabindex={index === 0 ? 0 : -1} data-route-id={route.id}>{route.name}</button>
   ))}
@@ -53,6 +54,8 @@ const details = routes.map((route) => ({
 
 <script>
   import L from "leaflet";
+  import { decodePolyline } from "../lib/polyline";
+  import { cityMapBounds, frameCityMap } from "../lib/city-map-frame";
 
   type Detail = { id: string; name: string; date: string; middle: string; climb: string; points: [number, number][] };
 
@@ -81,8 +84,10 @@ const details = routes.map((route) => ({
     new MutationObserver(() => tiles.setUrl(tileUrl(document.documentElement.getAttribute("data-theme"))))
       .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-    const REST = { weight: 3, opacity: 0.55 };
-    const FADED = { weight: 3, opacity: 0.18 };
+    const background: [number, number][][] | undefined = card.dataset.backgroundLines ? JSON.parse(card.dataset.backgroundLines).map(decodePolyline) : undefined;
+    background?.forEach(points => L.polyline(points, { color: accent, weight: 2.5, opacity: .75, lineCap: "round", interactive: false }).addTo(map));
+    const REST = { weight: 3, opacity: background ? 0 : 0.55 };
+    const FADED = { weight: 3, opacity: background ? 0 : 0.18 };
     const ACTIVE = { weight: 6, opacity: 1 };
 
     const bounds = L.latLngBounds([]);
@@ -192,36 +197,9 @@ const details = routes.map((route) => ({
     // Framing is based on where most of the running happens: the middle 90%
     // of all route points, or those near the median point (data-frame-radius). A far-off route (a race out of town, say) can run
     // off the edge; choosing it slides the map across to it.
-    const allPoints = routes.flatMap((route) => route.points);
-    const pct = (values: number[], q: number) => {
-      const sorted = [...values].sort((a, b) => a - b);
-      return sorted[Math.min(sorted.length - 1, Math.max(0, Math.round(q * (sorted.length - 1))))];
-    };
-    const lats = allPoints.map((pt) => pt[0]);
-    const lngs = allPoints.map((pt) => pt[1]);
-    const radiusKm = Number(card.dataset.frameRadius ?? 0);
-    const median = L.latLng(pct(lats, 0.5), pct(lngs, 0.5));
-    const near = allPoints.filter((pt) => median.distanceTo(pt) <= radiusKm * 1000);
-    const core = radiusKm > 0 && near.length > 1
-      ? L.latLngBounds(near)
-      : L.latLngBounds([pct(lats, 0.05), pct(lngs, 0.05)], [pct(lats, 0.95), pct(lngs, 0.95)]);
-    const frameBounds = core.isValid() && core.getNorth() > core.getSouth() ? core : bounds;
-
-    // The core area takes up about half the map's width, so the surroundings
-    // show, unless that would overflow the height.
-    const SHARE = 0.5;
-    const frame = () => {
-      if (!frameBounds.isValid()) return;
-      const lngSpan = Math.max(frameBounds.getEast() - frameBounds.getWest(), 0.001);
-      const byWidth = Math.log2((SHARE * target.clientWidth * 360) / (256 * lngSpan));
-      map.setMinZoom(0);
-      map.setMaxZoom(18);
-      const fitsHeight = map.getBoundsZoom(frameBounds.pad(0.08), false);
-      const zoom = Math.min(byWidth, fitsHeight);
-      map.setView(frameBounds.getCenter(), zoom, { animate: false });
-      map.setMinZoom(zoom);
-      map.setMaxZoom(zoom);
-    };
+    const allPoints = background ? background.flat() : routes.flatMap(route => route.points);
+    const frameBounds = cityMapBounds(allPoints, Number(card.dataset.frameRadius ?? 0));
+    const frame = () => frameCityMap(map, target, frameBounds);
     frame();
     let resizeTimer: number | undefined;
     window.addEventListener("resize", () => {

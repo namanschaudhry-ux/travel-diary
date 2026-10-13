@@ -160,7 +160,8 @@ const stats = [
  .watch-button:focus-visible,.watch-stat:focus-visible { outline:2px solid #65aaa3; outline-offset:3px; }
  .home-links { display:flex; gap:28px; font:12px monospace; color:var(--color-paper-dim); } .home-links a:hover { color:var(--color-accent); }
  /* Turtle under the watch: own your slow. Coloured by the theme via a mask. */
- .turtle-track { display:flex; justify-content:center; align-items:flex-end; gap:12px clamp(12px,3vw,22px); flex-wrap:wrap; width:min(720px,100%); --h:clamp(44px,9vw,72px); }
+ /* One row at every width: 8.61 is the sum of the five artworks' widths as multiples of --h, so the row always fits the screen. */
+ .turtle-track { display:flex; justify-content:center; align-items:center; gap:var(--g); width:min(720px,100%); --g:clamp(8px,3vw,22px); --h:min(72px,calc((100vw - 36px - 4 * var(--g)) / 8.61)); }
  .turtle-track > * { flex:none; }
  /* Relay doodle beside the turtle, traced from Naman's own poster drawing. Coloured by the theme via a mask. */
  .relay { display:block; height:var(--h); aspect-ratio:1434/602; background:var(--color-paper); opacity:.9;
