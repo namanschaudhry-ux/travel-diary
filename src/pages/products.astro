@@ -1,0 +1,65 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHeading from "../components/PageHeading.astro";
+
+// Things I've made that live on their own sites. Posters are exported from the
+// Footnote repo (Melbourne-Marathon-Keepsake) and kept in public/products/.
+const footnoteUrl = "https://melbourne-marathon-keepsake.vercel.app/";
+const posters = [
+  { src: "/products/footnote-2xu-half.svg", tilt: "-7deg", shift: "-24%" },
+  { src: "/products/footnote-hoka-half.svg", tilt: "6deg", shift: "24%" },
+  { src: "/products/footnote-nyc-marathon.svg", tilt: "-1deg", shift: "0%" },
+];
+---
+
+<Layout title="Products — Naman Chaudhry" description="Things I've made, starting with Footnote: art for the finish line.">
+  <PageHeading title="products" subtitle="Things I've made." />
+
+  <section class="mx-auto max-w-6xl px-6 pb-20 sm:px-10">
+    <a
+      href={footnoteUrl}
+      target="_blank"
+      rel="noopener"
+      class="product-card group mx-auto grid max-w-4xl items-center gap-10 rounded-[12px] border border-[var(--color-card-border)] p-8 sm:grid-cols-2 sm:p-12"
+    >
+      <div class="relative mx-auto aspect-[1000/1414] w-[62%] sm:w-[70%]" aria-hidden="true">
+        {posters.map((p) => (
+          <img
+            src={p.src}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class="poster absolute inset-0 h-full w-full shadow-lg"
+            style={`--tilt: ${p.tilt}; --shift: ${p.shift};`}
+          />
+        ))}
+      </div>
+      <div class="text-center sm:text-left">
+        <p class="font-heading text-[44px] italic leading-none text-paper">
+          Footnote<sup class="ml-0.5 align-super font-sans text-[18px] not-italic text-accent">1</sup>
+        </p>
+        <p class="mt-3 font-heading text-[20px] italic text-paper-dim">Art for the finish line.</p>
+        <p class="mt-6 text-paper-dim">
+          Playful, vintage-style posters of the races you've run. Your route, your time and your notes from the course, made into a print.
+        </p>
+        <span class="mt-8 inline-block text-sm lowercase text-accent transition-colors group-hover:text-paper">
+          visit footnote ↗
+        </span>
+      </div>
+    </a>
+  </section>
+</Layout>
+
+<style>
+  .poster {
+    transform: translateX(var(--shift)) rotate(var(--tilt));
+    transition: transform 0.35s ease;
+  }
+  .product-card:hover .poster,
+  .product-card:focus-visible .poster {
+    transform: translateX(calc(var(--shift) * 1.15)) rotate(calc(var(--tilt) * 1.3));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .poster { transition: none; }
+  }
+</style>

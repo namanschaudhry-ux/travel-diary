@@ -72,6 +72,15 @@ const currentTrip = photoLinks.find((link) => path === `/photos/${link.slug}`);
       >
         Moving
       </a>
+      <a
+        href="/products/"
+        class:list={[
+          "transition-colors hover:text-accent",
+          path === "/products" && "text-accent",
+        ]}
+      >
+        Products
+      </a>
 
     </nav>
   </div>
