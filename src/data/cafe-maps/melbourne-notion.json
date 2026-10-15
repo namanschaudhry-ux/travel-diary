@@ -1,0 +1,1493 @@
+{
+  "asAt": "2026-10-15",
+  "database": "https://app.notion.com/p/f60a401bb823419998bf0439e4a83e4d",
+  "results": [
+    {
+      "Suburb": "Mitcham",
+      "date:Last visit:start": "2025-06-27",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 89,
+      "Cafe": "Mylk Bar",
+      "url": "https://app.notion.com/p/3f97010a6322814e93dfddc46fea453a"
+    },
+    {
+      "Suburb": "Burwood East",
+      "date:Last visit:start": "2022-07-01",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 42,
+      "Cafe": "The Coffee Cart Company",
+      "url": "https://app.notion.com/p/3f97010a6322817fb7f2ca05e2360187"
+    },
+    {
+      "Suburb": "Vermont",
+      "date:Last visit:start": "2026-09-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 22,
+      "Cafe": "Leeroy Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281c7be45ef4b9225347a"
+    },
+    {
+      "Suburb": "Vermont",
+      "date:Last visit:start": "2021-12-19",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 20,
+      "Cafe": "Dimicks Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228153a74ec7f1e89316d7"
+    },
+    {
+      "Suburb": "Vermont",
+      "date:Last visit:start": "2026-10-08",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 19,
+      "Cafe": "Rise and Grind 3133",
+      "url": "https://app.notion.com/p/3f97010a63228163ab28f892f66ac1cc"
+    },
+    {
+      "Suburb": "Nunawading",
+      "date:Last visit:start": "2026-10-04",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 19,
+      "Cafe": "Manta Ray Coffee Roasters",
+      "url": "https://app.notion.com/p/3f97010a6322817b9769d2b51b36cc78"
+    },
+    {
+      "Suburb": "Elwood",
+      "date:Last visit:start": "2026-05-11",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 18,
+      "Cafe": "Beach Shack Elwood",
+      "url": "https://app.notion.com/p/3f97010a6322812f9f72ce82f7d7d1f7"
+    },
+    {
+      "Suburb": "Elwood",
+      "date:Last visit:start": "2026-05-26",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 17,
+      "Cafe": "Elwood Bathers",
+      "url": "https://app.notion.com/p/3f97010a632281adbff8fbd5c99b79d0"
+    },
+    {
+      "Suburb": "Glen Iris",
+      "date:Last visit:start": "2026-10-12",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 15,
+      "Cafe": "Haiku Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322818faabadcf43f6defef"
+    },
+    {
+      "Suburb": "Wheelers Hill",
+      "date:Last visit:start": "2024-09-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 15,
+      "Cafe": "Code Five",
+      "url": "https://app.notion.com/p/3f97010a632281459dd3c2b20f366a96"
+    },
+    {
+      "Suburb": "Hawthorn",
+      "date:Last visit:start": "2026-10-01",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 13,
+      "Cafe": "Sabi Sounds",
+      "url": "https://app.notion.com/p/3f97010a632281cb912bc2e9367c5f57"
+    },
+    {
+      "Suburb": "Glen Iris",
+      "date:Last visit:start": "2026-10-13",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 12,
+      "Cafe": "Golden Child Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281fabbc6d14063a26c38"
+    },
+    {
+      "Suburb": "South Yarra",
+      "date:Last visit:start": "2026-08-02",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 11,
+      "Cafe": "Baker Bleu",
+      "url": "https://app.notion.com/p/3f97010a63228122ad2ed2bbc3e71ba3"
+    },
+    {
+      "Suburb": "South Melbourne",
+      "date:Last visit:start": "2025-11-21",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 11,
+      "Cafe": "St Ali",
+      "url": "https://app.notion.com/p/3f97010a632281e7bc89cf3dbd3bd3b5"
+    },
+    {
+      "Suburb": "Carlton",
+      "date:Last visit:start": "2024-05-27",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 11,
+      "Cafe": "Seven Seeds",
+      "url": "https://app.notion.com/p/3f97010a6322811aab8ad2a0f62ddc8d"
+    },
+    {
+      "Suburb": "Glen Waverley",
+      "date:Last visit:start": "2024-05-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 11,
+      "Cafe": "Piatella Cafe Bar",
+      "url": "https://app.notion.com/p/3f97010a632281899210d2956d4516ac"
+    },
+    {
+      "Suburb": "Richmond",
+      "date:Last visit:start": "2026-01-28",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 10,
+      "Cafe": "Top Paddock",
+      "url": "https://app.notion.com/p/3f97010a632281989da0d0fb170a7f24"
+    },
+    {
+      "Suburb": "Glen Waverley",
+      "date:Last visit:start": "2025-03-16",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 10,
+      "Cafe": "Café 1809",
+      "url": "https://app.notion.com/p/3f97010a63228121958be1019c712e85"
+    },
+    {
+      "Suburb": "Hawthorn",
+      "date:Last visit:start": "2023-04-19",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 10,
+      "Cafe": "Axil Coffee Roasters",
+      "url": "https://app.notion.com/p/3f97010a63228174b44be8630e4a45c7"
+    },
+    {
+      "Suburb": "Camberwell",
+      "date:Last visit:start": "2026-04-29",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 9,
+      "Cafe": "Ivy Lane",
+      "url": "https://app.notion.com/p/3f97010a6322812b8f5cf60bb35a5efd"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-04-06",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 9,
+      "Cafe": "Rosso Coffee Roasters",
+      "url": "https://app.notion.com/p/3f97010a6322813aa883c0fc3426ec0d"
+    },
+    {
+      "Suburb": "Glen Waverley",
+      "date:Last visit:start": "2024-10-21",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 8,
+      "Cafe": "Starbucks",
+      "url": "https://app.notion.com/p/3f97010a6322814e984ff3d96693bb0f"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 7,
+      "Cafe": "Patricia Coffee Brewers",
+      "url": "https://app.notion.com/p/3f97010a6322815eb24ff6221fc98e56"
+    },
+    {
+      "Suburb": "Reservoir",
+      "date:Last visit:start": "2026-03-04",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 7,
+      "Cafe": "North Point Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281388ad4dce80cfd2d15"
+    },
+    {
+      "Suburb": "North Melbourne",
+      "date:Last visit:start": "2025-12-31",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 7,
+      "Cafe": "Auction Rooms",
+      "url": "https://app.notion.com/p/3f97010a6322815da3c7cfb1ff4f2cf1"
+    },
+    {
+      "Suburb": "Ringwood East",
+      "date:Last visit:start": "2024-09-13",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 7,
+      "Cafe": "Fortunate Son Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281adb729ed7fadc1853a"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-10-13",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 6,
+      "Cafe": "1983 Espresso & Panini Bar",
+      "url": "https://app.notion.com/p/3f97010a6322815aab3ecc8acaa74d42"
+    },
+    {
+      "Suburb": "Boronia",
+      "date:Last visit:start": "2026-06-19",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 6,
+      "Cafe": "Milki & Miller",
+      "url": "https://app.notion.com/p/3f97010a63228160a777ed1c6db7a0e3"
+    },
+    {
+      "Suburb": "South Yarra",
+      "date:Last visit:start": "2026-03-10",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 6,
+      "Cafe": "Commonfolk",
+      "url": "https://app.notion.com/p/3f97010a632281ec9d40eb2ebb9585b6"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-10-13",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "Bench Coffee Co.",
+      "url": "https://app.notion.com/p/3f97010a6322818baa25c4ce66963ce4"
+    },
+    {
+      "Suburb": "Carlton",
+      "date:Last visit:start": "2026-09-14",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "Good Measure",
+      "url": "https://app.notion.com/p/3f97010a63228192b1b2f6dc38bad69f"
+    },
+    {
+      "Suburb": "North Melbourne",
+      "date:Last visit:start": "2026-07-30",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "Mörk Chocolate",
+      "url": "https://app.notion.com/p/3f97010a632281e1b2f1d432bbd9965c"
+    },
+    {
+      "Suburb": "The Basin",
+      "date:Last visit:start": "2026-05-25",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "1 in 20",
+      "url": "https://app.notion.com/p/3f97010a6322818bb2d0f90ca4765225"
+    },
+    {
+      "Suburb": "Elwood",
+      "date:Last visit:start": "2026-05-01",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "Plain Sailing",
+      "url": "https://app.notion.com/p/3f97010a6322818caaefdea4527e5853"
+    },
+    {
+      "Suburb": "Ringwood",
+      "date:Last visit:start": "2026-04-21",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "Saazaa Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281cfab91e815dcd4c13d"
+    },
+    {
+      "Suburb": "Prahran",
+      "date:Last visit:start": "2025-11-21",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "Market Lane Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281b482ebfa995500a9e6"
+    },
+    {
+      "Suburb": "Camberwell",
+      "date:Last visit:start": "2024-10-21",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "Legacy",
+      "url": "https://app.notion.com/p/3f97010a632281358ab3ec61a4219858"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2021-02-02",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 5,
+      "Cafe": "Upstate Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281dfbbe7e21c94813e29"
+    },
+    {
+      "Suburb": "Hawthorn East",
+      "date:Last visit:start": "2026-09-30",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "Cru+ Coffee Roastery",
+      "url": "https://app.notion.com/p/3f97010a632281409b10fe35b00fe8d1"
+    },
+    {
+      "Suburb": "Camberwell",
+      "date:Last visit:start": "2026-06-25",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "The Bakers Wife",
+      "url": "https://app.notion.com/p/3f97010a63228119a4cdf742e367b240"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-18",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "Dukes Coffee Roasters",
+      "url": "https://app.notion.com/p/3f97010a632281bba33bfe50f233b1e1"
+    },
+    {
+      "Suburb": "South Yarra",
+      "date:Last visit:start": "2026-03-10",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "Two Birds One Stone",
+      "url": "https://app.notion.com/p/3f97010a632281ae8b8fffb8173daad8"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-12-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "Hudsons Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281f38297e63a5f39a76b"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2024-08-12",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "Brunetti",
+      "url": "https://app.notion.com/p/3f97010a632281fd864dc6edbf2b6812"
+    },
+    {
+      "Suburb": "Heathmont",
+      "date:Last visit:start": "2024-06-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "Milk & Wine Co",
+      "url": "https://app.notion.com/p/3f97010a632281b4a706c2c5eb552b35"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-05-25",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "Pocket Espresso",
+      "url": "https://app.notion.com/p/3f97010a632281aca02ada9b2582454d"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-04-24",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 4,
+      "Cafe": "Ladida",
+      "url": "https://app.notion.com/p/3f97010a632281199868c13140690915"
+    },
+    {
+      "Suburb": "Cremorne",
+      "date:Last visit:start": "2026-10-14",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Code Black Coffee",
+      "url": "https://app.notion.com/p/3f97010a63228106b36fea658908bda4"
+    },
+    {
+      "Suburb": "Camberwell",
+      "date:Last visit:start": "2026-09-28",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Spencer Milk Bar",
+      "url": "https://app.notion.com/p/3f97010a632281998c1eeae876572c9d"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-14",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Ondo City",
+      "url": "https://app.notion.com/p/3f97010a6322810db33de48f5713f1b6"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-13",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "The Hatter and the Hare",
+      "url": "https://app.notion.com/p/3f97010a632281eea08fff9cefa9de5c"
+    },
+    {
+      "Suburb": "Hawthorn",
+      "date:Last visit:start": "2026-04-24",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Porgies Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281bfbbe7c0f425be4328"
+    },
+    {
+      "Suburb": "Sandringham",
+      "date:Last visit:start": "2026-01-24",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Port of Call",
+      "url": "https://app.notion.com/p/3f97010a6322812fba48e81f2c5c22a7"
+    },
+    {
+      "Suburb": "Glen Waverley",
+      "date:Last visit:start": "2025-04-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Andzero Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281b28e14db67faadea5b"
+    },
+    {
+      "Suburb": "Richmond",
+      "date:Last visit:start": "2024-12-27",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "The Coffee Mob",
+      "url": "https://app.notion.com/p/3f97010a63228158b70ad1749489904c"
+    },
+    {
+      "Suburb": "Glen Waverley",
+      "date:Last visit:start": "2024-09-23",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Black Flat Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281eca2eef1d8f2fb467b"
+    },
+    {
+      "Suburb": "Collingwood",
+      "date:Last visit:start": "2024-04-12",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "N Lee Bakery Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322810e9204e7bd3dc9fc84"
+    },
+    {
+      "Suburb": "Glen Waverley",
+      "date:Last visit:start": "2024-02-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Mocha Jo's",
+      "url": "https://app.notion.com/p/3f97010a63228182bf72d16dbfb836f8"
+    },
+    {
+      "Suburb": "Mitcham",
+      "date:Last visit:start": "2024-01-08",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Collector's Coffee",
+      "url": "https://app.notion.com/p/3f97010a6322816cbebbd4d8225f770a"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-10-18",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "First Love Collins",
+      "url": "https://app.notion.com/p/3f97010a6322814a8da4dcf209eddd8e"
+    },
+    {
+      "Suburb": "Nunawading",
+      "date:Last visit:start": "2023-04-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Little Hugh",
+      "url": "https://app.notion.com/p/3f97010a63228176ad84df9ba8a1447f"
+    },
+    {
+      "Suburb": "Glen Iris",
+      "date:Last visit:start": "2022-04-24",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Hibiki Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322812cbd76ff04751dd5c2"
+    },
+    {
+      "Suburb": "Collingwood",
+      "date:Last visit:start": "2021-04-10",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 3,
+      "Cafe": "Paradox Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281699c05eec2caa01dbc"
+    },
+    {
+      "Suburb": "Richmond",
+      "date:Last visit:start": "2026-10-11",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Rowena Corner Store",
+      "url": "https://app.notion.com/p/3fa7010a632281dba639fb3dba05449b"
+    },
+    {
+      "Suburb": "Mitcham",
+      "date:Last visit:start": "2026-07-12",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "The Mabel",
+      "url": "https://app.notion.com/p/3f97010a63228179b5ccd240da17a323"
+    },
+    {
+      "Suburb": "Richmond",
+      "date:Last visit:start": "2026-06-28",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Black Gold",
+      "url": "https://app.notion.com/p/3f97010a632281dbb9fcfc3a7329cac3"
+    },
+    {
+      "Suburb": "Lilydale",
+      "date:Last visit:start": "2026-06-26",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Hutch & Co",
+      "url": "https://app.notion.com/p/3f97010a632281a19cc9cd6b16cbff11"
+    },
+    {
+      "Suburb": "Cremorne (Adolph St)",
+      "date:Last visit:start": "2026-06-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Vacation Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281fc9667df8578ab1543"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-18",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "The Terrace",
+      "url": "https://app.notion.com/p/3f97010a6322817eb940e84089af228f"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-16",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Sloane Ranger Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281afa38ddf0e66ab4409"
+    },
+    {
+      "Suburb": "Cremorne",
+      "date:Last visit:start": "2026-06-11",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Suupaa",
+      "url": "https://app.notion.com/p/3fa7010a632281ce81e9f31c8aa57a43"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Micah Coffee Brewers",
+      "url": "https://app.notion.com/p/3f97010a63228198b2c8e93c5ff35b56"
+    },
+    {
+      "Suburb": "South Melbourne",
+      "date:Last visit:start": "2026-02-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Meeya Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228101bac0f1c35925be40"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-11-27",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "oneway coffee lab",
+      "url": "https://app.notion.com/p/3f97010a632281d7a01df3c72141bbac"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-11-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Bean Lab",
+      "url": "https://app.notion.com/p/3f97010a632281eb83c6eb4518055b90"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-06-07",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Black Drop Espresso & Wine",
+      "url": "https://app.notion.com/p/3f97010a632281f09c10d514705ff923"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-04-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Au79",
+      "url": "https://app.notion.com/p/3f97010a6322816881abd1e8d55f8cc5"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-03-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Padre Coffee",
+      "url": "https://app.notion.com/p/3f97010a63228120a281cde9acdfc82e"
+    },
+    {
+      "Suburb": "Brighton",
+      "date:Last visit:start": "2025-01-11",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Pantry Brighton",
+      "url": "https://app.notion.com/p/3fa7010a6322810b86b8ce6fb4d9c3fa"
+    },
+    {
+      "Suburb": "Wantirna",
+      "date:Last visit:start": "2024-10-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Crest Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281c88a0dd43c0ea5b449"
+    },
+    {
+      "Suburb": "Dandenong",
+      "date:Last visit:start": "2024-10-21",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "MnM Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322812c92a7d2f35ea90f25"
+    },
+    {
+      "Suburb": "Glen Iris",
+      "date:Last visit:start": "2024-10-06",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Mr Tucci",
+      "url": "https://app.notion.com/p/3fa7010a63228193b0d0d8789b16e9ee"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2024-09-13",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Aix Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322812fb946c040fde5aad5"
+    },
+    {
+      "Suburb": "Nunawading",
+      "date:Last visit:start": "2024-08-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "The Peddler Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228173aebae1905819f72e"
+    },
+    {
+      "Suburb": "Malvern",
+      "date:Last visit:start": "2024-07-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Thirty Mill",
+      "url": "https://app.notion.com/p/3f97010a63228132bbc6d83492ac15ad"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2024-05-24",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Pellegrini's Espresso Bar",
+      "url": "https://app.notion.com/p/3f97010a63228107baaefd6945b3cf23"
+    },
+    {
+      "Suburb": "Carlton",
+      "date:Last visit:start": "2024-05-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Haymarket Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281318a42ecb43ba6c5de"
+    },
+    {
+      "Suburb": "Albert Park",
+      "date:Last visit:start": "2024-04-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Dundas Faussett Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281d48d73d93e861702ea"
+    },
+    {
+      "Suburb": "Albert Park",
+      "date:Last visit:start": "2024-04-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Leaps & Bounds",
+      "url": "https://app.notion.com/p/3f97010a632281de9310dc782bacecb3"
+    },
+    {
+      "Suburb": "Fitzroy North",
+      "date:Last visit:start": "2024-04-08",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Standing Room Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281508430e1dd9de55dbb"
+    },
+    {
+      "Suburb": "Parkville",
+      "date:Last visit:start": "2024-01-23",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Professors Walk Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281009141d56b2eb9ca4b"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-12-04",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Brother Baba Budan",
+      "url": "https://app.notion.com/p/3f97010a632281979adfec1f243c1575"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-04-17",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Workshop Brothers",
+      "url": "https://app.notion.com/p/3f97010a632281f9bc77c89c0d994700"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-03-17",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Cafe Vue (airport)",
+      "url": "https://app.notion.com/p/3f97010a6322814ba589de317388f909"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2022-12-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Higher Ground",
+      "url": "https://app.notion.com/p/3f97010a63228156949cf66023a76d90"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2022-03-07",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Chapter 3 Espresso",
+      "url": "https://app.notion.com/p/3f97010a6322814485ebd6635363d355"
+    },
+    {
+      "Suburb": "Burwood East",
+      "date:Last visit:start": "2022-01-12",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Acre Farm & Eatery",
+      "url": "https://app.notion.com/p/3f97010a63228174b71dcd687a4fdffc"
+    },
+    {
+      "Suburb": "Armadale",
+      "date:Last visit:start": "2021-11-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Moby",
+      "url": "https://app.notion.com/p/3fa7010a63228117a217cea5a1725aee"
+    },
+    {
+      "Suburb": "Carlton",
+      "date:Last visit:start": "2021-05-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "Cafe Commercio",
+      "url": "https://app.notion.com/p/3f97010a63228178a537cb8685e0a490"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2021-03-29",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 2,
+      "Cafe": "The Moat",
+      "url": "https://app.notion.com/p/3f97010a632281c7b70af5da60831a1d"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-10-03",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Great Jones",
+      "url": "https://app.notion.com/p/3f97010a632281708285ff6f160ef697"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-10-03",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Sox Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281888b37e1e309feeaf0"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-09-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Boxcar Espresso",
+      "url": "https://app.notion.com/p/3f97010a632281778bb4cba95249c329"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-08-04",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Figure 9 Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281fa853ceb8254b9a208"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-07-11",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Dish & Spoon Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228190a5e8cd56e184b119"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-30",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Caffe Amatrice",
+      "url": "https://app.notion.com/p/3f97010a63228141af73c9ac96f66b5a"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-30",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Hikari Coffee",
+      "url": "https://app.notion.com/p/3f97010a6322817a9ed1f8dd78b445a3"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-30",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Mary Miller Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281e7b4bbd365a6c171f5"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-29",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Pinned Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281d28043c4c6cd8cd31c"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-09",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Cafe Tomi",
+      "url": "https://app.notion.com/p/3f97010a632281dfa85ac90862f8b2c5"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-08",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Mammoth Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322810ba888debcee88180c"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-06",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Secondipity Roasters",
+      "url": "https://app.notion.com/p/3f97010a63228103a4fdd1cba1c22524"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-04",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "La Vie Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281b29f32fc6229b875e1"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-06-04",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Square Lane Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281b2a032d683bf58fe62"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Darling Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281d6b96ef47ba364c796"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Tone Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281fa8fa3ddf1389b74f9"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-14",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Naau Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281718373e1e66f8f809d"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-10",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Project Zero Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281bcaf4ae2475e33dc55"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-05-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Namoo Japanese Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322817784b8d0a2d30f9c6a"
+    },
+    {
+      "Suburb": "Melbourne CBD (Collins St)",
+      "date:Last visit:start": "2026-04-23",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Three Beans",
+      "url": "https://app.notion.com/p/3f97010a632281f0807fd9b2cc69c1cf"
+    },
+    {
+      "Suburb": "South Yarra",
+      "date:Last visit:start": "2026-03-17",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Coffee Geek Brewers",
+      "url": "https://app.notion.com/p/3f97010a632281e6b0d9f72eba91793e"
+    },
+    {
+      "Suburb": "Olinda",
+      "date:Last visit:start": "2026-03-08",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Olinda Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322819491efc5798eda1409"
+    },
+    {
+      "Suburb": "Olinda",
+      "date:Last visit:start": "2026-03-07",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Storehouse Roastery",
+      "url": "https://app.notion.com/p/3f97010a632281d9848ac667f3e1de49"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2026-03-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Spyglass Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281748fe2d973e5dd42c9"
+    },
+    {
+      "Suburb": "Prahran",
+      "date:Last visit:start": "2026-02-09",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Tall Timber",
+      "url": "https://app.notion.com/p/3f97010a632281899435e91dec0e8f30"
+    },
+    {
+      "Suburb": "Cremorne",
+      "date:Last visit:start": "2026-02-03",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Niccolo Coffee",
+      "url": "https://app.notion.com/p/3f97010a6322815488ccc7d3c0090beb"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-11-14",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Eat 24 Cafe and Bakery",
+      "url": "https://app.notion.com/p/3f97010a63228105abe3c6417a11b931"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-11-11",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Light Up Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281368db1dea0ae6841c5"
+    },
+    {
+      "Suburb": "Footscray",
+      "date:Last visit:start": "2025-07-19",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Footscray Milking Station",
+      "url": "https://app.notion.com/p/3f97010a63228136acbce387b363ada1"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-07-17",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "South of Johnston",
+      "url": "https://app.notion.com/p/3f97010a632281f885a3cfbd5f665d97"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-07-08",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Berry Good Coffee",
+      "url": "https://app.notion.com/p/3f97010a63228118af3fd14ed865f263"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-07-07",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Depot Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281a5854edbc9e507652c"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-06-25",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Head In The Cloud Coffee",
+      "url": "https://app.notion.com/p/3f97010a63228170a71fefd87b23194f"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-05-20",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Aqualink Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228109aa19c50029af8c34"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-05-19",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Tribu Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281fe9c48d32e12186a39"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-04-21",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Moons Espresso Bar",
+      "url": "https://app.notion.com/p/3f97010a63228166aeb3ecda8f6d0b7b"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-04-14",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Chapel Bakery Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322819c85d6f215f8bee3d9"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2025-04-12",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "javaScript Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281918f80e5c96245f0b3"
+    },
+    {
+      "Suburb": "South Yarra",
+      "date:Last visit:start": "2025-03-02",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Neds",
+      "url": "https://app.notion.com/p/3fa7010a63228167b2fafa5be403d875"
+    },
+    {
+      "Suburb": "Ferntree Gully",
+      "date:Last visit:start": "2025-02-28",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Lorna Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281a29ad0f05633a72aa2"
+    },
+    {
+      "Suburb": "Mount Waverley",
+      "date:Last visit:start": "2025-01-16",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Inglewood Coffee",
+      "url": "https://app.notion.com/p/3f97010a632281aa8595f15a1c0c612f"
+    },
+    {
+      "Suburb": "Wheelers Hill",
+      "date:Last visit:start": "2024-12-19",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "T House at Jells",
+      "url": "https://app.notion.com/p/3f97010a6322811c9e95f0acb2aefc98"
+    },
+    {
+      "Suburb": "Richmond",
+      "date:Last visit:start": "2024-10-13",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "My Oh My",
+      "url": "https://app.notion.com/p/3fa7010a6322815fb60ceb79229d7953"
+    },
+    {
+      "Suburb": "Burnley",
+      "date:Last visit:start": "2024-09-30",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Serotonin Eatery",
+      "url": "https://app.notion.com/p/3f97010a6322810bae29c4c0a8fb53a2"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2024-05-23",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Little Rogue",
+      "url": "https://app.notion.com/p/3f97010a63228196a172e7b82e581964"
+    },
+    {
+      "Suburb": "Camberwell",
+      "date:Last visit:start": "2024-04-29",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Crimson Coffee",
+      "url": "https://app.notion.com/p/3fa7010a632281b9b4e6f3ba1f4e10c7"
+    },
+    {
+      "Suburb": "Hawthorn East",
+      "date:Last visit:start": "2024-04-09",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Nigel",
+      "url": "https://app.notion.com/p/3fa7010a63228149aec9f1cd275d96dd"
+    },
+    {
+      "Suburb": "St Kilda",
+      "date:Last visit:start": "2024-03-25",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Prophecy Espresso",
+      "url": "https://app.notion.com/p/3f97010a632281e7b9bed28a844331e4"
+    },
+    {
+      "Suburb": "Fitzroy",
+      "date:Last visit:start": "2024-03-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Addict Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281759f1afcb64d97f60a"
+    },
+    {
+      "Suburb": "Collingwood",
+      "date:Last visit:start": "2024-02-21",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Proud Mary",
+      "url": "https://app.notion.com/p/3f97010a632281cc973cf1440c7c3b65"
+    },
+    {
+      "Suburb": "Box Hill",
+      "date:Last visit:start": "2024-02-07",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Eno Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281cfafa1c2a85b642eb6"
+    },
+    {
+      "Suburb": "Ashwood",
+      "date:Last visit:start": "2024-02-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Soul Sisters Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228159abb8f869639773fc"
+    },
+    {
+      "Suburb": "Camberwell",
+      "date:Last visit:start": "2024-02-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Penny for Pound",
+      "url": "https://app.notion.com/p/3f97010a632281b48e21d19c25a4960e"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2024-01-30",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Tom Thumb Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322818eb40bfffc8edbf1ef"
+    },
+    {
+      "Suburb": "Mitcham",
+      "date:Last visit:start": "2024-01-18",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Mitcham Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281b4b00fea1daf496c17"
+    },
+    {
+      "Suburb": "East Melbourne",
+      "date:Last visit:start": "2024-01-10",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Basement Espresso",
+      "url": "https://app.notion.com/p/3f97010a632281349025c325ea3122c8"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-12-13",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "The Journal Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281dc8db8fe8af2f17661"
+    },
+    {
+      "Suburb": "St Kilda",
+      "date:Last visit:start": "2023-12-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Ground Yourself Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228144a745e8b93d5bc552"
+    },
+    {
+      "Suburb": "Blackburn",
+      "date:Last visit:start": "2023-11-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Aunt Billies Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228121bb1bff919eaf31a7"
+    },
+    {
+      "Suburb": "Hawthorn East",
+      "date:Last visit:start": "2023-10-30",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Prospect Espresso",
+      "url": "https://app.notion.com/p/3f97010a6322816c8a74edcc7f5a8a6f"
+    },
+    {
+      "Suburb": "Glen Iris",
+      "date:Last visit:start": "2023-10-23",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Baba Sus",
+      "url": "https://app.notion.com/p/3fa7010a632281e6a82cc82cef739675"
+    },
+    {
+      "Suburb": "Vermont South",
+      "date:Last visit:start": "2023-10-18",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Ramsay Gardens Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322812eae47fb7d34835cee"
+    },
+    {
+      "Suburb": "Burwood East",
+      "date:Last visit:start": "2023-10-16",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Cafe Oggi",
+      "url": "https://app.notion.com/p/3f97010a632281c2be45e15771a7de56"
+    },
+    {
+      "Suburb": "Malvern",
+      "date:Last visit:start": "2023-10-16",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Tonic and Grace",
+      "url": "https://app.notion.com/p/3f97010a632281dea4a6d77feef373e4"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-09-18",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Siesta Cafe and Deli",
+      "url": "https://app.notion.com/p/3f97010a632281c19734d75d5d8325c3"
+    },
+    {
+      "Suburb": "South Melbourne",
+      "date:Last visit:start": "2023-03-02",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Nine Yards",
+      "url": "https://app.notion.com/p/3fa7010a63228175b387d8d17decf5e6"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2023-01-31",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Culpa Espresso",
+      "url": "https://app.notion.com/p/3f97010a632281a29670e73ab49b557a"
+    },
+    {
+      "Suburb": "South Melbourne",
+      "date:Last visit:start": "2023-01-23",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Kettle Black",
+      "url": "https://app.notion.com/p/3f97010a632281f490b7fb36bb2a6f81"
+    },
+    {
+      "Suburb": "St Kilda",
+      "date:Last visit:start": "2022-12-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "St James Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281a59fd0d480cd95514b"
+    },
+    {
+      "Suburb": "Elwood",
+      "date:Last visit:start": "2022-10-10",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Jerry's Milk Bar",
+      "url": "https://app.notion.com/p/3f97010a63228199af46e2b807ca5233"
+    },
+    {
+      "Suburb": "Burwood East",
+      "date:Last visit:start": "2022-09-01",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Norwood Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322812d9be6f841c08c5e76"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2022-09-01",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Mr Brownstone Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228172952de7da16c3a5ed"
+    },
+    {
+      "Suburb": "Richmond / Abbotsford (branch unclear)",
+      "date:Last visit:start": "2022-08-29",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Hector's Deli",
+      "url": "https://app.notion.com/p/3fa7010a632281edb8a3c08c5209ce2a"
+    },
+    {
+      "Suburb": "Malvern",
+      "date:Last visit:start": "2022-04-01",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Eden Espresso",
+      "url": "https://app.notion.com/p/3f97010a632281209bbcd7f91012e34b"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2022-01-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Issus Cafe and Bar",
+      "url": "https://app.notion.com/p/3f97010a6322817f902af8dfedb4e33d"
+    },
+    {
+      "Suburb": "Wheelers Hill",
+      "date:Last visit:start": "2021-11-23",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Young & Foolish",
+      "url": "https://app.notion.com/p/3f97010a6322810b8f0def0cd1b86f44"
+    },
+    {
+      "Suburb": "Hawthorn East",
+      "date:Last visit:start": "2021-10-22",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Shanklin Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228198823cee2f9fa80c39"
+    },
+    {
+      "Suburb": "Carlton",
+      "date:Last visit:start": "2021-05-24",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Baretto Espresso Bar",
+      "url": "https://app.notion.com/p/3f97010a63228154943cdd448a6b1c5b"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2021-05-15",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Anda Cafe",
+      "url": "https://app.notion.com/p/3f97010a63228161bc2ac9d347e95282"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2021-05-05",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Caffe Corso",
+      "url": "https://app.notion.com/p/3f97010a63228158aafff37e2c86200b"
+    },
+    {
+      "Suburb": "Malvern",
+      "date:Last visit:start": "2021-02-23",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Fergus Cafe",
+      "url": "https://app.notion.com/p/3f97010a6322810a87b9cd70d75494a1"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:start": "2021-01-26",
+      "date:Last visit:is_datetime": 0,
+      "Visits": 1,
+      "Cafe": "Amie Bakery Cafe",
+      "url": "https://app.notion.com/p/3f97010a632281ef99d5df8c0482fddd"
+    },
+    {
+      "Suburb": "Ashburton",
+      "date:Last visit:is_datetime": 0,
+      "Cafe": "Joe Frank",
+      "url": "https://app.notion.com/p/3fa7010a6322816a98d1d2fee9d3f915"
+    },
+    {
+      "Suburb": "Hawthorn",
+      "date:Last visit:is_datetime": 0,
+      "Cafe": "More Coffee",
+      "url": "https://app.notion.com/p/3fa7010a632281cc8646e311c459cde2"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:is_datetime": 0,
+      "Cafe": "OnAir",
+      "url": "https://app.notion.com/p/3fa7010a63228181924fd318c10daf0d"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:is_datetime": 0,
+      "Cafe": "My Other Brother",
+      "url": "https://app.notion.com/p/3fa7010a632281849ab2eeb81ab9dc9f"
+    },
+    {
+      "Suburb": "not recorded",
+      "date:Last visit:is_datetime": 0,
+      "Cafe": "Maker Coffee",
+      "url": "https://app.notion.com/p/3fa7010a632281e8966ac4de10167fb3"
+    }
+  ],
+  "has_more": false
+}

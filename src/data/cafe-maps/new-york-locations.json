@@ -1,0 +1,916 @@
+{
+  "originalPins": [
+    {
+      "name": "Devoción Flatiron",
+      "area": "Flatiron",
+      "visits": 3,
+      "last": "2026-09-03",
+      "lat": 40.73904,
+      "lng": -73.98917,
+      "status": "ok",
+      "note": "25 E 20th St"
+    },
+    {
+      "name": "Devoción Lexington",
+      "area": "Midtown East",
+      "visits": 2,
+      "last": "2024-11-11",
+      "lat": 40.75803,
+      "lng": -73.97142,
+      "status": "ok",
+      "note": "600 Lexington Ave"
+    },
+    {
+      "name": "Devoción Williamsburg",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2024-09-07",
+      "lat": 40.71476,
+      "lng": -73.96223,
+      "status": "ok",
+      "note": "Grand St, Williamsburg"
+    },
+    {
+      "name": "WatchHouse 5th Ave",
+      "area": "Midtown",
+      "visits": 6,
+      "last": "2026-09-01",
+      "lat": 40.76007,
+      "lng": -73.97665,
+      "status": "branch",
+      "note": "660 5th Ave. Only 1 of the 6 purchases names 5th Ave; the other 5 (27–30 Aug 2026) name no branch. WatchHouse also has Park Ave South and Lexington shops."
+    },
+    {
+      "name": "Bright Side",
+      "area": "Williamsburg",
+      "visits": 6,
+      "last": "2024-11-24",
+      "lat": 40.71868,
+      "lng": -73.96405,
+      "status": "ok",
+      "note": "N 4th St, Williamsburg"
+    },
+    {
+      "name": "All The King's Horses",
+      "area": "East Village",
+      "visits": 6,
+      "last": "2023-08-18",
+      "lat": 40.72882,
+      "lng": -73.98018,
+      "status": "ok",
+      "note": "521 E 12th St. Closed at the end of 2023."
+    },
+    {
+      "name": "Butler South Williamsburg",
+      "area": "Williamsburg",
+      "visits": 2,
+      "last": "2023-08-09",
+      "lat": 40.71183,
+      "lng": -73.96472,
+      "status": "ok",
+      "note": "95 S 5th St"
+    },
+    {
+      "name": "Butler Dumbo",
+      "area": "Dumbo",
+      "visits": 1,
+      "last": "2024-09-03",
+      "lat": 40.70319,
+      "lng": -73.99242,
+      "status": "ok",
+      "note": "40 Water St"
+    },
+    {
+      "name": "Butler North Williamsburg",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2024-09-05",
+      "lat": 40.7203,
+      "lng": -73.9575,
+      "status": "approx",
+      "note": "Bank says 'North Williamsburg'; street address not found, so the pin is approximate."
+    },
+    {
+      "name": "La Cabra",
+      "area": "NoHo",
+      "visits": 4,
+      "last": "2025-10-12",
+      "lat": 40.72424,
+      "lng": -73.9962,
+      "status": "branch",
+      "note": "Pinned at 284 Lafayette St. La Cabra also has East Village (2nd Ave) and Bushwick shops."
+    },
+    {
+      "name": "Poetica Coffee Smith St",
+      "area": "Carroll Gardens",
+      "visits": 2,
+      "last": "2023-03-22",
+      "lat": 40.6818,
+      "lng": -73.9934,
+      "status": "approx",
+      "note": "Bank says Smith St; exact number not found."
+    },
+    {
+      "name": "Poetica Coffee Kent Ave",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2024-10-31",
+      "lat": 40.7167,
+      "lng": -73.9653,
+      "status": "approx",
+      "note": "Bank says Kent Ave; exact number not found."
+    },
+    {
+      "name": "Poetica Coffee Lorimer",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2024-12-10",
+      "lat": 40.71372,
+      "lng": -73.94948,
+      "status": "ok",
+      "note": "561 Lorimer St"
+    },
+    {
+      "name": "Ruby's Murray Hill",
+      "area": "Murray Hill",
+      "visits": 2,
+      "last": "2026-09-07",
+      "lat": 40.74361,
+      "lng": -73.97989,
+      "status": "ok",
+      "note": "442 3rd Ave"
+    },
+    {
+      "name": "Ruby's East Village",
+      "area": "East Village",
+      "visits": 1,
+      "last": "2023-08-06",
+      "lat": 40.73131,
+      "lng": -73.98881,
+      "status": "ok",
+      "note": "198 E 11th St"
+    },
+    {
+      "name": "Le Café Coffee",
+      "area": "Midtown",
+      "visits": 3,
+      "last": "2025-10-13",
+      "lat": 40.75415,
+      "lng": -73.98614,
+      "status": "branch",
+      "note": "Pinned at 1440 Broadway. Many Manhattan branches (W 57th, Lexington, …)."
+    },
+    {
+      "name": "Two Hands Tribeca",
+      "area": "Tribeca",
+      "visits": 2,
+      "last": "2023-08-11",
+      "lat": 40.71781,
+      "lng": -74.00545,
+      "status": "ok",
+      "note": "251 Church St"
+    },
+    {
+      "name": "Two Hands Williamsburg",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2023-08-07",
+      "lat": 40.7161,
+      "lng": -73.96634,
+      "status": "ok",
+      "note": "262 Kent Ave"
+    },
+    {
+      "name": "Partners Coffee Williamsburg",
+      "area": "Williamsburg",
+      "visits": 3,
+      "last": "2025-10-15",
+      "lat": 40.71797,
+      "lng": -73.95918,
+      "status": "ok",
+      "note": "125 N 6th St. 2 purchases name Williamsburg; the Oct 2025 one names no branch and is counted here."
+    },
+    {
+      "name": "Bluestone Lane Carmine St",
+      "area": "West Village",
+      "visits": 1,
+      "last": "2023-03-16",
+      "lat": 40.73002,
+      "lng": -74.00284,
+      "status": "ok",
+      "note": "30 Carmine St"
+    },
+    {
+      "name": "Bluestone Lane Chelsea",
+      "area": "Chelsea",
+      "visits": 1,
+      "last": "2023-03-28",
+      "lat": 40.75227,
+      "lng": -73.9988,
+      "status": "branch",
+      "note": "Pinned at 435 W 31st St. Could be the Chelsea Piers cafe."
+    },
+    {
+      "name": "Bluestone Lane East 90th",
+      "area": "Carnegie Hill",
+      "visits": 1,
+      "last": "2023-03-27",
+      "lat": 40.78384,
+      "lng": -73.95842,
+      "status": "ok",
+      "note": "E 90th St"
+    },
+    {
+      "name": "Compilation Coffee",
+      "area": "Brooklyn",
+      "visits": 3,
+      "last": "2025-10-15",
+      "lat": 40.69381,
+      "lng": -73.98289,
+      "status": "check",
+      "note": "Work card, no location recorded. Pinned at the only Compilation Coffee found, Gold St."
+    },
+    {
+      "name": "Variety Coffee Roasters",
+      "area": "Chelsea",
+      "visits": 2,
+      "last": "2026-09-06",
+      "lat": 40.74521,
+      "lng": -73.99461,
+      "status": "branch",
+      "note": "Pinned at 261 7th Ave. Many branches (UWS, UES, Williamsburg…)."
+    },
+    {
+      "name": "Ninth Street Espresso",
+      "area": "East Village",
+      "visits": 2,
+      "last": "2026-09-05",
+      "lat": 40.72705,
+      "lng": -73.98011,
+      "status": "branch",
+      "note": "Pinned at the E 10th St original. Also Midtown and Chelsea."
+    },
+    {
+      "name": "% Arabica Dumbo",
+      "area": "Dumbo",
+      "visits": 2,
+      "last": "2026-09-02",
+      "lat": 40.7026,
+      "lng": -73.99414,
+      "status": "ok",
+      "note": "20 Old Fulton St"
+    },
+    {
+      "name": "Acre",
+      "area": "Greenpoint",
+      "visits": 2,
+      "last": "2026-08-31",
+      "lat": 40.72628,
+      "lng": -73.95469,
+      "status": "check",
+      "note": "Pinned at Acre, 64 Meserole Ave (tagged as a restaurant). Merchant just says 'Acre Brooklyn'."
+    },
+    {
+      "name": "Little Collins",
+      "area": "Midtown East",
+      "visits": 2,
+      "last": "2024-12-10",
+      "lat": 40.75239,
+      "lng": -73.9735,
+      "status": "ok",
+      "note": "708 3rd Ave"
+    },
+    {
+      "name": "Maman Bryant Park",
+      "area": "Midtown",
+      "visits": 1,
+      "last": "2023-03-19",
+      "lat": 40.75448,
+      "lng": -73.98558,
+      "status": "ok",
+      "note": "114 W 41st St"
+    },
+    {
+      "name": "Maman Lexington",
+      "area": "Midtown East",
+      "visits": 1,
+      "last": "2024-12-09",
+      "lat": 40.7599,
+      "lng": -73.96968,
+      "status": "ok",
+      "note": "667 Lexington Ave"
+    },
+    {
+      "name": "Ange Noir Cafe",
+      "area": "East Williamsburg",
+      "visits": 2,
+      "last": "2024-11-18",
+      "lat": 40.70418,
+      "lng": -73.93416,
+      "status": "ok",
+      "note": "247 Varet St"
+    },
+    {
+      "name": "Think Coffee Tribeca",
+      "area": "Tribeca",
+      "visits": 1,
+      "last": "2024-10-31",
+      "lat": 40.71745,
+      "lng": -74.00452,
+      "status": "ok",
+      "note": "350 Broadway"
+    },
+    {
+      "name": "Think Coffee Devoe St",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2024-11-17",
+      "lat": 40.71298,
+      "lng": -73.95098,
+      "status": "ok",
+      "note": "10 Devoe St"
+    },
+    {
+      "name": "Citizens of Chelsea",
+      "area": "Chelsea",
+      "visits": 1,
+      "last": "2024-11-02",
+      "lat": 40.74798,
+      "lng": -74.00058,
+      "status": "ok",
+      "note": "401 W 25th St"
+    },
+    {
+      "name": "Citizens of Gramercy",
+      "area": "Gramercy",
+      "visits": 1,
+      "last": "2023-08-08",
+      "lat": 40.73666,
+      "lng": -73.98154,
+      "status": "ok",
+      "note": "362 2nd Ave"
+    },
+    {
+      "name": "St Kilda Coffee",
+      "area": "Hell's Kitchen",
+      "visits": 2,
+      "last": "2024-09-02",
+      "lat": 40.76075,
+      "lng": -73.9905,
+      "status": "branch",
+      "note": "Pinned at W 46th St. Also W 44th St and 8th Ave, Chelsea."
+    },
+    {
+      "name": "Saltwater Coffee",
+      "area": "Greenwich Village",
+      "visits": 2,
+      "last": "2023-08-08",
+      "lat": 40.73265,
+      "lng": -73.9998,
+      "status": "branch",
+      "note": "Pinned at Waverly Pl. Also E 12th St."
+    },
+    {
+      "name": "Ralph's Coffee",
+      "area": "Upper East Side",
+      "visits": 2,
+      "last": "2023-03-21",
+      "lat": 40.77163,
+      "lng": -73.96573,
+      "status": "branch",
+      "note": "Pinned at 888 Madison Ave. Ralph's has other Manhattan cafes."
+    },
+    {
+      "name": "Voyager Espresso",
+      "area": "Financial District",
+      "visits": 1,
+      "last": "2026-09-04",
+      "lat": 40.70878,
+      "lng": -74.00677,
+      "status": "ok",
+      "note": "110 William St, lower level"
+    },
+    {
+      "name": "Caffè Panna",
+      "area": "Gramercy",
+      "visits": 1,
+      "last": "2026-09-04",
+      "lat": 40.737,
+      "lng": -73.98675,
+      "status": "ok",
+      "note": "77 Irving Pl"
+    },
+    {
+      "name": "Suited",
+      "area": "Financial District",
+      "visits": 1,
+      "last": "2026-09-02",
+      "lat": 40.70924,
+      "lng": -74.00788,
+      "status": "ok",
+      "note": "45 John St"
+    },
+    {
+      "name": "Villager",
+      "area": "Prospect Heights",
+      "visits": 1,
+      "last": "2026-08-31",
+      "lat": 40.67197,
+      "lng": -73.96097,
+      "status": "ok",
+      "note": "841 Classon Ave"
+    },
+    {
+      "name": "Radio Bakery",
+      "area": "Prospect Heights",
+      "visits": 1,
+      "last": "2026-08-31",
+      "lat": 40.67499,
+      "lng": -73.96689,
+      "status": "ok",
+      "note": "186 Underhill Ave (merchant says 'Radio Bakery 2', the second shop)"
+    },
+    {
+      "name": "Asano",
+      "area": "West Village",
+      "visits": 1,
+      "last": "2026-08-29",
+      "lat": 40.73215,
+      "lng": -74.0033,
+      "status": "check",
+      "note": "Merchant reads 'Asano Cafe (Noortw…'. Asano runs daytime cafes inside restaurants, so pinned at The Noortwyck, 289 Bleecker St."
+    },
+    {
+      "name": "Rhythm Zero",
+      "area": "Greenpoint",
+      "visits": 1,
+      "last": "2024-12-11",
+      "lat": 40.73025,
+      "lng": -73.9598,
+      "status": "ok",
+      "note": "38 Kent St"
+    },
+    {
+      "name": "Do Not Feed Alligators",
+      "area": "West Village",
+      "visits": 1,
+      "last": "2024-12-09",
+      "lat": 40.73368,
+      "lng": -74.00426,
+      "status": "ok",
+      "note": "337 Bleecker St"
+    },
+    {
+      "name": "Clockface Coffee",
+      "area": "Bay Ridge",
+      "visits": 1,
+      "last": "2024-12-09",
+      "lat": 40.63235,
+      "lng": -74.02784,
+      "status": "ok",
+      "note": "275 74th St"
+    },
+    {
+      "name": "Blue Brown Cafe",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2024-12-03",
+      "lat": 40.71529,
+      "lng": -73.95385,
+      "status": "ok",
+      "note": "45 Havemeyer St"
+    },
+    {
+      "name": "Hungry Ghost Coffee",
+      "area": "Fort Greene",
+      "visits": 1,
+      "last": "2024-12-02",
+      "lat": 40.68364,
+      "lng": -73.96813,
+      "status": "branch",
+      "note": "Pinned at 810 Fulton St. Several Brooklyn branches."
+    },
+    {
+      "name": "Picky Barista",
+      "area": "Upper West Side",
+      "visits": 1,
+      "last": "2024-12-02",
+      "lat": 40.77947,
+      "lng": -73.98321,
+      "status": "branch",
+      "note": "Pinned at W 72nd St. Several UWS branches."
+    },
+    {
+      "name": "Kaffe Landskap",
+      "area": "Tribeca",
+      "visits": 1,
+      "last": "2024-11-28",
+      "lat": 40.72091,
+      "lng": -74.00968,
+      "status": "branch",
+      "note": "Pinned at 401 Greenwich St. Merchant says 'KL2', possibly the 275 Greenwich St shop."
+    },
+    {
+      "name": "Laughing Man Cafe",
+      "area": "Battery Park City",
+      "visits": 1,
+      "last": "2024-11-26",
+      "lat": 40.71457,
+      "lng": -74.01715,
+      "status": "ok",
+      "note": "Battery Park City"
+    },
+    {
+      "name": "Pueblo Querido Coffee",
+      "area": "Astoria",
+      "visits": 1,
+      "last": "2024-11-16",
+      "lat": 40.75001,
+      "lng": -73.93617,
+      "status": "check",
+      "note": "Only one found is on Northern Blvd, Queens, but the bank says Brooklyn."
+    },
+    {
+      "name": "Marcy and Myrtle",
+      "area": "Brooklyn",
+      "visits": 1,
+      "last": "2024-11-15",
+      "lat": 40.69506,
+      "lng": -73.94929,
+      "status": "branch",
+      "note": "Pinned at Marcy Ave. Also N 10th St, Williamsburg."
+    },
+    {
+      "name": "Dudleys",
+      "area": "Lower East Side",
+      "visits": 1,
+      "last": "2024-11-15",
+      "lat": 40.71808,
+      "lng": -73.99037,
+      "status": "ok",
+      "note": "85 Orchard St"
+    },
+    {
+      "name": "Caffè Valencia",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2024-11-13",
+      "lat": 40.71491,
+      "lng": -73.96277,
+      "status": "ok",
+      "note": "255 Berry St"
+    },
+    {
+      "name": "La Parisienne",
+      "area": "Financial District",
+      "visits": 1,
+      "last": "2024-11-12",
+      "lat": 40.70961,
+      "lng": -74.00933,
+      "status": "ok",
+      "note": "9 Maiden Ln"
+    },
+    {
+      "name": "Stumptown Coffee Roasters",
+      "area": "NoMad",
+      "visits": 1,
+      "last": "2024-11-10",
+      "lat": 40.74566,
+      "lng": -73.98805,
+      "status": "branch",
+      "note": "Pinned at 20 W 29th St (Ace Hotel). Also W 8th St."
+    },
+    {
+      "name": "Cafe Hugo",
+      "area": "Hudson Square",
+      "visits": 1,
+      "last": "2024-11-07",
+      "lat": 40.72639,
+      "lng": -74.00873,
+      "status": "ok",
+      "note": "Hotel Hugo, 525 Greenwich St"
+    },
+    {
+      "name": "Copper Mug Coffee",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2024-11-07",
+      "lat": 40.71649,
+      "lng": -73.95981,
+      "status": "ok",
+      "note": "131 N 4th St"
+    },
+    {
+      "name": "Gasoline Alley Coffee",
+      "area": "NoHo",
+      "visits": 1,
+      "last": "2024-11-05",
+      "lat": 40.7255,
+      "lng": -73.99478,
+      "status": "branch",
+      "note": "Pinned at 325 Lafayette St. Has other branches."
+    },
+    {
+      "name": "Birch Coffee",
+      "area": "Manhattan",
+      "visits": 1,
+      "last": "2024-09-05",
+      "lat": 40.72657,
+      "lng": -73.99962,
+      "status": "branch",
+      "note": "Merchant says 'Birch Coffee West…'. Pinned at W Houston St; many branches."
+    },
+    {
+      "name": "Gumption Coffee",
+      "area": "Times Square",
+      "visits": 1,
+      "last": "2024-09-01",
+      "lat": 40.75689,
+      "lng": -73.98349,
+      "status": "ok",
+      "note": "W 45th St"
+    },
+    {
+      "name": "The Roost",
+      "area": "Alphabet City",
+      "visits": 1,
+      "last": "2023-08-18",
+      "lat": 40.72906,
+      "lng": -73.97845,
+      "status": "ok",
+      "note": "222 Avenue B"
+    },
+    {
+      "name": "Joe Coffee 23rd St",
+      "area": "Chelsea",
+      "visits": 1,
+      "last": "2023-08-17",
+      "lat": 40.74678,
+      "lng": -74.00162,
+      "status": "ok",
+      "note": "405 W 23rd St"
+    },
+    {
+      "name": "Merriweather Coffee + Kitchen",
+      "area": "West Village",
+      "visits": 1,
+      "last": "2023-08-17",
+      "lat": 40.73056,
+      "lng": -74.00654,
+      "status": "ok",
+      "note": "428 Hudson St"
+    },
+    {
+      "name": "Matchaful",
+      "area": "Tribeca",
+      "visits": 1,
+      "last": "2023-08-17",
+      "lat": 40.7191,
+      "lng": -74.01066,
+      "status": "branch",
+      "note": "Pinned at Harrison St. Also Canal St and Williamsburg."
+    },
+    {
+      "name": "Drip Drop Cafe",
+      "area": "SoHo",
+      "visits": 1,
+      "last": "2023-08-17",
+      "lat": 40.72533,
+      "lng": -74.00062,
+      "status": "ok",
+      "note": "98 Thompson St"
+    },
+    {
+      "name": "787 Coffee",
+      "area": "Upper East Side",
+      "visits": 1,
+      "last": "2023-08-15",
+      "lat": 40.76658,
+      "lng": -73.95738,
+      "status": "branch",
+      "note": "Pinned at E 70th St. Many branches."
+    },
+    {
+      "name": "Good Thanks Cafe",
+      "area": "Lower East Side",
+      "visits": 1,
+      "last": "2023-08-10",
+      "lat": 40.71972,
+      "lng": -73.98952,
+      "status": "ok",
+      "note": "131 Orchard St"
+    },
+    {
+      "name": "Ground Support",
+      "area": "SoHo",
+      "visits": 1,
+      "last": "2023-08-09",
+      "lat": 40.72426,
+      "lng": -74.00199,
+      "status": "ok",
+      "note": "399 W Broadway"
+    },
+    {
+      "name": "Hutch and Waldo",
+      "area": "Upper East Side",
+      "visits": 1,
+      "last": "2023-08-07",
+      "lat": 40.77487,
+      "lng": -73.95428,
+      "status": "check",
+      "note": "Pinned at 247 E 81st St, but the merchant reads 'Hutch And Waldo Irvi…', which may be another (Irving Pl?) location."
+    },
+    {
+      "name": "Yafa Cafe",
+      "area": "Boerum Hill",
+      "visits": 1,
+      "last": "2023-03-31",
+      "lat": 40.68567,
+      "lng": -73.97927,
+      "status": "branch",
+      "note": "Pinned at State St. Also Sunset Park."
+    },
+    {
+      "name": "Buddies Coffee",
+      "area": "Williamsburg",
+      "visits": 1,
+      "last": "2023-03-27",
+      "lat": 40.71475,
+      "lng": -73.96221,
+      "status": "ok",
+      "note": "150 Grand St (closed 2025)"
+    },
+    {
+      "name": "Koré Coffee",
+      "area": "Nolita",
+      "visits": 1,
+      "last": "2023-03-26",
+      "lat": 40.71615,
+      "lng": -73.99709,
+      "status": "ok",
+      "note": "26A Elizabeth St"
+    },
+    {
+      "name": "Pause Cafe",
+      "area": "Lower East Side",
+      "visits": 1,
+      "last": "2023-03-24",
+      "lat": 40.72123,
+      "lng": -73.98409,
+      "status": "ok",
+      "note": "3 Clinton St"
+    },
+    {
+      "name": "Cafe Serafina",
+      "area": "Midtown",
+      "visits": 1,
+      "last": "2023-03-20",
+      "lat": 40.76637,
+      "lng": -73.97966,
+      "status": "check",
+      "note": "Pinned at 922 7th Ave, the Serafina cafe that opened in 2022."
+    },
+    {
+      "name": "Arcane Estate Coffee",
+      "area": "West Village",
+      "visits": 1,
+      "last": "2026-08-26",
+      "lat": 40.73126,
+      "lng": -74.0028,
+      "status": "check",
+      "note": "Work card, no location recorded; New York inferred from trip dates. Cornelia St."
+    },
+    {
+      "name": "Interlude Coffee and Tea",
+      "area": "Tribeca",
+      "visits": 1,
+      "last": "2026-08-26",
+      "lat": 40.72117,
+      "lng": -74.00857,
+      "status": "branch",
+      "note": "Work card, no location. Pinned at 145 Hudson St; also Murray St."
+    },
+    {
+      "name": "Black Fox Coffee",
+      "area": "Midtown East",
+      "visits": 1,
+      "last": "2026-08-26",
+      "lat": 40.76142,
+      "lng": -73.97387,
+      "status": "branch",
+      "note": "Work card, no location. Pinned at E 55th St; also Pine St (FiDi)."
+    },
+    {
+      "name": "Stone Street Coffee",
+      "area": "Chelsea",
+      "visits": 1,
+      "last": "2026-08-23",
+      "lat": 40.74359,
+      "lng": -74.00321,
+      "status": "branch",
+      "note": "Work card, no location. Pinned at 9th Ave, Chelsea; also Park Slope."
+    },
+    {
+      "name": "Dawn's Til Dusk",
+      "area": "Dumbo",
+      "visits": 1,
+      "last": "2025-10-09",
+      "lat": 40.70334,
+      "lng": -73.99056,
+      "status": "check",
+      "note": "Work card, no location; New York inferred from trip dates. 33 Main St, Dumbo."
+    },
+    {
+      "name": "Starbucks Reserve (store 47906)",
+      "area": "Chelsea",
+      "visits": 4,
+      "last": "2024-12-03",
+      "lat": 40.74161,
+      "lng": -74.00515,
+      "status": "check",
+      "note": "Merchant 'Siren47906'. Store number not matched; pinned at the Reserve Roastery, 61 9th Ave, as a guess."
+    },
+    {
+      "name": "Starbucks Reserve (store 57845)",
+      "area": "Midtown",
+      "visits": 3,
+      "last": "2023-08-26",
+      "lat": 40.74844,
+      "lng": -73.98566,
+      "status": "check",
+      "note": "Merchant 'Siren57845'. Store number not matched; pinned at the Empire State Building Reserve as a guess."
+    }
+  ],
+  "originalUnplaced": [
+    {
+      "name": "Starbucks",
+      "visits": 7,
+      "last": "2025-10-10",
+      "note": "Several stores: #47020 Manhattan (3), #22596 and #07646 Brooklyn, #2338 Flushing (likely LaGuardia), 1 with no location."
+    },
+    {
+      "name": "Dunkin'",
+      "visits": 5,
+      "last": "2024-12-16",
+      "note": "Stores in Brooklyn and Queens plus 2 at an airport (Hudson). Store locations not recorded."
+    },
+    {
+      "name": "Blue Bottle Coffee",
+      "visits": 5,
+      "last": "2026-08-22",
+      "note": "4 in Manhattan, 1 in Brooklyn; no branch recorded."
+    },
+    {
+      "name": "Joe & The Juice",
+      "visits": 3,
+      "last": "2026-09-01",
+      "note": "No branch recorded."
+    },
+    {
+      "name": "Butler (no branch)",
+      "visits": 1,
+      "last": "2026-08-25",
+      "note": "Work card; no branch recorded. You've been to three Butler shops."
+    },
+    {
+      "name": "Gregorys Coffee",
+      "visits": 1,
+      "last": "2024-12-02",
+      "note": "Chain; no branch recorded."
+    },
+    {
+      "name": "Blank Street",
+      "visits": 1,
+      "last": "2024-09-02",
+      "note": "Chain; no branch recorded."
+    },
+    {
+      "name": "Western Coffee Shop",
+      "visits": 1,
+      "last": "2023-08-18",
+      "note": "Not found. Possibly a diner."
+    },
+    {
+      "name": "Gs Coffee",
+      "visits": 1,
+      "last": "2023-03-21",
+      "note": "Not found (bank says Brooklyn)."
+    },
+    {
+      "name": "Coffee Table",
+      "visits": 1,
+      "last": "2025-10-13",
+      "note": "Work card; not found."
+    }
+  ],
+  "corrections": {
+    "Copper Mug Coffee": {
+      "locations": [],
+      "reason": "Notion records Manhattan; the earlier map pin is in Williamsburg, Brooklyn. Visited branch unresolved."
+    },
+    "Pueblo Querido Coffee": {
+      "locations": [],
+      "reason": "Notion records Brooklyn; the earlier map labelled its pin Astoria, Queens. Visited branch unresolved."
+    }
+  }
+}

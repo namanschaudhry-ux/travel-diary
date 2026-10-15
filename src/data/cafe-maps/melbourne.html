@@ -111,6 +111,9 @@ h1 { font-family: var(--display); font-weight: 700; font-size: 28px; line-height
   .legend .sw { width: 11px; height: 11px; }
 }
 @media (prefers-reduced-motion: reduce) { .pin { transition: none; } }
+button.row { width:100%; text-align:left; color:inherit; background:none; border:0; border-bottom:1px solid var(--rule); font:inherit; }
+.row .ar { display:block; }
+.result-count { margin:0; padding:10px 20px; font-size:12px; color:var(--muted); }
 </style>
 
 </head><body>
@@ -139,180 +142,15 @@ h1 { font-family: var(--display); font-weight: 700; font-size: 28px; line-height
   <main class="mapwrap">
     <div id="map" aria-label="Map of cafes"></div>
     <div class="legend" aria-label="Legend">
-      <div><span class="sw ok"></span>Address confirmed</div>
+      <div><span class="sw ok"></span>Venue location</div>
       <div><span class="sw branch"></span>Branch unclear</div>
       <div><span class="sw approx"></span>Suburb only</div>
-      <div><span class="sw check"></span>Assumption, check</div>
+      <div><span class="sw check"></span>Check location</div>
     </div>
   </main>
 </div>
 
+<script type="application/json" id="cafe-data">__CAFE_DATA__</script>
 <script src="/cafes/leaflet.js"></script>
-<script>
-// ---- DATA: one line per cafe. To add a cafe, add a line with name, visits, last (YYYY-MM-DD),
-// lat/lng, status (ok | branch | approx | check), area and a short note. ----
-const CAFES = [
-  {"name": "Rise and Grind 3133", "visits": 19, "last": "2026-10-08", "lat": -37.83304, "lng": 145.20827, "status": "ok", "note": "605 Canterbury Rd, Vermont", "area": "Vermont", "bank": true},
-  {"name": "Elwood Bathers", "visits": 15, "last": "2026-05-26", "lat": -37.88947, "lng": 144.98432, "status": "ok", "note": "15 Bay Trail, Elwood", "area": "Elwood", "bank": true},
-  {"name": "Manta Ray Coffee Roasters", "visits": 13, "last": "2026-10-04", "lat": -37.83073, "lng": 145.18632, "status": "ok", "note": "12 Beech Street, Nunawading", "area": "Nunawading", "bank": true},
-  {"name": "Sabi Sounds", "visits": 13, "last": "2026-10-01", "lat": -37.81924, "lng": 145.03584, "status": "ok", "note": "Glenferrie Road, Hawthorn", "area": "Hawthorn", "bank": true},
-  {"name": "Golden Child Cafe", "visits": 11, "last": "2026-10-13", "lat": -37.8514, "lng": 145.07994, "status": "ok", "note": "1-3 Bardolph St, Glen Iris", "area": "Glen Iris", "bank": true},
-  {"name": "Baker Bleu", "visits": 10, "last": "2026-08-02", "lat": -37.83422, "lng": 144.98215, "status": "ok", "note": "Bank recorded South Yarra, so pinned at the Domain Rd shop. Other branches: Caulfield North, Cremorne.", "area": "South Yarra", "bank": true},
-  {"name": "Leeroy Cafe", "visits": 10, "last": "2026-09-15", "lat": -37.83835, "lng": 145.20684, "status": "ok", "note": "37 Centre Road, Vermont", "area": "Vermont", "bank": true},
-  {"name": "Beach Shack Elwood", "visits": 8, "last": "2026-05-11", "lat": -37.88202, "lng": 144.97568, "status": "approx", "note": "No listing found. Pinned at Point Ormond on Elwood beach as a guess.", "area": "Elwood", "bank": true},
-  {"name": "Haiku Cafe", "visits": 8, "last": "2026-10-12", "lat": -37.84818, "lng": 145.07784, "status": "ok", "note": "1161 Toorak Rd, Camberwell", "area": "Camberwell", "bank": true},
-  {"name": "North Point Cafe", "visits": 7, "last": "2026-03-04", "lat": -37.8995, "lng": 145.00357, "status": "check", "note": "Bank says Reservoir, but the only North Point Cafe I found is on the beach at 2B North Rd, Brighton. Pinned there.", "area": "Brighton?", "bank": true},
-  {"name": "St Ali", "visits": 7, "last": "2025-11-21", "lat": -37.8313, "lng": 144.96031, "status": "branch", "note": "Pinned at the South Melbourne flagship. Also St Ali Canteen in Parkville and others.", "area": "South Melbourne?", "bank": false},
-  {"name": "1 in 20", "visits": 5, "last": "2026-05-25", "lat": -37.85564, "lng": 145.31579, "status": "ok", "note": "1305 Mountain Hwy, The Basin", "area": "The Basin", "bank": true},
-  {"name": "1983 Espresso & Panini Bar", "visits": 5, "last": "2026-10-13", "lat": -37.82575, "lng": 144.99077, "status": "ok", "note": "20 Cremorne St, Cremorne (one listing found)", "area": "Cremorne", "bank": false},
-  {"name": "Bench Coffee Co.", "visits": 5, "last": "2026-10-13", "lat": -37.81522, "lng": 144.96422, "status": "branch", "note": "Pinned at Little Collins St (CBD). Also St Kilda Rd and possibly Brunswick.", "area": "CBD?", "bank": false},
-  {"name": "Commonfolk", "visits": 5, "last": "2026-03-10", "lat": -37.83927, "lng": 144.99386, "status": "approx", "note": "Off Toorak Rd, South Yarra. Street number not found, so the pin is approximate.", "area": "South Yarra", "bank": true},
-  {"name": "Milki & Miller", "visits": 5, "last": "2026-06-19", "lat": -37.84438, "lng": 145.2988, "status": "ok", "note": "24 Alchester Crescent, Alchester Village Shopping Centre", "area": "Boronia", "bank": true},
-  {"name": "Cru+ Coffee Roastery", "visits": 4, "last": "2026-09-30", "lat": -37.83138, "lng": 145.04998, "status": "approx", "note": "Bank says Hawthorn East, but I couldn't find this roastery listed. Pin is the suburb centre.", "area": "Hawthorn East", "bank": true},
-  {"name": "The Bakers Wife", "visits": 4, "last": "2026-06-25", "lat": -37.84488, "lng": 145.05436, "status": "ok", "note": "414 Burke Rd, Camberwell", "area": "Camberwell", "bank": true},
-  {"name": "Ondo City", "visits": 3, "last": "2026-05-14", "lat": -37.80939, "lng": 144.96851, "status": "ok", "note": "Ondo, 115 Little Lonsdale St (CBD)", "area": "CBD", "bank": false},
-  {"name": "Spencer Milk Bar", "visits": 3, "last": "2026-09-28", "lat": -37.83846, "lng": 145.07408, "status": "approx", "note": "Bank says Camberwell, but I couldn't find it listed. Pin is the suburb centre.", "area": "Camberwell", "bank": true},
-  {"name": "Bean Lab", "visits": 2, "last": "2025-11-15", "lat": -37.77798, "lng": 144.85075, "status": "ok", "note": "Kiosk 2/330 Ballarat Rd, Braybrook (the only Melbourne Bean Lab found)", "area": "Braybrook", "bank": false},
-  {"name": "Black Gold", "visits": 2, "last": "2026-06-28", "lat": -37.82321, "lng": 144.99389, "status": "ok", "note": "Gipps Street, Richmond", "area": "Richmond", "bank": true},
-  {"name": "Café 1809", "visits": 2, "last": "2025-03-16", "lat": -37.86552, "lng": 145.1573, "status": "ok", "note": "34 Willow Avenue, Glen Waverley", "area": "Glen Waverley", "bank": true},
-  {"name": "Dukes Coffee Roasters", "visits": 2, "last": "2026-06-18", "lat": -37.81678, "lng": 144.96614, "status": "branch", "note": "Pinned at Flinders Lane (CBD). Dukes has other shops, e.g. Chapel St Windsor.", "area": "CBD?", "bank": false},
-  {"name": "Ivy Lane", "visits": 2, "last": "2026-04-29", "lat": -37.85051, "lng": 145.09497, "status": "ok", "note": "Checked: it is a cafe, on Toorak Rd in Burwood Village", "area": "Camberwell", "bank": true},
-  {"name": "Meeya Cafe", "visits": 2, "last": "2026-02-05", "lat": -37.83027, "lng": 144.95953, "status": "ok", "note": "191 Clarendon St, South Melbourne (one listing found)", "area": "South Melbourne", "bank": false},
-  {"name": "Mörk Chocolate", "visits": 2, "last": "2026-07-30", "lat": -37.81662, "lng": 144.96547, "status": "branch", "note": "Pinned at Centre Place (CBD). Also Equitable Place and the North Melbourne flagship.", "area": "CBD?", "bank": false},
-  {"name": "Padre Coffee", "visits": 2, "last": "2025-03-22", "lat": -37.83253, "lng": 144.95631, "status": "branch", "note": "Pinned at South Melbourne Market. Also Collingwood and Brunswick East.", "area": "South Melbourne?", "bank": false},
-  {"name": "Patricia Coffee Brewers", "visits": 2, "last": "2026-05-22", "lat": -37.8147, "lng": 144.95829, "status": "branch", "note": "Pinned at the original on Little William St. A second shop opened at 44 Lonsdale St in 2026.", "area": "CBD", "bank": false},
-  {"name": "Porgies Cafe", "visits": 2, "last": "2026-04-24", "lat": -37.83051, "lng": 145.04375, "status": "ok", "note": "291-293 Auburn Rd, Hawthorn", "area": "Hawthorn", "bank": true},
-  {"name": "Sloane Ranger Cafe", "visits": 2, "last": "2026-06-16", "lat": -37.82576, "lng": 144.9914, "status": "ok", "note": "13 Cremorne St, Cremorne", "area": "Cremorne", "bank": false},
-  {"name": "The Terrace", "visits": 2, "last": "2026-06-18", "lat": -37.8303, "lng": 144.9797, "status": "check", "note": "Checked: The Terrace cafe in the Royal Botanic Gardens (run by the Darling group). Assumed this is the one.", "area": "Botanic Gardens", "bank": false},
-  {"name": "Andzero Cafe", "visits": 1, "last": "2025-04-05", "lat": -37.88107, "lng": 145.16366, "status": "approx", "note": "Japanese-style cafe in Glen Waverley. Street not found; pin is near the Kingsway strip.", "area": "Glen Waverley", "bank": false},
-  {"name": "Aqualink Cafe", "visits": 1, "last": "2025-05-20", "lat": -37.82634, "lng": 145.11756, "status": "branch", "note": "Pool cafe. Pinned at Aqualink Box Hill; there is also Aqualink Nunawading.", "area": "Box Hill?", "bank": false},
-  {"name": "Au79", "visits": 1, "last": "2025-04-15", "lat": -37.78424, "lng": 145.12568, "status": "branch", "note": "Pinned at Doncaster. Also Southbank and Richmond (and the Abbotsford original).", "area": "Doncaster?", "bank": false},
-  {"name": "Auction Rooms", "visits": 1, "last": "2025-12-31", "lat": -37.8025, "lng": 144.94952, "status": "ok", "note": "103-107 Errol Street, North Melbourne", "area": "North Melbourne", "bank": false},
-  {"name": "Black Drop Espresso & Wine", "visits": 1, "last": "2025-06-07", "lat": -37.97066, "lng": 145.02128, "status": "approx", "note": "In Black Rock. Pin is the suburb centre.", "area": "Black Rock", "bank": false},
-  {"name": "Boxcar Espresso", "visits": 1, "last": "2026-09-22", "lat": -37.81822, "lng": 145.19278, "status": "ok", "note": "On the Box Hill to Ringwood trail, Mitcham", "area": "Mitcham", "bank": false},
-  {"name": "Cafe Tomi", "visits": 1, "last": "2026-06-09", "lat": -37.80073, "lng": 144.95338, "status": "ok", "note": "11 Wreckyn Street, North Melbourne", "area": "North Melbourne", "bank": false},
-  {"name": "Chapel Bakery Cafe", "visits": 1, "last": "2025-04-14", "lat": -37.83545, "lng": 144.94574, "status": "ok", "note": "369 Bay Street, Port Melbourne", "area": "Port Melbourne", "bank": false},
-  {"name": "Code Black Coffee", "visits": 1, "last": "2025-11-10", "lat": -37.81625, "lng": 144.96807, "status": "branch", "note": "Pinned at Flinders Lane (CBD). Also South Melbourne, Little Collins and North Melbourne.", "area": "CBD?", "bank": false},
-  {"name": "Coffee Geek Brewers", "visits": 1, "last": "2026-03-17", "lat": -37.83899, "lng": 144.99064, "status": "ok", "note": "81 Davis Avenue, South Yarra", "area": "South Yarra", "bank": true},
-  {"name": "Darling Cafe", "visits": 1, "last": "2026-05-20", "lat": -37.83853, "lng": 144.99149, "status": "ok", "note": "2 Darling Street, South Yarra", "area": "South Yarra", "bank": false},
-  {"name": "Dish & Spoon Cafe", "visits": 1, "last": "2026-07-11", "lat": -37.83788, "lng": 145.08452, "status": "ok", "note": "122 Highfield Rd, Camberwell", "area": "Camberwell", "bank": false},
-  {"name": "Eat 24 Cafe and Bakery", "visits": 1, "last": "2025-11-14", "lat": -37.76854, "lng": 144.96173, "status": "ok", "note": "373 Sydney Rd, Brunswick", "area": "Brunswick", "bank": false},
-  {"name": "Figure 9 Cafe", "visits": 1, "last": "2026-08-04", "lat": -37.81754, "lng": 145.19148, "status": "ok", "note": "1 Colombo St, Mitcham", "area": "Mitcham", "bank": false},
-  {"name": "Footscray Milking Station", "visits": 1, "last": "2025-07-19", "lat": -37.80303, "lng": 144.90387, "status": "ok", "note": "35 Bunbury Street, Footscray", "area": "Footscray", "bank": true},
-  {"name": "Fortunate Son Cafe", "visits": 1, "last": "2024-05-11", "lat": -37.81941, "lng": 145.24451, "status": "ok", "note": "117 Bedford Road, Ringwood East", "area": "Ringwood East", "bank": true},
-  {"name": "Good Measure", "visits": 1, "last": "2026-02-13", "lat": -37.80111, "lng": 144.96668, "status": "ok", "note": "193 Lygon St, Carlton (tagged as a bar on OpenStreetMap)", "area": "Carlton", "bank": true},
-  {"name": "Great Jones", "visits": 1, "last": "2026-10-03", "lat": -37.85647, "lng": 145.02681, "status": "ok", "note": "Checked: a cafe-restaurant at 1184 High St, Armadale (opened 2026)", "area": "Armadale", "bank": false},
-  {"name": "Head In The Cloud Coffee", "visits": 1, "last": "2025-06-25", "lat": -37.83548, "lng": 144.99642, "status": "approx", "note": "Said to be just off Chapel St. Pin is approximate.", "area": "South Yarra", "bank": false},
-  {"name": "Inglewood Coffee", "visits": 1, "last": "2025-01-16", "lat": -37.8985, "lng": 145.14038, "status": "ok", "note": "Inglewood's roastery site, 23 Lionel Rd, Mount Waverley", "area": "Mount Waverley", "bank": true},
-  {"name": "Lorna Cafe", "visits": 1, "last": "2025-02-28", "lat": -37.88846, "lng": 145.29335, "status": "ok", "note": "1051-1053 Burwood Highway, Ferntree Gully", "area": "Ferntree Gully", "bank": true},
-  {"name": "Mammoth Cafe", "visits": 1, "last": "2026-06-08", "lat": -37.84956, "lng": 145.01318, "status": "ok", "note": "736 Malvern Rd, Armadale", "area": "Armadale", "bank": false},
-  {"name": "Market Lane Coffee", "visits": 1, "last": "2025-11-21", "lat": -37.80628, "lng": 144.95796, "status": "branch", "note": "Pinned at Queen Victoria Market. Many branches: Prahran Market, Carlton, Brunswick, CBD.", "area": "CBD?", "bank": false},
-  {"name": "Micah Coffee Brewers", "visits": 1, "last": "2026-05-15", "lat": -37.88812, "lng": 145.28982, "status": "ok", "note": "1015 Burwood Highway, Ferntree Gully", "area": "Ferntree Gully", "bank": false},
-  {"name": "Naau Cafe", "visits": 1, "last": "2026-05-14", "lat": -37.81, "lng": 144.96702, "status": "ok", "note": "276 Russell St (CBD)", "area": "CBD", "bank": false},
-  {"name": "Namoo Japanese Cafe", "visits": 1, "last": "2026-05-05", "lat": -37.81869, "lng": 144.95609, "status": "ok", "note": "Collins St (CBD)", "area": "CBD", "bank": false},
-  {"name": "Niccolo Coffee", "visits": 1, "last": "2026-02-03", "lat": -37.82912, "lng": 144.9937, "status": "ok", "note": "57-59 Stephenson St, Cremorne", "area": "Cremorne", "bank": true},
-  {"name": "Olinda Cafe", "visits": 1, "last": "2026-03-08", "lat": -37.85574, "lng": 145.36491, "status": "ok", "note": "13-17 Olinda-Monbulk Rd, Olinda", "area": "Olinda", "bank": true},
-  {"name": "Project Zero Coffee", "visits": 1, "last": "2026-05-10", "lat": -37.81677, "lng": 144.95633, "status": "ok", "note": "Gallaghers Place (CBD)", "area": "CBD", "bank": false},
-  {"name": "Rosso Coffee Roasters", "visits": 1, "last": "2025-04-06", "lat": -37.81817, "lng": 144.95784, "status": "branch", "note": "Pinned at the Rialto (CBD). Also Flinders Lane.", "area": "CBD?", "bank": false},
-  {"name": "Saazaa Coffee", "visits": 1, "last": "2026-04-21", "lat": -37.81777, "lng": 145.22165, "status": "ok", "note": "8 Olive Grove, Ringwood", "area": "Ringwood", "bank": true},
-  {"name": "Secondipity Roasters", "visits": 1, "last": "2026-06-06", "lat": -37.80667, "lng": 144.9879, "status": "ok", "note": "86-90 Langridge Street, Collingwood", "area": "Collingwood", "bank": false},
-  {"name": "South of Johnston", "visits": 1, "last": "2025-07-17", "lat": -37.806, "lng": 144.98469, "status": "ok", "note": "46 Oxford Street, Collingwood", "area": "Collingwood", "bank": false},
-  {"name": "Spyglass Coffee", "visits": 1, "last": "2026-03-05", "lat": -37.8172, "lng": 144.9612, "status": "ok", "note": "34 Queen St (CBD)", "area": "CBD", "bank": false},
-  {"name": "Storehouse Roastery", "visits": 1, "last": "2026-03-07", "lat": -37.84832, "lng": 145.36118, "status": "ok", "note": "1544 Mount Dandenong Tourist Road, Olinda", "area": "Olinda", "bank": true},
-  {"name": "T House at Jells", "visits": 1, "last": "2024-12-19", "lat": -37.89675, "lng": 145.1965, "status": "ok", "note": "34-70 Jells Road, Wheelers Hill", "area": "Wheelers Hill", "bank": true},
-  {"name": "Tall Timber", "visits": 1, "last": "2026-02-09", "lat": -37.84621, "lng": 144.98814, "status": "ok", "note": "Commercial Road, Prahran", "area": "Prahran", "bank": true},
-  {"name": "The Coffee Mob", "visits": 1, "last": "2024-12-27", "lat": -37.8125, "lng": 144.98589, "status": "approx", "note": "Bank says East Melbourne, but no listing found. Pin is the suburb centre.", "area": "East Melbourne", "bank": true},
-  {"name": "The Hatter and the Hare", "visits": 1, "last": "2026-05-13", "lat": -37.84141, "lng": 145.27102, "status": "ok", "note": "21 Scoresby Road, Bayswater", "area": "Bayswater", "bank": false},
-  {"name": "Tone Coffee", "visits": 1, "last": "2026-05-20", "lat": -37.80281, "lng": 144.94572, "status": "ok", "note": "653 Queensberry Street, North Melbourne", "area": "North Melbourne", "bank": false},
-  {"name": "Top Paddock", "visits": 1, "last": "2026-01-28", "lat": -37.83271, "lng": 144.99638, "status": "ok", "note": "658 Church Street, Richmond", "area": "Richmond", "bank": true},
-  {"name": "Tribu Coffee", "visits": 1, "last": "2025-05-19", "lat": -37.8412, "lng": 144.93754, "status": "ok", "note": "217 Rouse Street, Port Melbourne", "area": "Port Melbourne", "bank": false},
-  {"name": "Two Birds One Stone", "visits": 1, "last": "2026-03-10", "lat": -37.83807, "lng": 144.99393, "status": "ok", "note": "12 Claremont Street, South Yarra", "area": "South Yarra", "bank": true},
-  {"name": "javaScript Cafe", "visits": 1, "last": "2025-04-12", "lat": -37.8582, "lng": 145.19962, "status": "ok", "note": "Vermont South Medical Centre, Burwood Hwy", "area": "Vermont South", "bank": false}
-];
-
-const UNPLACED = [
-  {"name": "Berry Good Coffee", "visits": 1, "last": "2025-07-08", "note": "No Melbourne listing found."},
-  {"name": "Depot Cafe", "visits": 1, "last": "2025-07-07", "note": "No Melbourne listing found."},
-  {"name": "Light Up Coffee", "visits": 1, "last": "2025-11-11", "note": "Only match is a Tokyo roaster. Could this be a Tokyo purchase?"},
-  {"name": "Moons Espresso Bar", "visits": 1, "last": "2025-04-21", "note": "Only match is Moons in Lorne, which you excluded."},
-  {"name": "Sox Coffee", "visits": 1, "last": "2026-10-03", "note": "No listing found."},
-  {"name": "Square Lane Coffee", "visits": 1, "last": "2026-06-04", "note": "No listing found. Possibly Market Lane?"},
-  {"name": "oneway coffee lab", "visits": 1, "last": "2025-05-29", "note": "No listing found."}
-];
-
-const AS_AT = "14 Oct 2026";
-// ---- end of data ----
-
-const FLAGGED = new Set(["branch", "approx", "check"]);
-const LABEL = { branch: "Branch?", approx: "Approx", check: "Check" };
-const fmtDate = d => new Date(d + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const size = v => Math.round(9 + 4.4 * Math.sqrt(v));
-
-const totalVisits = CAFES.reduce((a, c) => a + c.visits, 0) + UNPLACED.reduce((a, c) => a + c.visits, 0);
-const flaggedCount = CAFES.filter(c => FLAGGED.has(c.status)).length;
-document.getElementById("tally").innerHTML =
-  `<span><b>${CAFES.length + UNPLACED.length}</b>cafes</span><span><b>${totalVisits}</b>visits</span><span><b>${CAFES.length}</b>on the map</span><span><b>${flaggedCount + UNPLACED.length}</b>to check</span>`;
-
-const map = L.map("map", { zoomSnap: 0.5, minZoom: 10, maxZoom: 17, maxBounds: [[-38.15, 144.55], [-37.55, 145.65]] });
-L.tileLayer("/cafes/melbourne/osm/{z}/{x}/{y}.png", { minZoom: 10, maxNativeZoom: 13, maxZoom: 17,
-  bounds: [[-38.02, 144.78], [-37.70, 145.44]],
-  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
-
-const markers = new Map();
-[...CAFES].sort((a, b) => a.visits - b.visits).forEach(c => {
-  const s = size(c.visits);
-  const icon = L.divIcon({ className: "", iconSize: [s, s], iconAnchor: [s / 2, s / 2],
-    html: `<div class="pin ${c.status}" style="width:${s}px;height:${s}px">${c.visits > 2 ? c.visits : ""}</div>` });
-  const m = L.marker([c.lat, c.lng], { icon, title: c.name, riseOnHover: true, zIndexOffset: c.visits * 10 })
-    .bindTooltip(`${esc(c.name)} · ${c.visits}`, { direction: "top", offset: [0, -s / 2] })
-    .bindPopup(`<div class="pop"><h3>${esc(c.name)}</h3><div class="meta">${c.visits} visit${c.visits > 1 ? "s" : ""} · last ${fmtDate(c.last)}</div><p>${esc(c.note)}</p>${c.bank ? "" : '<p class="meta" style="margin-top:6px">Location looked up by name (no location in bank data)</p>'}</div>`)
-    .addTo(map);
-  markers.set(c.name, m);
-});
-map.fitBounds(L.latLngBounds(CAFES.map(c => [c.lat, c.lng])), { padding: [30, 30] });
-
-let filter = "all", sort = "visits", q = "";
-try { const saved = localStorage.getItem("cafe-sort"); if (["visits", "last", "name"].includes(saved)) sort = saved; } catch (e) {}
-
-function render() {
-  document.querySelectorAll("[data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === filter));
-  document.querySelectorAll("[data-s]").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === sort));
-  const match = c => !q || (c.name + " " + (c.area || "")).toLowerCase().includes(q);
-  const rows = CAFES.filter(c => (filter === "all" || FLAGGED.has(c.status)) && match(c));
-  const cmp = { visits: (a, b) => b.visits - a.visits || b.last.localeCompare(a.last),
-                last: (a, b) => b.last.localeCompare(a.last), name: (a, b) => a.name.localeCompare(b.name) }[sort];
-  rows.sort(cmp);
-  markers.forEach((m, name) => {
-    const c = CAFES.find(x => x.name === name);
-    const show = (filter === "all" || FLAGGED.has(c.status)) && match(c);
-    if (show && !map.hasLayer(m)) m.addTo(map); else if (!show && map.hasLayer(m)) map.removeLayer(m);
-  });
-  const row = c => `<div class="row" tabindex="0" data-name="${esc(c.name)}">
-      <span class="n">${c.visits}</span>
-      <div class="nm">${esc(c.name)}${LABEL[c.status] ? `<span class="chip ${c.status}">${LABEL[c.status]}</span>` : ""}<div class="ar">${esc(c.area || "")}</div></div>
-      <span class="dt">${fmtDate(c.last)}</span></div>`;
-  const un = UNPLACED.filter(match).sort(cmp);
-  document.getElementById("list").innerHTML =
-    (rows.length ? rows.map(row).join("") : `<p class="foot">No mapped cafes match “${esc(q)}”.</p>`) +
-    (un.length ? `<div class="sect">Not on the map · couldn't find these</div><div class="unplaced">` +
-      un.map(c => `<div class="row"><span class="n">${c.visits}</span><div class="nm">${esc(c.name)}<div class="ar">${esc(c.note)}</div></div><span class="dt">${fmtDate(c.last)}</span></div>`).join("") + `</div>` : "") +
-    `<p class="foot">Visits are card purchases, so cash visits and other people's shouts are missing. Data as at ${AS_AT}, from the Notion page “Cafe Visits”.</p>`;
-}
-
-function focusCafe(name) {
-  const m = markers.get(name); if (!m) return;
-  if (!map.hasLayer(m)) m.addTo(map);
-  map.flyTo(m.getLatLng(), Math.max(map.getZoom(), 14), { duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.6 });
-  m.openPopup();
-  if (matchMedia("(max-width: 760px)").matches) document.querySelector(".mapwrap").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-}
-document.getElementById("list").addEventListener("click", e => { const r = e.target.closest(".row[data-name]"); if (r) focusCafe(r.dataset.name); });
-document.getElementById("list").addEventListener("keydown", e => { const r = e.target.closest(".row[data-name]"); if (r && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); focusCafe(r.dataset.name); } });
-document.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { filter = b.dataset.f; render(); });
-document.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { sort = b.dataset.s; try { localStorage.setItem("cafe-sort", sort); } catch (e) {} render(); });
-document.getElementById("q").addEventListener("input", e => { q = e.target.value.trim().toLowerCase(); render(); });
-render();
-</script>
-
+<script src="/cafes/map.js"></script>
 </body></html>

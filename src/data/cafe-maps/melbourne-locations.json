@@ -1,0 +1,1638 @@
+{
+  "originalPins": [
+    {
+      "name": "Rise and Grind 3133",
+      "visits": 19,
+      "last": "2026-10-08",
+      "lat": -37.83304,
+      "lng": 145.20827,
+      "status": "ok",
+      "note": "605 Canterbury Rd, Vermont",
+      "area": "Vermont",
+      "bank": true
+    },
+    {
+      "name": "Elwood Bathers",
+      "visits": 15,
+      "last": "2026-05-26",
+      "lat": -37.88947,
+      "lng": 144.98432,
+      "status": "ok",
+      "note": "15 Bay Trail, Elwood",
+      "area": "Elwood",
+      "bank": true
+    },
+    {
+      "name": "Manta Ray Coffee Roasters",
+      "visits": 13,
+      "last": "2026-10-04",
+      "lat": -37.83073,
+      "lng": 145.18632,
+      "status": "ok",
+      "note": "12 Beech Street, Nunawading",
+      "area": "Nunawading",
+      "bank": true
+    },
+    {
+      "name": "Sabi Sounds",
+      "visits": 13,
+      "last": "2026-10-01",
+      "lat": -37.81924,
+      "lng": 145.03584,
+      "status": "ok",
+      "note": "Glenferrie Road, Hawthorn",
+      "area": "Hawthorn",
+      "bank": true
+    },
+    {
+      "name": "Golden Child Cafe",
+      "visits": 11,
+      "last": "2026-10-13",
+      "lat": -37.8514,
+      "lng": 145.07994,
+      "status": "ok",
+      "note": "1-3 Bardolph St, Glen Iris",
+      "area": "Glen Iris",
+      "bank": true
+    },
+    {
+      "name": "Baker Bleu",
+      "visits": 10,
+      "last": "2026-08-02",
+      "lat": -37.83422,
+      "lng": 144.98215,
+      "status": "ok",
+      "note": "Bank recorded South Yarra, so pinned at the Domain Rd shop. Other branches: Caulfield North, Cremorne.",
+      "area": "South Yarra",
+      "bank": true
+    },
+    {
+      "name": "Leeroy Cafe",
+      "visits": 10,
+      "last": "2026-09-15",
+      "lat": -37.83835,
+      "lng": 145.20684,
+      "status": "ok",
+      "note": "37 Centre Road, Vermont",
+      "area": "Vermont",
+      "bank": true
+    },
+    {
+      "name": "Beach Shack Elwood",
+      "visits": 8,
+      "last": "2026-05-11",
+      "lat": -37.88202,
+      "lng": 144.97568,
+      "status": "approx",
+      "note": "No listing found. Pinned at Point Ormond on Elwood beach as a guess.",
+      "area": "Elwood",
+      "bank": true
+    },
+    {
+      "name": "Haiku Cafe",
+      "visits": 8,
+      "last": "2026-10-12",
+      "lat": -37.84818,
+      "lng": 145.07784,
+      "status": "ok",
+      "note": "1161 Toorak Rd, Camberwell",
+      "area": "Camberwell",
+      "bank": true
+    },
+    {
+      "name": "North Point Cafe",
+      "visits": 7,
+      "last": "2026-03-04",
+      "lat": -37.8995,
+      "lng": 145.00357,
+      "status": "check",
+      "note": "Bank says Reservoir, but the only North Point Cafe I found is on the beach at 2B North Rd, Brighton. Pinned there.",
+      "area": "Brighton?",
+      "bank": true
+    },
+    {
+      "name": "St Ali",
+      "visits": 7,
+      "last": "2025-11-21",
+      "lat": -37.8313,
+      "lng": 144.96031,
+      "status": "branch",
+      "note": "Pinned at the South Melbourne flagship. Also St Ali Canteen in Parkville and others.",
+      "area": "South Melbourne?",
+      "bank": false
+    },
+    {
+      "name": "1 in 20",
+      "visits": 5,
+      "last": "2026-05-25",
+      "lat": -37.85564,
+      "lng": 145.31579,
+      "status": "ok",
+      "note": "1305 Mountain Hwy, The Basin",
+      "area": "The Basin",
+      "bank": true
+    },
+    {
+      "name": "1983 Espresso & Panini Bar",
+      "visits": 5,
+      "last": "2026-10-13",
+      "lat": -37.82575,
+      "lng": 144.99077,
+      "status": "ok",
+      "note": "20 Cremorne St, Cremorne (one listing found)",
+      "area": "Cremorne",
+      "bank": false
+    },
+    {
+      "name": "Bench Coffee Co.",
+      "visits": 5,
+      "last": "2026-10-13",
+      "lat": -37.81522,
+      "lng": 144.96422,
+      "status": "branch",
+      "note": "Pinned at Little Collins St (CBD). Also St Kilda Rd and possibly Brunswick.",
+      "area": "CBD?",
+      "bank": false
+    },
+    {
+      "name": "Commonfolk",
+      "visits": 5,
+      "last": "2026-03-10",
+      "lat": -37.83927,
+      "lng": 144.99386,
+      "status": "approx",
+      "note": "Off Toorak Rd, South Yarra. Street number not found, so the pin is approximate.",
+      "area": "South Yarra",
+      "bank": true
+    },
+    {
+      "name": "Milki & Miller",
+      "visits": 5,
+      "last": "2026-06-19",
+      "lat": -37.84438,
+      "lng": 145.2988,
+      "status": "ok",
+      "note": "24 Alchester Crescent, Alchester Village Shopping Centre",
+      "area": "Boronia",
+      "bank": true
+    },
+    {
+      "name": "Cru+ Coffee Roastery",
+      "visits": 4,
+      "last": "2026-09-30",
+      "lat": -37.83138,
+      "lng": 145.04998,
+      "status": "approx",
+      "note": "Bank says Hawthorn East, but I couldn't find this roastery listed. Pin is the suburb centre.",
+      "area": "Hawthorn East",
+      "bank": true
+    },
+    {
+      "name": "The Bakers Wife",
+      "visits": 4,
+      "last": "2026-06-25",
+      "lat": -37.84488,
+      "lng": 145.05436,
+      "status": "ok",
+      "note": "414 Burke Rd, Camberwell",
+      "area": "Camberwell",
+      "bank": true
+    },
+    {
+      "name": "Ondo City",
+      "visits": 3,
+      "last": "2026-05-14",
+      "lat": -37.80939,
+      "lng": 144.96851,
+      "status": "ok",
+      "note": "Ondo, 115 Little Lonsdale St (CBD)",
+      "area": "CBD",
+      "bank": false
+    },
+    {
+      "name": "Spencer Milk Bar",
+      "visits": 3,
+      "last": "2026-09-28",
+      "lat": -37.83846,
+      "lng": 145.07408,
+      "status": "approx",
+      "note": "Bank says Camberwell, but I couldn't find it listed. Pin is the suburb centre.",
+      "area": "Camberwell",
+      "bank": true
+    },
+    {
+      "name": "Bean Lab",
+      "visits": 2,
+      "last": "2025-11-15",
+      "lat": -37.77798,
+      "lng": 144.85075,
+      "status": "ok",
+      "note": "Kiosk 2/330 Ballarat Rd, Braybrook (the only Melbourne Bean Lab found)",
+      "area": "Braybrook",
+      "bank": false
+    },
+    {
+      "name": "Black Gold",
+      "visits": 2,
+      "last": "2026-06-28",
+      "lat": -37.82321,
+      "lng": 144.99389,
+      "status": "ok",
+      "note": "Gipps Street, Richmond",
+      "area": "Richmond",
+      "bank": true
+    },
+    {
+      "name": "Café 1809",
+      "visits": 2,
+      "last": "2025-03-16",
+      "lat": -37.86552,
+      "lng": 145.1573,
+      "status": "ok",
+      "note": "34 Willow Avenue, Glen Waverley",
+      "area": "Glen Waverley",
+      "bank": true
+    },
+    {
+      "name": "Dukes Coffee Roasters",
+      "visits": 2,
+      "last": "2026-06-18",
+      "lat": -37.81678,
+      "lng": 144.96614,
+      "status": "branch",
+      "note": "Pinned at Flinders Lane (CBD). Dukes has other shops, e.g. Chapel St Windsor.",
+      "area": "CBD?",
+      "bank": false
+    },
+    {
+      "name": "Ivy Lane",
+      "visits": 2,
+      "last": "2026-04-29",
+      "lat": -37.85051,
+      "lng": 145.09497,
+      "status": "ok",
+      "note": "Checked: it is a cafe, on Toorak Rd in Burwood Village",
+      "area": "Camberwell",
+      "bank": true
+    },
+    {
+      "name": "Meeya Cafe",
+      "visits": 2,
+      "last": "2026-02-05",
+      "lat": -37.83027,
+      "lng": 144.95953,
+      "status": "ok",
+      "note": "191 Clarendon St, South Melbourne (one listing found)",
+      "area": "South Melbourne",
+      "bank": false
+    },
+    {
+      "name": "Mörk Chocolate",
+      "visits": 2,
+      "last": "2026-07-30",
+      "lat": -37.81662,
+      "lng": 144.96547,
+      "status": "branch",
+      "note": "Pinned at Centre Place (CBD). Also Equitable Place and the North Melbourne flagship.",
+      "area": "CBD?",
+      "bank": false
+    },
+    {
+      "name": "Padre Coffee",
+      "visits": 2,
+      "last": "2025-03-22",
+      "lat": -37.83253,
+      "lng": 144.95631,
+      "status": "branch",
+      "note": "Pinned at South Melbourne Market. Also Collingwood and Brunswick East.",
+      "area": "South Melbourne?",
+      "bank": false
+    },
+    {
+      "name": "Patricia Coffee Brewers",
+      "visits": 2,
+      "last": "2026-05-22",
+      "lat": -37.8147,
+      "lng": 144.95829,
+      "status": "branch",
+      "note": "Pinned at the original on Little William St. A second shop opened at 44 Lonsdale St in 2026.",
+      "area": "CBD",
+      "bank": false
+    },
+    {
+      "name": "Porgies Cafe",
+      "visits": 2,
+      "last": "2026-04-24",
+      "lat": -37.83051,
+      "lng": 145.04375,
+      "status": "ok",
+      "note": "291-293 Auburn Rd, Hawthorn",
+      "area": "Hawthorn",
+      "bank": true
+    },
+    {
+      "name": "Sloane Ranger Cafe",
+      "visits": 2,
+      "last": "2026-06-16",
+      "lat": -37.82576,
+      "lng": 144.9914,
+      "status": "ok",
+      "note": "13 Cremorne St, Cremorne",
+      "area": "Cremorne",
+      "bank": false
+    },
+    {
+      "name": "The Terrace",
+      "visits": 2,
+      "last": "2026-06-18",
+      "lat": -37.8303,
+      "lng": 144.9797,
+      "status": "check",
+      "note": "Checked: The Terrace cafe in the Royal Botanic Gardens (run by the Darling group). Assumed this is the one.",
+      "area": "Botanic Gardens",
+      "bank": false
+    },
+    {
+      "name": "Andzero Cafe",
+      "visits": 1,
+      "last": "2025-04-05",
+      "lat": -37.88107,
+      "lng": 145.16366,
+      "status": "approx",
+      "note": "Japanese-style cafe in Glen Waverley. Street not found; pin is near the Kingsway strip.",
+      "area": "Glen Waverley",
+      "bank": false
+    },
+    {
+      "name": "Aqualink Cafe",
+      "visits": 1,
+      "last": "2025-05-20",
+      "lat": -37.82634,
+      "lng": 145.11756,
+      "status": "branch",
+      "note": "Pool cafe. Pinned at Aqualink Box Hill; there is also Aqualink Nunawading.",
+      "area": "Box Hill?",
+      "bank": false
+    },
+    {
+      "name": "Au79",
+      "visits": 1,
+      "last": "2025-04-15",
+      "lat": -37.78424,
+      "lng": 145.12568,
+      "status": "branch",
+      "note": "Pinned at Doncaster. Also Southbank and Richmond (and the Abbotsford original).",
+      "area": "Doncaster?",
+      "bank": false
+    },
+    {
+      "name": "Auction Rooms",
+      "visits": 1,
+      "last": "2025-12-31",
+      "lat": -37.8025,
+      "lng": 144.94952,
+      "status": "ok",
+      "note": "103-107 Errol Street, North Melbourne",
+      "area": "North Melbourne",
+      "bank": false
+    },
+    {
+      "name": "Black Drop Espresso & Wine",
+      "visits": 1,
+      "last": "2025-06-07",
+      "lat": -37.97066,
+      "lng": 145.02128,
+      "status": "approx",
+      "note": "In Black Rock. Pin is the suburb centre.",
+      "area": "Black Rock",
+      "bank": false
+    },
+    {
+      "name": "Boxcar Espresso",
+      "visits": 1,
+      "last": "2026-09-22",
+      "lat": -37.81822,
+      "lng": 145.19278,
+      "status": "ok",
+      "note": "On the Box Hill to Ringwood trail, Mitcham",
+      "area": "Mitcham",
+      "bank": false
+    },
+    {
+      "name": "Cafe Tomi",
+      "visits": 1,
+      "last": "2026-06-09",
+      "lat": -37.80073,
+      "lng": 144.95338,
+      "status": "ok",
+      "note": "11 Wreckyn Street, North Melbourne",
+      "area": "North Melbourne",
+      "bank": false
+    },
+    {
+      "name": "Chapel Bakery Cafe",
+      "visits": 1,
+      "last": "2025-04-14",
+      "lat": -37.83545,
+      "lng": 144.94574,
+      "status": "ok",
+      "note": "369 Bay Street, Port Melbourne",
+      "area": "Port Melbourne",
+      "bank": false
+    },
+    {
+      "name": "Code Black Coffee",
+      "visits": 1,
+      "last": "2025-11-10",
+      "lat": -37.81625,
+      "lng": 144.96807,
+      "status": "branch",
+      "note": "Pinned at Flinders Lane (CBD). Also South Melbourne, Little Collins and North Melbourne.",
+      "area": "CBD?",
+      "bank": false
+    },
+    {
+      "name": "Coffee Geek Brewers",
+      "visits": 1,
+      "last": "2026-03-17",
+      "lat": -37.83899,
+      "lng": 144.99064,
+      "status": "ok",
+      "note": "81 Davis Avenue, South Yarra",
+      "area": "South Yarra",
+      "bank": true
+    },
+    {
+      "name": "Darling Cafe",
+      "visits": 1,
+      "last": "2026-05-20",
+      "lat": -37.83853,
+      "lng": 144.99149,
+      "status": "ok",
+      "note": "2 Darling Street, South Yarra",
+      "area": "South Yarra",
+      "bank": false
+    },
+    {
+      "name": "Dish & Spoon Cafe",
+      "visits": 1,
+      "last": "2026-07-11",
+      "lat": -37.83788,
+      "lng": 145.08452,
+      "status": "ok",
+      "note": "122 Highfield Rd, Camberwell",
+      "area": "Camberwell",
+      "bank": false
+    },
+    {
+      "name": "Eat 24 Cafe and Bakery",
+      "visits": 1,
+      "last": "2025-11-14",
+      "lat": -37.76854,
+      "lng": 144.96173,
+      "status": "ok",
+      "note": "373 Sydney Rd, Brunswick",
+      "area": "Brunswick",
+      "bank": false
+    },
+    {
+      "name": "Figure 9 Cafe",
+      "visits": 1,
+      "last": "2026-08-04",
+      "lat": -37.81754,
+      "lng": 145.19148,
+      "status": "ok",
+      "note": "1 Colombo St, Mitcham",
+      "area": "Mitcham",
+      "bank": false
+    },
+    {
+      "name": "Footscray Milking Station",
+      "visits": 1,
+      "last": "2025-07-19",
+      "lat": -37.80303,
+      "lng": 144.90387,
+      "status": "ok",
+      "note": "35 Bunbury Street, Footscray",
+      "area": "Footscray",
+      "bank": true
+    },
+    {
+      "name": "Fortunate Son Cafe",
+      "visits": 1,
+      "last": "2024-05-11",
+      "lat": -37.81941,
+      "lng": 145.24451,
+      "status": "ok",
+      "note": "117 Bedford Road, Ringwood East",
+      "area": "Ringwood East",
+      "bank": true
+    },
+    {
+      "name": "Good Measure",
+      "visits": 1,
+      "last": "2026-02-13",
+      "lat": -37.80111,
+      "lng": 144.96668,
+      "status": "ok",
+      "note": "193 Lygon St, Carlton (tagged as a bar on OpenStreetMap)",
+      "area": "Carlton",
+      "bank": true
+    },
+    {
+      "name": "Great Jones",
+      "visits": 1,
+      "last": "2026-10-03",
+      "lat": -37.85647,
+      "lng": 145.02681,
+      "status": "ok",
+      "note": "Checked: a cafe-restaurant at 1184 High St, Armadale (opened 2026)",
+      "area": "Armadale",
+      "bank": false
+    },
+    {
+      "name": "Head In The Cloud Coffee",
+      "visits": 1,
+      "last": "2025-06-25",
+      "lat": -37.83548,
+      "lng": 144.99642,
+      "status": "approx",
+      "note": "Said to be just off Chapel St. Pin is approximate.",
+      "area": "South Yarra",
+      "bank": false
+    },
+    {
+      "name": "Inglewood Coffee",
+      "visits": 1,
+      "last": "2025-01-16",
+      "lat": -37.8985,
+      "lng": 145.14038,
+      "status": "ok",
+      "note": "Inglewood's roastery site, 23 Lionel Rd, Mount Waverley",
+      "area": "Mount Waverley",
+      "bank": true
+    },
+    {
+      "name": "Lorna Cafe",
+      "visits": 1,
+      "last": "2025-02-28",
+      "lat": -37.88846,
+      "lng": 145.29335,
+      "status": "ok",
+      "note": "1051-1053 Burwood Highway, Ferntree Gully",
+      "area": "Ferntree Gully",
+      "bank": true
+    },
+    {
+      "name": "Mammoth Cafe",
+      "visits": 1,
+      "last": "2026-06-08",
+      "lat": -37.84956,
+      "lng": 145.01318,
+      "status": "ok",
+      "note": "736 Malvern Rd, Armadale",
+      "area": "Armadale",
+      "bank": false
+    },
+    {
+      "name": "Market Lane Coffee",
+      "visits": 1,
+      "last": "2025-11-21",
+      "lat": -37.80628,
+      "lng": 144.95796,
+      "status": "branch",
+      "note": "Pinned at Queen Victoria Market. Many branches: Prahran Market, Carlton, Brunswick, CBD.",
+      "area": "CBD?",
+      "bank": false
+    },
+    {
+      "name": "Micah Coffee Brewers",
+      "visits": 1,
+      "last": "2026-05-15",
+      "lat": -37.88812,
+      "lng": 145.28982,
+      "status": "ok",
+      "note": "1015 Burwood Highway, Ferntree Gully",
+      "area": "Ferntree Gully",
+      "bank": false
+    },
+    {
+      "name": "Naau Cafe",
+      "visits": 1,
+      "last": "2026-05-14",
+      "lat": -37.81,
+      "lng": 144.96702,
+      "status": "ok",
+      "note": "276 Russell St (CBD)",
+      "area": "CBD",
+      "bank": false
+    },
+    {
+      "name": "Namoo Japanese Cafe",
+      "visits": 1,
+      "last": "2026-05-05",
+      "lat": -37.81869,
+      "lng": 144.95609,
+      "status": "ok",
+      "note": "Collins St (CBD)",
+      "area": "CBD",
+      "bank": false
+    },
+    {
+      "name": "Niccolo Coffee",
+      "visits": 1,
+      "last": "2026-02-03",
+      "lat": -37.82912,
+      "lng": 144.9937,
+      "status": "ok",
+      "note": "57-59 Stephenson St, Cremorne",
+      "area": "Cremorne",
+      "bank": true
+    },
+    {
+      "name": "Olinda Cafe",
+      "visits": 1,
+      "last": "2026-03-08",
+      "lat": -37.85574,
+      "lng": 145.36491,
+      "status": "ok",
+      "note": "13-17 Olinda-Monbulk Rd, Olinda",
+      "area": "Olinda",
+      "bank": true
+    },
+    {
+      "name": "Project Zero Coffee",
+      "visits": 1,
+      "last": "2026-05-10",
+      "lat": -37.81677,
+      "lng": 144.95633,
+      "status": "ok",
+      "note": "Gallaghers Place (CBD)",
+      "area": "CBD",
+      "bank": false
+    },
+    {
+      "name": "Rosso Coffee Roasters",
+      "visits": 1,
+      "last": "2025-04-06",
+      "lat": -37.81817,
+      "lng": 144.95784,
+      "status": "branch",
+      "note": "Pinned at the Rialto (CBD). Also Flinders Lane.",
+      "area": "CBD?",
+      "bank": false
+    },
+    {
+      "name": "Saazaa Coffee",
+      "visits": 1,
+      "last": "2026-04-21",
+      "lat": -37.81777,
+      "lng": 145.22165,
+      "status": "ok",
+      "note": "8 Olive Grove, Ringwood",
+      "area": "Ringwood",
+      "bank": true
+    },
+    {
+      "name": "Secondipity Roasters",
+      "visits": 1,
+      "last": "2026-06-06",
+      "lat": -37.80667,
+      "lng": 144.9879,
+      "status": "ok",
+      "note": "86-90 Langridge Street, Collingwood",
+      "area": "Collingwood",
+      "bank": false
+    },
+    {
+      "name": "South of Johnston",
+      "visits": 1,
+      "last": "2025-07-17",
+      "lat": -37.806,
+      "lng": 144.98469,
+      "status": "ok",
+      "note": "46 Oxford Street, Collingwood",
+      "area": "Collingwood",
+      "bank": false
+    },
+    {
+      "name": "Spyglass Coffee",
+      "visits": 1,
+      "last": "2026-03-05",
+      "lat": -37.8172,
+      "lng": 144.9612,
+      "status": "ok",
+      "note": "34 Queen St (CBD)",
+      "area": "CBD",
+      "bank": false
+    },
+    {
+      "name": "Storehouse Roastery",
+      "visits": 1,
+      "last": "2026-03-07",
+      "lat": -37.84832,
+      "lng": 145.36118,
+      "status": "ok",
+      "note": "1544 Mount Dandenong Tourist Road, Olinda",
+      "area": "Olinda",
+      "bank": true
+    },
+    {
+      "name": "T House at Jells",
+      "visits": 1,
+      "last": "2024-12-19",
+      "lat": -37.89675,
+      "lng": 145.1965,
+      "status": "ok",
+      "note": "34-70 Jells Road, Wheelers Hill",
+      "area": "Wheelers Hill",
+      "bank": true
+    },
+    {
+      "name": "Tall Timber",
+      "visits": 1,
+      "last": "2026-02-09",
+      "lat": -37.84621,
+      "lng": 144.98814,
+      "status": "ok",
+      "note": "Commercial Road, Prahran",
+      "area": "Prahran",
+      "bank": true
+    },
+    {
+      "name": "The Coffee Mob",
+      "visits": 1,
+      "last": "2024-12-27",
+      "lat": -37.8125,
+      "lng": 144.98589,
+      "status": "approx",
+      "note": "Bank says East Melbourne, but no listing found. Pin is the suburb centre.",
+      "area": "East Melbourne",
+      "bank": true
+    },
+    {
+      "name": "The Hatter and the Hare",
+      "visits": 1,
+      "last": "2026-05-13",
+      "lat": -37.84141,
+      "lng": 145.27102,
+      "status": "ok",
+      "note": "21 Scoresby Road, Bayswater",
+      "area": "Bayswater",
+      "bank": false
+    },
+    {
+      "name": "Tone Coffee",
+      "visits": 1,
+      "last": "2026-05-20",
+      "lat": -37.80281,
+      "lng": 144.94572,
+      "status": "ok",
+      "note": "653 Queensberry Street, North Melbourne",
+      "area": "North Melbourne",
+      "bank": false
+    },
+    {
+      "name": "Top Paddock",
+      "visits": 1,
+      "last": "2026-01-28",
+      "lat": -37.83271,
+      "lng": 144.99638,
+      "status": "ok",
+      "note": "658 Church Street, Richmond",
+      "area": "Richmond",
+      "bank": true
+    },
+    {
+      "name": "Tribu Coffee",
+      "visits": 1,
+      "last": "2025-05-19",
+      "lat": -37.8412,
+      "lng": 144.93754,
+      "status": "ok",
+      "note": "217 Rouse Street, Port Melbourne",
+      "area": "Port Melbourne",
+      "bank": false
+    },
+    {
+      "name": "Two Birds One Stone",
+      "visits": 1,
+      "last": "2026-03-10",
+      "lat": -37.83807,
+      "lng": 144.99393,
+      "status": "ok",
+      "note": "12 Claremont Street, South Yarra",
+      "area": "South Yarra",
+      "bank": true
+    },
+    {
+      "name": "javaScript Cafe",
+      "visits": 1,
+      "last": "2025-04-12",
+      "lat": -37.8582,
+      "lng": 145.19962,
+      "status": "ok",
+      "note": "Vermont South Medical Centre, Burwood Hwy",
+      "area": "Vermont South",
+      "bank": false
+    }
+  ],
+  "originalUnplaced": [
+    {
+      "name": "Berry Good Coffee",
+      "visits": 1,
+      "last": "2025-07-08",
+      "note": "No Melbourne listing found."
+    },
+    {
+      "name": "Depot Cafe",
+      "visits": 1,
+      "last": "2025-07-07",
+      "note": "No Melbourne listing found."
+    },
+    {
+      "name": "Light Up Coffee",
+      "visits": 1,
+      "last": "2025-11-11",
+      "note": "Only match is a Tokyo roaster. Could this be a Tokyo purchase?"
+    },
+    {
+      "name": "Moons Espresso Bar",
+      "visits": 1,
+      "last": "2025-04-21",
+      "note": "Only match is Moons in Lorne, which you excluded."
+    },
+    {
+      "name": "Sox Coffee",
+      "visits": 1,
+      "last": "2026-10-03",
+      "note": "No listing found."
+    },
+    {
+      "name": "Square Lane Coffee",
+      "visits": 1,
+      "last": "2026-06-04",
+      "note": "No listing found. Possibly Market Lane?"
+    },
+    {
+      "name": "oneway coffee lab",
+      "visits": 1,
+      "last": "2025-05-29",
+      "note": "No listing found."
+    }
+  ],
+  "corrections": {
+    "Mylk Bar": {
+      "locations": [
+        {
+          "name": "Mylk Bar",
+          "lat": -37.8269812,
+          "lng": 145.1943754,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/10724774950",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Code Five": {
+      "locations": [
+        {
+          "name": "Code Five",
+          "lat": -37.9003032,
+          "lng": 145.1746514,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/408616708",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Seven Seeds": {
+      "locations": [
+        {
+          "name": "Seven Seeds",
+          "lat": -37.8028349,
+          "lng": 144.9590354,
+          "status": "ok",
+          "note": "114 Berkeley Street",
+          "area": "Carlton",
+          "source": "https://www.openstreetmap.org/node/457308112",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Plain Sailing": {
+      "locations": [
+        {
+          "name": "Plain Sailing",
+          "lat": -37.8863787,
+          "lng": 144.9889713,
+          "status": "ok",
+          "note": "144 Ormond Road",
+          "area": "Elwood",
+          "source": "https://www.openstreetmap.org/node/7619124970",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Upstate Coffee": {
+      "locations": [
+        {
+          "name": "Upstate Coffee",
+          "lat": -37.813731,
+          "lng": 144.9708413,
+          "status": "check",
+          "note": "Public OpenStreetMap venue location. Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/11135649031",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Milk & Wine Co": {
+      "locations": [
+        {
+          "name": "Milk & Wine Co",
+          "lat": -37.829656,
+          "lng": 145.245692,
+          "status": "ok",
+          "note": "196-198 Canterbury Road",
+          "area": "Heathmont",
+          "source": "https://www.openstreetmap.org/way/1501261927",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Ladida": {
+      "locations": [
+        {
+          "name": "Ladida",
+          "lat": -37.8155125,
+          "lng": 144.9556539,
+          "status": "check",
+          "note": "577 Little Bourke Street Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/633912832",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Port of Call": {
+      "locations": [
+        {
+          "name": "Port of Call",
+          "lat": -37.9516255,
+          "lng": 145.0043457,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/13368514302",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "N Lee Bakery Cafe": {
+      "locations": [
+        {
+          "name": "N Lee Bakery Cafe",
+          "lat": -37.8024675,
+          "lng": 144.9838273,
+          "status": "ok",
+          "note": "220 Smith Street",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/1104147041",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Mocha Jo's": {
+      "locations": [
+        {
+          "name": "Mocha Jo's",
+          "lat": -37.8808251,
+          "lng": 145.1632307,
+          "status": "ok",
+          "note": "87 Kingsway",
+          "area": "Glen Waverley",
+          "source": "https://www.openstreetmap.org/way/1124561951",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "The Mabel": {
+      "locations": [
+        {
+          "name": "The Mabel",
+          "lat": -37.8080928,
+          "lng": 145.1965481,
+          "status": "ok",
+          "note": "9 McKeon Road",
+          "area": "Mitcham",
+          "source": "https://www.openstreetmap.org/node/9421898094",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Pantry Brighton": {
+      "locations": [
+        {
+          "name": "Pantry Brighton",
+          "lat": -37.9124238,
+          "lng": 144.9931005,
+          "status": "ok",
+          "note": "1 Church Street",
+          "area": "",
+          "source": "https://www.openstreetmap.org/way/1031530182",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "The Peddler Cafe": {
+      "locations": [
+        {
+          "name": "The Peddler Cafe",
+          "lat": -37.8125159,
+          "lng": 145.172222,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/1907864896",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Pellegrini's Espresso Bar": {
+      "locations": [
+        {
+          "name": "Pellegrini's Espresso Bar",
+          "lat": -37.811722,
+          "lng": 144.971173,
+          "status": "check",
+          "note": "66 Bourke Street Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "Melbourne",
+          "source": "https://www.openstreetmap.org/node/642333245",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Haymarket Cafe": {
+      "locations": [
+        {
+          "name": "Haymarket Cafe",
+          "lat": -37.8005151,
+          "lng": 144.9590042,
+          "status": "ok",
+          "note": "212 Berkeley Street",
+          "area": "Carlton",
+          "source": "https://www.openstreetmap.org/way/293946730",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Dundas Faussett Cafe": {
+      "locations": [
+        {
+          "name": "Dundas Faussett Cafe",
+          "lat": -37.841341,
+          "lng": 144.9546792,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/way/837263917",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Standing Room Coffee": {
+      "locations": [
+        {
+          "name": "Standing Room Coffee",
+          "lat": -37.7847866,
+          "lng": 144.9823865,
+          "status": "ok",
+          "note": "187 St Georges Road",
+          "area": "Fitzroy North",
+          "source": "https://www.openstreetmap.org/node/2068000291",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Professors Walk Cafe": {
+      "locations": [
+        {
+          "name": "Professors Walk Cafe",
+          "lat": -37.7981416,
+          "lng": 144.9595503,
+          "status": "ok",
+          "note": "11 Professors Walk",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/4192572947",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Brother Baba Budan": {
+      "locations": [
+        {
+          "name": "Brother Baba Budan",
+          "lat": -37.813506,
+          "lng": 144.9620872,
+          "status": "check",
+          "note": "359 Little Bourke Street Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/1112462421",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Higher Ground": {
+      "locations": [
+        {
+          "name": "Higher Ground",
+          "lat": -37.8158967,
+          "lng": 144.9531574,
+          "status": "check",
+          "note": "650 Little Bourke Street Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/4957928429",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Acre Farm & Eatery": {
+      "locations": [
+        {
+          "name": "Acre Farm & Eatery",
+          "lat": -37.8489503,
+          "lng": 145.134568,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/way/983636919",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Moby": {
+      "locations": [
+        {
+          "name": "Moby",
+          "lat": -37.8562409,
+          "lng": 145.0255752,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/1830309146",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Cafe Commercio": {
+      "locations": [
+        {
+          "name": "Cafe Commercio",
+          "lat": -37.8014283,
+          "lng": 144.9587685,
+          "status": "ok",
+          "note": "198 Berkeley Street",
+          "area": "Carlton",
+          "source": "https://www.openstreetmap.org/node/457302467",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "The Moat": {
+      "locations": [
+        {
+          "name": "The Moat",
+          "lat": -37.8101724,
+          "lng": 144.9652411,
+          "status": "check",
+          "note": "176 Little Lonsdale Street Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/2240626119",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Hikari Coffee": {
+      "locations": [
+        {
+          "name": "Hikari Coffee",
+          "lat": -37.8108738,
+          "lng": 144.9641712,
+          "status": "check",
+          "note": "Swanston Street Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "Melbourne",
+          "source": "https://www.openstreetmap.org/node/2490526574",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Three Beans": {
+      "locations": [
+        {
+          "name": "Three Beans",
+          "lat": -37.8168334,
+          "lng": 144.9625039,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/13810407797",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Serotonin Eatery": {
+      "locations": [
+        {
+          "name": "Serotonin Eatery",
+          "lat": -37.8281633,
+          "lng": 145.0090979,
+          "status": "ok",
+          "note": "52 Madden Grove",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/4959255523",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Little Rogue": {
+      "locations": [
+        {
+          "name": "Little Rogue",
+          "lat": -37.8109925,
+          "lng": 144.9640518,
+          "status": "check",
+          "note": "12 Drewery Lane Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "Melbourne",
+          "source": "https://www.openstreetmap.org/node/7132635362",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Prophecy Espresso": {
+      "locations": [
+        {
+          "name": "Prophecy Espresso",
+          "lat": -37.8599507,
+          "lng": 144.9778653,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/10935506546",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Addict Cafe": {
+      "locations": [
+        {
+          "name": "Addict Cafe",
+          "lat": -37.7989725,
+          "lng": 144.9832189,
+          "status": "ok",
+          "note": "240-242 Johnston Street",
+          "area": "Fitzroy",
+          "source": "https://www.openstreetmap.org/node/2805345201",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Proud Mary": {
+      "locations": [
+        {
+          "name": "Proud Mary",
+          "lat": -37.802337,
+          "lng": 144.985247,
+          "status": "ok",
+          "note": "172 Oxford Street",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/1070249501",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Penny for Pound": {
+      "locations": [
+        {
+          "name": "Penny for Pound",
+          "lat": -37.8350804,
+          "lng": 145.0613023,
+          "status": "ok",
+          "note": "387 Camberwell Road",
+          "area": "Camberwell",
+          "source": "https://www.openstreetmap.org/way/1499936094",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Tom Thumb Cafe": {
+      "locations": [
+        {
+          "name": "Tom Thumb Cafe",
+          "lat": -37.8148983,
+          "lng": 144.9727708,
+          "status": "check",
+          "note": "Public OpenStreetMap venue location. Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/6138135281",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Basement Espresso": {
+      "locations": [
+        {
+          "name": "Basement Espresso",
+          "lat": -37.8087663,
+          "lng": 144.9779671,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/7053362730",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "The Journal Cafe": {
+      "locations": [
+        {
+          "name": "The Journal Cafe",
+          "lat": -37.8169101,
+          "lng": 144.965784,
+          "status": "check",
+          "note": "253 Flinders Lane Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/4305653789",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Aunt Billies Cafe": {
+      "locations": [
+        {
+          "name": "Aunt Billies Cafe",
+          "lat": -37.8155012,
+          "lng": 145.1565221,
+          "status": "ok",
+          "note": "184 Surrey Road",
+          "area": "Blackburn",
+          "source": "https://www.openstreetmap.org/node/1430554947",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Prospect Espresso": {
+      "locations": [
+        {
+          "name": "Prospect Espresso",
+          "lat": -37.828333,
+          "lng": 145.0575383,
+          "status": "ok",
+          "note": "2A Prospect Hill Road",
+          "area": "Camberwell",
+          "source": "https://www.openstreetmap.org/way/493831030",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Cafe Oggi": {
+      "locations": [
+        {
+          "name": "Cafe Oggi",
+          "lat": -37.8549453,
+          "lng": 145.1657298,
+          "status": "ok",
+          "note": "1 Lakeside Drive",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/2622874842",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Nine Yards": {
+      "locations": [
+        {
+          "name": "Nine Yards",
+          "lat": -37.8330269,
+          "lng": 144.9601073,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/10720442105",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Kettle Black": {
+      "locations": [
+        {
+          "name": "Kettle Black",
+          "lat": -37.8341251,
+          "lng": 144.9713427,
+          "status": "ok",
+          "note": "50 Albert Road",
+          "area": "South Melbourne",
+          "source": "https://www.openstreetmap.org/node/7489594530",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Norwood Cafe": {
+      "locations": [
+        {
+          "name": "Norwood Cafe",
+          "lat": -37.8496081,
+          "lng": 145.1343507,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/7800138290",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Shanklin Cafe": {
+      "locations": [
+        {
+          "name": "Shanklin Cafe",
+          "lat": -37.8330621,
+          "lng": 145.0473785,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/9236522976",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Caffe Corso": {
+      "locations": [
+        {
+          "name": "Caffe Corso",
+          "lat": -37.9256152,
+          "lng": 145.119938,
+          "status": "check",
+          "note": "298 Clayton Road Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/way/542404391",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Amie Bakery Cafe": {
+      "locations": [
+        {
+          "name": "Amie Bakery Cafe",
+          "lat": -37.817513,
+          "lng": 144.957576,
+          "status": "check",
+          "note": "500 Collins Street Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "Melbourne",
+          "source": "https://www.openstreetmap.org/node/1030061540",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Axil Coffee Roasters": {
+      "locations": [
+        {
+          "name": "Axil Coffee Roasters",
+          "lat": -37.822773,
+          "lng": 145.0342508,
+          "status": "ok",
+          "note": "322 Burwood Road",
+          "area": "Hawthorn",
+          "source": "https://www.openstreetmap.org/way/860268913",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Market Lane Coffee": {
+      "locations": [
+        {
+          "name": "Market Lane Coffee",
+          "lat": -37.8458338,
+          "lng": 144.9929721,
+          "status": "ok",
+          "note": "Public OpenStreetMap venue location.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/8015742747",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Mörk Chocolate": {
+      "locations": [
+        {
+          "name": "Mörk Chocolate",
+          "lat": -37.8015381,
+          "lng": 144.9501893,
+          "status": "ok",
+          "note": "148-150 Errol Street",
+          "area": "North Melbourne",
+          "source": "https://www.openstreetmap.org/way/628203443",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Rowena Corner Store": {
+      "locations": [
+        {
+          "name": "Rowena Corner Store",
+          "lat": -37.8215275,
+          "lng": 144.9926479,
+          "status": "check",
+          "note": "Public OpenStreetMap venue location. Two nearby OpenStreetMap records share this name; pin needs verification.",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/6418834783",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Light Up Coffee": {
+      "locations": [
+        {
+          "name": "Light Up Coffee",
+          "lat": -37.8334741,
+          "lng": 144.9638666,
+          "status": "check",
+          "note": "237 Moray Street Matched by venue name; the Notion database does not identify the visited branch.",
+          "area": "South Melbourne",
+          "source": "https://www.openstreetmap.org/node/583444563",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "North Point Cafe": {
+      "locations": [],
+      "reason": "Notion records Reservoir; the old map placed it in Brighton. No reliable matching venue location established."
+    },
+    "The Coffee Mob": {
+      "locations": [],
+      "reason": "Notion records Richmond; the old map guessed East Melbourne. Exact location unresolved."
+    },
+    "Code Black Coffee": {
+      "locations": [],
+      "reason": "Notion records Cremorne; the old CBD branch pin does not match. Exact location unresolved."
+    },
+    "Siesta Cafe and Deli": {
+      "locations": [
+        {
+          "name": "Siesta Cafe and Deli",
+          "lat": -38.007812,
+          "lng": 145.0868984,
+          "status": "check",
+          "note": "Venue matched to public map data; branch needs checking. 598-618 Main Street Mordialloc",
+          "area": "Mordialloc",
+          "source": "https://www.openstreetmap.org/node/2511257316",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Neds": {
+      "locations": [
+        {
+          "name": "Neds",
+          "lat": -37.8390019,
+          "lng": 144.9908508,
+          "status": "check",
+          "note": "Venue matched to public map data; branch needs checking. ",
+          "area": "",
+          "source": "https://www.openstreetmap.org/node/10718125705",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Hector's Deli": {
+      "locations": [
+        {
+          "name": "Hector's Deli",
+          "lat": -37.8142049,
+          "lng": 145.0046452,
+          "status": "branch",
+          "note": "One plausible branch; visited branch is not established. 94 Buckingham Street Richmond",
+          "area": "Richmond",
+          "source": "https://www.openstreetmap.org/node/2814716731",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Haiku Cafe": {
+      "locations": [
+        {
+          "name": "Haiku Cafe",
+          "lat": -37.84818,
+          "lng": 145.07784,
+          "status": "check",
+          "note": "1161 Toorak Rd, Camberwell. Notion records Glen Iris while this earlier pin is labelled Camberwell; suburb discrepancy needs checking.",
+          "area": "Camberwell"
+        }
+      ]
+    }
+  }
+}

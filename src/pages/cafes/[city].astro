@@ -1,13 +1,19 @@
 ---
 import melbourne from '../../data/cafe-maps/melbourne.html?raw';
 import newYork from '../../data/cafe-maps/new-york.html?raw';
+import melbourneRows from '../../data/cafe-maps/melbourne-notion.json';
+import newYorkRows from '../../data/cafe-maps/new-york-notion.json';
+import melbourneLocations from '../../data/cafe-maps/melbourne-locations.json';
+import newYorkLocations from '../../data/cafe-maps/new-york-locations.json';
+import { reconcileCafes } from '../../lib/reconcile-cafes.mjs';
 
 export function getStaticPaths() {
   return [
-    { params: { city: 'melbourne' }, props: { html: melbourne } },
-    { params: { city: 'new-york' }, props: { html: newYork } },
+    { params: { city: 'melbourne' }, props: { template: melbourne, data: reconcileCafes(melbourneRows, melbourneLocations, 'melbourne') } },
+    { params: { city: 'new-york' }, props: { template: newYork, data: reconcileCafes(newYorkRows, newYorkLocations, 'new-york') } },
   ];
 }
-const { html } = Astro.props;
+const { template, data } = Astro.props;
+const html = template.replace('__CAFE_DATA__', JSON.stringify(data).replace(/</g, '\\u003c'));
 ---
 <Fragment set:html={html} />
