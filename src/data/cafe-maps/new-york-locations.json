@@ -909,8 +909,76 @@
       "reason": "Notion records Manhattan; the earlier map pin is in Williamsburg, Brooklyn. Visited branch unresolved."
     },
     "Pueblo Querido Coffee": {
+      "locations": [
+        {
+          "name": "Pueblo Querido Coffee Roasters Cafe de Colombia",
+          "lat": 40.7253695,
+          "lng": -73.9515334,
+          "area": "Brooklyn",
+          "status": "branch",
+          "note": "698, Manhattan Avenue, Brooklyn; candidate branch only, visited branch is unknown.",
+          "source": "https://www.openstreetmap.org/node/2842613026",
+          "checkedOn": "2026-10-15"
+        },
+        {
+          "name": "Pueblo Querido Coffee Roasters Cafe de Colombia",
+          "lat": 40.7199461,
+          "lng": -73.9628164,
+          "area": "Brooklyn",
+          "status": "branch",
+          "note": "North 6th Street, Brooklyn; candidate branch only, visited branch is unknown.",
+          "source": "https://www.openstreetmap.org/node/13009033106",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Banter": {
+      "locations": [
+        {
+          "name": "Banter",
+          "lat": 40.7437478,
+          "lng": -73.9790582,
+          "area": "Manhattan",
+          "status": "branch",
+          "note": "201, East 31st Street, Manhattan; candidate branch only, visited branch is unknown.",
+          "source": "https://www.openstreetmap.org/node/3956950395",
+          "checkedOn": "2026-10-15"
+        },
+        {
+          "name": "Banter",
+          "lat": 40.7278638,
+          "lng": -74.001067,
+          "area": "Manhattan",
+          "status": "branch",
+          "note": "169, Sullivan Street, Manhattan; candidate branch only, visited branch is unknown.",
+          "source": "https://www.openstreetmap.org/node/6206584785",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Starbucks": {
       "locations": [],
-      "reason": "Notion records Brooklyn; the earlier map labelled its pin Astoria, Queens. Visited branch unresolved."
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "Blue Bottle Coffee": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "Dunkin'": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "Joe & The Juice": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "Gregorys Coffee": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "Blank Street": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
     }
   }
 }

@@ -1570,15 +1570,27 @@
     },
     "North Point Cafe": {
       "locations": [],
-      "reason": "Notion records Reservoir; the old map placed it in Brighton. No reliable matching venue location established."
+      "reason": "Notion records Reservoir. The former Brighton pin conflicts with that suburb; no reliable Reservoir match found."
     },
     "The Coffee Mob": {
       "locations": [],
       "reason": "Notion records Richmond; the old map guessed East Melbourne. Exact location unresolved."
     },
     "Code Black Coffee": {
-      "locations": [],
-      "reason": "Notion records Cremorne; the old CBD branch pin does not match. Exact location unresolved."
+      "locations": [
+        {
+          "name": "Code Black Coffee",
+          "lat": -37.8269718,
+          "lng": 144.9923153,
+          "area": "Cremorne",
+          "status": "approx",
+          "note": "6 Fitzgibbon Street, Cremorne, Victoria, Australia. Official cafe site confirms corner of Fitzgibbon and Dover Street, within Dover House at 6 Fitzgibbon Street. Replaces incompatible old CBD pin. Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Dover House; the venue identity comes from the linked published address.",
+          "source": "https://www.openstreetmap.org/way/1290621889",
+          "venueSource": "https://codeblackcoffee.com.au/pages/cremorne",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
     },
     "Siesta Cafe and Deli": {
       "locations": [
@@ -1633,6 +1645,672 @@
           "area": "Camberwell"
         }
       ]
+    },
+    "Piatella Cafe Bar": {
+      "locations": [
+        {
+          "name": "Piatella Cafe Bar",
+          "lat": -37.8811266,
+          "lng": 145.1638513,
+          "area": "Glen Waverley",
+          "status": "ok",
+          "note": "86-88, Kingsway, Glen Waverley",
+          "source": "https://www.openstreetmap.org/node/772401267",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Black Flat Coffee": {
+      "locations": [
+        {
+          "name": "Black Flat Coffee Brewers",
+          "lat": -37.8795612,
+          "lng": 145.163516,
+          "area": "Glen Waverley",
+          "status": "ok",
+          "note": "39, Kingsway, Glen Waverley",
+          "source": "https://www.openstreetmap.org/node/14145093178",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "First Love Collins": {
+      "locations": [
+        {
+          "name": "First Love Coffee",
+          "lat": -37.8177732,
+          "lng": 144.9595963,
+          "area": "Melbourne",
+          "status": "check",
+          "note": "447, Collins Street, Melbourne; matched by cafe name, visited branch is not recorded in Notion.",
+          "source": "https://www.openstreetmap.org/node/12252187508",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Suupaa": {
+      "locations": [
+        {
+          "name": "Suupaa",
+          "lat": -37.8275983,
+          "lng": 144.991921,
+          "area": "Cremorne",
+          "status": "ok",
+          "note": "65, Dover Street, Cremorne",
+          "source": "https://www.openstreetmap.org/node/13380558401",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Crest Cafe": {
+      "locations": [
+        {
+          "name": "Crest",
+          "lat": -37.8608192,
+          "lng": 145.2315394,
+          "area": "Wantirna",
+          "status": "ok",
+          "note": "17, Crestdale Road, Wantirna",
+          "source": "https://www.openstreetmap.org/way/86296008",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Thirty Mill": {
+      "locations": [
+        {
+          "name": "Thirty Mill",
+          "lat": -37.8494263,
+          "lng": 145.04093,
+          "area": "Malvern",
+          "status": "ok",
+          "note": "Milton Parade, Malvern",
+          "source": "https://www.openstreetmap.org/node/5272996698",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Anda Cafe": {
+      "locations": [
+        {
+          "name": "Anda",
+          "lat": -37.809638,
+          "lng": 144.9720241,
+          "area": "Melbourne",
+          "status": "check",
+          "note": "215, Spring Street, Melbourne; matched by cafe name, visited branch is not recorded in Notion.",
+          "source": "https://www.openstreetmap.org/node/6806674795",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Hudsons Coffee": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "Brunetti": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "Workshop Brothers": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "Maker Coffee": {
+      "locations": [],
+      "reason": "Multiple branches exist; the database does not identify the visited branch precisely enough to select a pin."
+    },
+    "The Coffee Cart Company": {
+      "locations": [
+        {
+          "name": "The Coffee Cart Company",
+          "lat": -37.8541396,
+          "lng": 145.1599887,
+          "area": "Burwood East",
+          "status": "approx",
+          "note": "292 Burwood Highway, Burwood East, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/way/1560855993",
+          "venueSource": "https://www.waze.com/live-map/directions/au/vic/burwood-east/the-coffee-cart-company?to=place.ChIJ6alD0Qw_1moRpFCG9YA3nOw",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Dimicks Cafe": {
+      "locations": [
+        {
+          "name": "Dimicks Cafe",
+          "lat": -37.8368428,
+          "lng": 145.1956126,
+          "area": "Vermont",
+          "status": "approx",
+          "note": "14 Boronia Road, Vermont, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12419114387",
+          "venueSource": "https://www.yvw.com.au/help-advice/be-refiller-not-landfiller",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Legacy": {
+      "locations": [
+        {
+          "name": "Legacy",
+          "lat": -37.8338859,
+          "lng": 145.0603656,
+          "area": "Camberwell",
+          "status": "approx",
+          "note": "347 Camberwell Road, Camberwell, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/way/682609636",
+          "venueSource": "https://camberwellshopping.com.au/trader/legacy/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Crimson Coffee": {
+      "locations": [
+        {
+          "name": "Crimson Coffee",
+          "lat": -37.8269246,
+          "lng": 145.0577408,
+          "area": "Camberwell",
+          "status": "approx",
+          "note": "716 Burke Road, Camberwell, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/way/485122013",
+          "venueSource": "https://www.crimsoncoffee.com.au/about",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Nigel": {
+      "locations": [
+        {
+          "name": "Nigel",
+          "lat": -37.8324583,
+          "lng": 145.0562723,
+          "area": "Camberwell",
+          "status": "approx",
+          "note": "691 Burke Road, Camberwell, Victoria, Australia. Marketed as Camberwell; the bank suburb in Notion is Hawthorn East. Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12418307543",
+          "venueSource": "https://www.broadsheet.com.au/melbourne/camberwell/cafes/nigel",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Joe Frank": {
+      "locations": [
+        {
+          "name": "Joe Frank",
+          "lat": -37.8636356,
+          "lng": 145.0803452,
+          "area": "Ashburton",
+          "status": "approx",
+          "note": "246 High Street, Ashburton, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address The Resident; the venue identity comes from the linked published address.",
+          "source": "https://www.openstreetmap.org/node/2206485048",
+          "venueSource": "https://www.ashburtonvillage3147.com.au/business/joe-frank/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "More Coffee": {
+      "locations": [
+        {
+          "name": "More Coffee",
+          "lat": -37.8224362,
+          "lng": 145.0356558,
+          "area": "Hawthorn",
+          "status": "approx",
+          "note": "351 Burwood Road, Hawthorn, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Soul Hair; the venue identity comes from the linked published address.",
+          "source": "https://www.openstreetmap.org/way/862036681",
+          "venueSource": "https://www.morecoffeemelbourne.com.au/reservations",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Baba Sus": {
+      "locations": [
+        {
+          "name": "Baba Sus",
+          "lat": -37.8517908,
+          "lng": 145.0799309,
+          "area": "Glen Iris",
+          "status": "approx",
+          "note": "15 Bardolph Street, Glen Iris, Victoria, Australia. Historical Baba Sus address, now Neon Tiger according to the Notion venue notes. Not counted as another visit. Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12418362987",
+          "venueSource": "https://www.babasus.com.au/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "My Other Brother": {
+      "locations": [
+        {
+          "name": "My Other Brother",
+          "lat": -37.8304597,
+          "lng": 145.0572444,
+          "area": "Camberwell",
+          "status": "approx",
+          "note": "586 Burke Road, Camberwell, Victoria, Australia. Cafe is at the rear of this address. Notion does not record a branch or suburb. Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/way/725034008",
+          "venueSource": "https://www.theurbanlist.com/melbourne/directory/my-other-brother",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Little Hugh": {
+      "locations": [
+        {
+          "name": "Little Hugh",
+          "lat": -37.8302717,
+          "lng": 145.1867388,
+          "area": "Nunawading",
+          "status": "approx",
+          "note": "150 Rooks Road, Nunawading, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12411625710",
+          "venueSource": "https://www.ubereats.com/au/store/little-hugh/JBU5njLLXYqP2EI0vaamiQ",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Mr Tucci": {
+      "locations": [
+        {
+          "name": "Mr Tucci",
+          "lat": -37.8618444,
+          "lng": 145.0648284,
+          "area": "Glen Iris",
+          "status": "approx",
+          "note": "10 High Street, Glen Iris, Victoria, Australia. Published venue address is Shop 1, 10–12 High Street. Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address QT Kitchen; the venue identity comes from the linked published address.",
+          "source": "https://www.openstreetmap.org/node/5517711064",
+          "venueSource": "https://lovelocallife.com.au/listings/mr-tucci/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Hutch & Co": {
+      "locations": [
+        {
+          "name": "Hutch & Co",
+          "lat": -37.757285,
+          "lng": 145.351812,
+          "area": "Lilydale",
+          "status": "approx",
+          "note": "251 Main Street, Lilydale, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12419864015",
+          "venueSource": "https://starnewsgroup.mediabuilder.com.au/data/archive-digital-editions/lilydale/2024-08-20_lsm_786_66c34303ea0a6.pdf",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Leaps & Bounds": {
+      "locations": [
+        {
+          "name": "Leaps & Bounds",
+          "lat": -37.8399698,
+          "lng": 144.9574471,
+          "area": "Albert Park",
+          "status": "approx",
+          "note": "84 Bridport Street, Albert Park, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address No. 84; the venue identity comes from the linked published address.",
+          "source": "https://www.openstreetmap.org/way/844920789",
+          "venueSource": "https://concreteplayground.com/melbourne/cafes/leaps-and-bounds-albert-park/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Caffe Amatrice": {
+      "locations": [
+        {
+          "name": "Caffe Amatrice",
+          "lat": -37.8259637,
+          "lng": 144.9925792,
+          "area": "Cremorne",
+          "status": "approx",
+          "note": "16 Stephenson Street, Cremorne, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/way/946747607",
+          "venueSource": "https://amatrice.com.au/contact-us",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "La Vie Cafe": {
+      "locations": [
+        {
+          "name": "La Vie Cafe",
+          "lat": -37.8304209,
+          "lng": 144.9900444,
+          "area": "Cremorne",
+          "status": "approx",
+          "note": "168 Cremorne Street, Cremorne, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/11769067736",
+          "venueSource": "https://laviecafe.com.au/contac-us",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Mary Miller Cafe": {
+      "locations": [
+        {
+          "name": "Mary Miller Cafe",
+          "lat": -37.7760611,
+          "lng": 144.9786343,
+          "area": "Brunswick East",
+          "status": "approx",
+          "note": "55 Nicholson Street, Brunswick East, Victoria, Australia. Published address is 55–63 Nicholson Street. Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/1671530113",
+          "venueSource": "https://www.marymiller.com.au/contact-us",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Pinned Coffee": {
+      "locations": [
+        {
+          "name": "Pinned Coffee",
+          "lat": -37.8137932,
+          "lng": 144.9621635,
+          "area": "Melbourne",
+          "status": "approx",
+          "note": "2 Rankins Lane, Melbourne, Victoria, Australia. Published address is ground floor, 2 Rankins Lane; entrance position approximate. Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Rankins Lane; the venue identity comes from the linked published address. Only the named lane/street was resolved; this is a street-level pin.",
+          "source": "https://www.openstreetmap.org/way/13911665",
+          "venueSource": "https://above.guide/australian-open-tennis/things-to-do/australia-dining-pinned-coffee",
+          "precision": "street",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Ramsay Gardens Cafe": {
+      "locations": [
+        {
+          "name": "Ramsay Gardens Cafe",
+          "lat": -37.8550263,
+          "lng": 145.175708,
+          "area": "Vermont South",
+          "status": "approx",
+          "note": "1 Stanley Road, Vermont South, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12414146990",
+          "venueSource": "https://ramsaygardenscafe.com/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Tonic and Grace": {
+      "locations": [
+        {
+          "name": "Tonic and Grace",
+          "lat": -37.8633381,
+          "lng": 145.0279596,
+          "area": "Malvern",
+          "status": "approx",
+          "note": "63 Glenferrie Road, Malvern, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12418922051",
+          "venueSource": "https://tonicandgrace.com.au/contact-us",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Eden Espresso": {
+      "locations": [
+        {
+          "name": "Eden Espresso",
+          "lat": -37.8618709,
+          "lng": 145.0282206,
+          "area": "Malvern",
+          "status": "approx",
+          "note": "115 Glenferrie Road, Malvern, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/8039183862",
+          "venueSource": "https://edenespresso.com/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Jerry's Milk Bar": {
+      "locations": [
+        {
+          "name": "Jerry's Milk Bar",
+          "lat": -37.8770291,
+          "lng": 144.9791134,
+          "area": "Elwood",
+          "status": "approx",
+          "note": "345 Barkly Street, Elwood, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12419140386",
+          "venueSource": "https://www.australiantraveller.com/vic/melbourne/elwood-neighbourhood-guide/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Young & Foolish": {
+      "locations": [
+        {
+          "name": "Young & Foolish",
+          "lat": -37.9055185,
+          "lng": 145.1623961,
+          "area": "Wheelers Hill",
+          "status": "approx",
+          "note": "580 Springvale Road, Wheelers Hill, Victoria, Australia. Inside Brandon Park Shopping Centre; pin marks the address, not an exact shop entrance. Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Brandon Park Shopping Centre; the venue identity comes from the linked published address.",
+          "source": "https://www.openstreetmap.org/way/11018663",
+          "venueSource": "https://www.youngandfoolish.com.au/location",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Fergus Cafe": {
+      "locations": [
+        {
+          "name": "Fergus Cafe",
+          "lat": -37.863884,
+          "lng": 145.0411539,
+          "area": "Malvern East",
+          "status": "approx",
+          "note": "301 Wattletree Road, Malvern East, Victoria, Australia. Published suburb is Malvern East; Notion records Malvern. Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12411700050",
+          "venueSource": "https://www.theurbanlist.com/melbourne/directory/fergus",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Hibiki Cafe": {
+      "locations": [
+        {
+          "name": "Hibiki Cafe",
+          "lat": -37.8481512,
+          "lng": 145.0778033,
+          "area": "Camberwell",
+          "status": "approx",
+          "note": "1161 Toorak Road, Camberwell, Victoria, Australia. Operator says Hibiki was reborn as Haiku in 2021 at this address. Separate database rows preserved; possible venue alias, not merged. Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12418306949",
+          "venueSource": "https://haikufuture.com/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "OnAir": {
+      "locations": [
+        {
+          "name": "OnAir",
+          "lat": -37.8280776,
+          "lng": 144.99386,
+          "area": "Cremorne",
+          "status": "approx",
+          "note": "25 Stephenson Street, Cremorne, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Coe & Coe; the venue identity comes from the linked published address.",
+          "source": "https://www.openstreetmap.org/way/1035865555",
+          "venueSource": "https://www.onaircremorne.com.au/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Aix Cafe": {
+      "locations": [
+        {
+          "name": "Aix Cafe",
+          "lat": -37.8166149,
+          "lng": 144.9655393,
+          "area": "Melbourne",
+          "status": "approx",
+          "note": "24 Centre Place, Melbourne, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Centre Place; the venue identity comes from the linked published address. Only the named lane/street was resolved; this is a street-level pin.",
+          "source": "https://www.openstreetmap.org/way/790601133",
+          "venueSource": "https://www.tripadvisor.com.au/Restaurant_Review-g255100-d3545464-Reviews-Aix_Cafe-Melbourne_Victoria.html",
+          "precision": "street",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "St James Cafe": {
+      "locations": [
+        {
+          "name": "St James Cafe",
+          "lat": -37.8667771,
+          "lng": 144.9783264,
+          "area": "St Kilda",
+          "status": "approx",
+          "note": "72A Acland Street, St Kilda, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12414147249",
+          "venueSource": "https://www.tripadvisor.com.au/Restaurant_Review-g255360-d25557567-Reviews-St_James_Cafe_St_Kilda-St_Kilda_Port_Phillip_Greater_Melbourne_Victoria.html",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Issus Cafe and Bar": {
+      "locations": [
+        {
+          "name": "Issus Cafe and Bar",
+          "lat": -37.8166149,
+          "lng": 144.9655393,
+          "area": "Melbourne",
+          "status": "approx",
+          "note": "8 Centre Place, Melbourne, Victoria, Australia. Published venue address is 8–10 Centre Place. Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Centre Place; the venue identity comes from the linked published address. Only the named lane/street was resolved; this is a street-level pin.",
+          "source": "https://www.openstreetmap.org/way/790601133",
+          "venueSource": "https://www.agfg.com.au/restaurant/issus-53032",
+          "precision": "street",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Baretto Espresso Bar": {
+      "locations": [
+        {
+          "name": "Baretto Espresso Bar",
+          "lat": -37.8002607,
+          "lng": 144.9592173,
+          "area": "Carlton",
+          "status": "approx",
+          "note": "Alan Gilbert Building, Carlton, Victoria, Australia. Historical cafe in the Alan Gilbert Building; pin marks the building, not an exact cafe entrance. Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Alan Gilbert Building (104); the venue identity comes from the linked published address.",
+          "source": "https://www.openstreetmap.org/way/22870778",
+          "venueSource": "https://ausinds.com/places/baretto-cafe/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "oneway coffee lab": {
+      "locations": [
+        {
+          "name": "oneway coffee lab",
+          "lat": -37.8300924,
+          "lng": 144.9626494,
+          "area": "South Melbourne",
+          "status": "approx",
+          "note": "35 York Street, South Melbourne, Victoria, Australia.  Coordinates are geocoded from the published address; exact cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12419075333",
+          "venueSource": "https://www.yellowpages.com.au/south-melbourne-vic/bpp/oneway-coffee-lab-581343053",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Vacation Coffee": {
+      "locations": [
+        {
+          "name": "Vacation Coffee",
+          "lat": -37.826794,
+          "lng": 144.9969436,
+          "area": "Cremorne",
+          "status": "approx",
+          "note": "Adolph Street, Cremorne, Victoria, Australia. Operator lists 8 Adolph Street, Richmond; Notion says Cremorne (Adolph St). Street-level approximation. Coordinates are geocoded from the published address; exact cafe entrance is approximate. OpenStreetMap labels this address Adolph Street; the venue identity comes from the linked published address. Only the named lane/street was resolved; this is a street-level pin.",
+          "source": "https://www.openstreetmap.org/way/28715972",
+          "venueSource": "https://vacationcoffee.com.au/pages/find-us",
+          "precision": "street",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "My Oh My": {
+      "locations": [
+        {
+          "name": "My Oh My",
+          "lat": -37.8257775,
+          "lng": 144.9974394,
+          "area": "Richmond",
+          "status": "approx",
+          "note": "232 Swan Street, Richmond, Victoria, Australia.  Coordinates from the published address; cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/way/1390953460",
+          "venueSource": "https://www.myohmy.com.au/contact-cafe-richmond/",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Mr Brownstone Cafe": {
+      "locations": [
+        {
+          "name": "Mr Brownstone Cafe",
+          "lat": -37.8630922,
+          "lng": 145.081569,
+          "area": "Ashburton",
+          "status": "approx",
+          "note": "1 Welfare Parade, Ashburton, Victoria, Australia. Historical listing uses 1A Welfare Parade; address lookup at 1 Welfare Parade is approximate. Coordinates from the published address; cafe entrance is approximate.",
+          "source": "https://www.openstreetmap.org/node/12411668171",
+          "venueSource": "https://www.agfg.com.au/restaurant/mr-brownstone-60657",
+          "precision": "address",
+          "checkedOn": "2026-10-15"
+        }
+      ]
+    },
+    "Eno Cafe": {
+      "locations": [],
+      "reason": "Operator publishes 895A Canterbury Road, Box Hill, but address geocoding returned road segments without a reliable building match. Left unplaced rather than using a road centre."
+    },
+    "Ground Yourself Cafe": {
+      "locations": [],
+      "reason": "Operator publishes Shop G1, 158 Acland Street, St Kilda, inside Acland Court. Address lookup returned only road segments; exact shopping-centre location unresolved."
+    },
+    "Soul Sisters Cafe": {
+      "locations": [],
+      "reason": "No reliable Ashwood match found. Public results for similarly named cafes elsewhere do not establish this venue."
+    },
+    "Culpa Espresso": {
+      "locations": [],
+      "reason": "Public listings give several Melbourne addresses; Notion does not identify the visited branch."
+    },
+    "Depot Cafe": {
+      "locations": [],
+      "reason": "Geocoder returned Precinct Hotel; the identity of Depot Cafe was not established, so this result was excluded."
+    },
+    "Mitcham Cafe": {
+      "locations": [],
+      "reason": "Geocoder returned Mitcham Hotel and Dark Horse Mitcham. Neither was established as the cafe in the database."
     }
   }
 }
