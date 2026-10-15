@@ -18,6 +18,10 @@ const photoLinks = [
 ];
 // On a trip page the name logo stays in that trip's colour, not only on hover.
 const currentTrip = photoLinks.find((link) => path === `/photos/${link.slug}`);
+// Products menu: things I've made that live on their own sites.
+const productLinks = [
+  { href: "https://melbourne-marathon-keepsake.vercel.app/", label: "Gallery 42", dark: "#ff5a4f", light: "#c41a10" },
+];
 ---
 
 <header class="sticky top-0 z-50 border-b border-line/70 bg-ink/90 backdrop-blur-sm">
@@ -49,7 +53,7 @@ const currentTrip = photoLinks.find((link) => path === `/photos/${link.slug}`);
     <nav
       class="hidden gap-8 text-sm lowercase text-paper-dim peer-checked:flex peer-checked:flex-col peer-checked:gap-4 peer-checked:absolute peer-checked:left-0 peer-checked:right-0 peer-checked:top-full peer-checked:border-b peer-checked:border-line/70 peer-checked:bg-ink peer-checked:px-6 peer-checked:py-6 sm:static sm:flex sm:flex-row sm:border-none sm:bg-transparent sm:px-0 sm:py-0"
     >
-      <details class="photos-dropdown relative">
+      <details class="photos-dropdown nav-dropdown relative">
         <summary class:list={[
           "flex cursor-pointer list-none items-center gap-2 transition-colors hover:text-accent",
           path.startsWith("/photos/") && "text-accent",
@@ -72,15 +76,17 @@ const currentTrip = photoLinks.find((link) => path === `/photos/${link.slug}`);
       >
         Moving
       </a>
-      <a
-        href="/products/"
-        class:list={[
-          "transition-colors hover:text-accent",
-          path === "/products" && "text-accent",
-        ]}
-      >
-        Products
-      </a>
+      <details class="nav-dropdown relative">
+        <summary class="flex cursor-pointer list-none items-center gap-2 transition-colors hover:text-accent">
+          Products
+          <svg class="country-chevron h-3 w-3 transition-transform" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.2" /></svg>
+        </summary>
+        <div class="mt-3 min-w-40 rounded-[12px] border border-line bg-ink p-2 shadow-lg sm:absolute sm:left-0 sm:top-full">
+          {productLinks.map((link) => (
+            <a href={link.href} target="_blank" rel="noopener" style={`--item-dark: ${link.dark}; --item-light: ${link.light};`} class="trip-link block whitespace-nowrap rounded-lg px-4 py-2 transition-colors">{link.label} ↗</a>
+          ))}
+        </div>
+      </details>
 
     </nav>
   </div>
@@ -100,10 +106,12 @@ const currentTrip = photoLinks.find((link) => path === `/photos/${link.slug}`);
 </style>
 <script>
   const countryDropdown = document.querySelector<HTMLDetailsElement>(".photos-dropdown");
+  const dropdowns = document.querySelectorAll<HTMLDetailsElement>(".nav-dropdown");
+  // Clicking anywhere outside a menu closes it (so opening one closes the other).
   document.addEventListener("click", (event) => {
-    if (event.target instanceof Node && !countryDropdown?.contains(event.target)) {
-      countryDropdown?.removeAttribute("open");
-    }
+    dropdowns.forEach((dropdown) => {
+      if (event.target instanceof Node && !dropdown.contains(event.target)) dropdown.removeAttribute("open");
+    });
   });
   // Hovering a city in the Photos menu tints the name (homepage arch or logo) in that city's colour.
   const root = document.documentElement;
@@ -115,10 +123,10 @@ const currentTrip = photoLinks.find((link) => path === `/photos/${link.slug}`);
     link.addEventListener("mouseleave", clear);
     link.addEventListener("blur", clear);
   });
-  countryDropdown?.addEventListener("keydown", (event) => {
+  dropdowns.forEach((dropdown) => dropdown.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      countryDropdown.open = false;
-      countryDropdown.querySelector("summary")?.focus();
+      dropdown.open = false;
+      dropdown.querySelector("summary")?.focus();
     }
-  });
+  }));
 </script>
