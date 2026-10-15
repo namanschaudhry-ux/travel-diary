@@ -1,0 +1,13 @@
+---
+import melbourne from '../../data/cafe-maps/melbourne.html?raw';
+import newYork from '../../data/cafe-maps/new-york.html?raw';
+
+export function getStaticPaths() {
+  return [
+    { params: { city: 'melbourne' }, props: { html: melbourne } },
+    { params: { city: 'new-york' }, props: { html: newYork } },
+  ];
+}
+const { html } = Astro.props;
+---
+<Fragment set:html={html} />

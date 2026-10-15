@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Naman’s New York cafe visits, with a searchable map, visit counts and location notes.">
+<title>New York Cafe Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+.leaflet-image-layer,.leaflet-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane,.leaflet-pane>canvas,.leaflet-pane>svg,.leaflet-tile,.leaflet-tile-container,.leaflet-zoom-box{position:absolute;left:0;top:0}.leaflet-container{overflow:hidden}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}.leaflet-tile::selection{background:0 0}.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}.leaflet-marker-icon,.leaflet-marker-shadow{display:block}.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer{max-width:none!important;max-height:none!important;width:auto;padding:0}.leaflet-container img.leaflet-tile{mix-blend-mode:plus-lighter}.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}.leaflet-container{-webkit-tap-highlight-color:transparent}.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,.4)}.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}.leaflet-zoom-box{width:0;height:0;-moz-box-sizing:border-box;box-sizing:border-box;z-index:800}.leaflet-overlay-pane svg{-moz-user-select:none}.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}.leaflet-map-pane canvas{z-index:100}.leaflet-map-pane svg{z-index:200}.leaflet-vml-shape{width:1px;height:1px}.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}.leaflet-control{position:relative;z-index:800;pointer-events:visiblePainted;pointer-events:auto}.leaflet-bottom,.leaflet-top{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-control{float:left;clear:both}.leaflet-right .leaflet-control{float:right}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px}.leaflet-fade-anim .leaflet-popup{opacity:0;-webkit-transition:opacity .2s linear;-moz-transition:opacity .2s linear;transition:opacity .2s linear}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}.leaflet-zoom-animated{-webkit-transform-origin:0 0;-ms-transform-origin:0 0;transform-origin:0 0}svg.leaflet-zoom-animated{will-change:transform}.leaflet-zoom-anim .leaflet-zoom-animated{-webkit-transition:-webkit-transform .25s cubic-bezier(0,0,.25,1);-moz-transition:-moz-transform .25s cubic-bezier(0,0,.25,1);transition:transform .25s cubic-bezier(0,0,.25,1)}.leaflet-pan-anim .leaflet-tile,.leaflet-zoom-anim .leaflet-tile{-webkit-transition:none;-moz-transition:none;transition:none}.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:-webkit-grab;cursor:-moz-grab;cursor:grab}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}.leaflet-control,.leaflet-popup-pane{cursor:auto}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable{cursor:move;cursor:-webkit-grabbing;cursor:-moz-grabbing;cursor:grabbing}.leaflet-image-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}.leaflet-image-layer.leaflet-interactive,.leaflet-marker-icon.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:visiblePainted;pointer-events:auto}.leaflet-container{background:#ddd;outline-offset:1px}.leaflet-container a{color:#0078a8}.leaflet-zoom-box{border:2px dotted #38f;background:rgba(255,255,255,.5)}.leaflet-container{font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;font-size:12px;font-size:.75rem;line-height:1.5}.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,.65);border-radius:4px}.leaflet-bar a{background-color:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:#000}.leaflet-bar a,.leaflet-control-layers-toggle{background-position:50% 50%;background-repeat:no-repeat;display:block}.leaflet-bar a:focus,.leaflet-bar a:hover{background-color:#f4f4f4}.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}.leaflet-bar a.leaflet-disabled{cursor:default;background-color:#f4f4f4;color:#bbb}.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}.leaflet-touch .leaflet-bar a:first-child{border-top-left-radius:2px;border-top-right-radius:2px}.leaflet-touch .leaflet-bar a:last-child{border-bottom-left-radius:2px;border-bottom-right-radius:2px}.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console',Monaco,monospace;text-indent:1px}.leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out{font-size:22px}.leaflet-control-layers{box-shadow:0 1px 5px rgba(0,0,0,.4);background:#fff;border-radius:5px}.leaflet-control-layers-toggle{background-image:url(images/layers.png);width:36px;height:36px}.leaflet-retina .leaflet-control-layers-toggle{background-image:url(images/layers-2x.png);background-size:26px 26px}.leaflet-touch .leaflet-control-layers-toggle{width:44px;height:44px}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle{display:none}.leaflet-control-layers-expanded .leaflet-control-layers-list{display:block;position:relative}.leaflet-control-layers-expanded{padding:6px 10px 6px 6px;color:#333;background:#fff}.leaflet-control-layers-scrollbar{overflow-y:scroll;overflow-x:hidden;padding-right:5px}.leaflet-control-layers-selector{margin-top:2px;position:relative;top:1px}.leaflet-control-layers label{display:block;font-size:13px;font-size:1.08333em}.leaflet-control-layers-separator{height:0;border-top:1px solid #ddd;margin:5px -10px 5px -6px}.leaflet-default-icon-path{background-image:url(images/marker-icon.png)}.leaflet-container .leaflet-control-attribution{background:#fff;background:rgba(255,255,255,.8);margin:0}.leaflet-control-attribution,.leaflet-control-scale-line{padding:0 5px;color:#333;line-height:1.4}.leaflet-control-attribution a{text-decoration:none}.leaflet-control-attribution a:focus,.leaflet-control-attribution a:hover{text-decoration:underline}.leaflet-attribution-flag{display:inline!important;vertical-align:baseline!important;width:1em;height:.6669em}.leaflet-left .leaflet-control-scale{margin-left:5px}.leaflet-bottom .leaflet-control-scale{margin-bottom:5px}.leaflet-control-scale-line{border:2px solid #777;border-top:none;line-height:1.1;padding:2px 5px 1px;white-space:nowrap;-moz-box-sizing:border-box;box-sizing:border-box;background:rgba(255,255,255,.8);text-shadow:1px 1px #fff}.leaflet-control-scale-line:not(:first-child){border-top:2px solid #777;border-bottom:none;margin-top:-2px}.leaflet-control-scale-line:not(:first-child):not(:last-child){border-bottom:2px solid #777}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers{box-shadow:none}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-layers{border:2px solid rgba(0,0,0,.2);background-clip:padding-box}.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}.leaflet-popup-content-wrapper{padding:1px;text-align:left;border-radius:12px}.leaflet-popup-content{margin:13px 24px 13px 20px;line-height:1.3;font-size:13px;font-size:1.08333em;min-height:1px}.leaflet-popup-content p{margin:17px 0;margin:1.3em 0}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-top:-1px;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;pointer-events:auto;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#333;box-shadow:0 3px 14px rgba(0,0,0,.4)}.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;right:0;border:none;text-align:center;width:24px;height:24px;font:16px/24px Tahoma,Verdana,sans-serif;color:#757575;text-decoration:none;background:0 0}.leaflet-container a.leaflet-popup-close-button:focus,.leaflet-container a.leaflet-popup-close-button:hover{color:#585858}.leaflet-popup-scrolled{overflow:auto}.leaflet-oldie .leaflet-popup-content-wrapper{-ms-zoom:1}.leaflet-oldie .leaflet-popup-tip{width:24px;margin:0 auto}.leaflet-oldie .leaflet-control-layers,.leaflet-oldie .leaflet-control-zoom,.leaflet-oldie .leaflet-popup-content-wrapper,.leaflet-oldie .leaflet-popup-tip{border:1px solid #999}.leaflet-div-icon{background:#fff;border:1px solid #666}.leaflet-tooltip{position:absolute;padding:6px;background-color:#fff;border:1px solid #fff;border-radius:3px;color:#222;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.4)}.leaflet-tooltip.leaflet-interactive{cursor:pointer;pointer-events:auto}.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before,.leaflet-tooltip-top:before{position:absolute;pointer-events:none;border:6px solid transparent;background:0 0;content:""}.leaflet-tooltip-bottom{margin-top:6px}.leaflet-tooltip-top{margin-top:-6px}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before{left:50%;margin-left:-6px}.leaflet-tooltip-top:before{bottom:0;margin-bottom:-12px;border-top-color:#fff}.leaflet-tooltip-bottom:before{top:0;margin-top:-12px;margin-left:-6px;border-bottom-color:#fff}.leaflet-tooltip-left{margin-left:-6px}.leaflet-tooltip-right{margin-left:6px}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{top:50%;margin-top:-6px}.leaflet-tooltip-left:before{right:0;margin-right:-12px;border-left-color:#fff}.leaflet-tooltip-right:before{left:0;margin-left:-12px;border-right-color:#fff}@media print{.leaflet-control{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+/* Layout: one-screen app. Ledger panel on the left, map on the right; stacks map-over-list on phones. */
+:root {
+  --bg: #f3f2ef;
+  --panel: #fbfaf8;
+  --ink: #241c17;
+  --muted: #6f655d;
+  --rule: #e2ddd6;
+  --crema: #c9822b;
+  --crema-ink: #8a5310;
+  --pin-ring: #3a2a1e;
+  --approx: #b9a58c;
+  --check: #3d6f8f;
+  --display: "Bricolage Grotesque", "Avenir Next", "Helvetica Neue", sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --tiles: grayscale(.85) contrast(.92) brightness(1.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171310; --panel: #1e1915; --ink: #efe7df; --muted: #a59a90; --rule: #332b25;
+    --crema: #e09a45; --crema-ink: #f0b56c; --pin-ring: #f6eadc; --approx: #8b7a66; --check: #7fb0cf;
+    --tiles: invert(1) hue-rotate(180deg) grayscale(.9) brightness(.78) contrast(.9);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171310; --panel: #1e1915; --ink: #efe7df; --muted: #a59a90; --rule: #332b25;
+  --crema: #e09a45; --crema-ink: #f0b56c; --pin-ring: #f6eadc; --approx: #8b7a66; --check: #7fb0cf;
+  --tiles: invert(1) hue-rotate(180deg) grayscale(.9) brightness(.78) contrast(.9);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+.city-nav { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; }
+.city-nav a { color: var(--muted); text-underline-offset: 4px; }
+.city-nav a[aria-current="page"] { color: var(--crema-ink); font-weight: 600; }
+a:focus-visible, button:focus-visible, input:focus-visible, .row:focus-visible { outline: 2px solid var(--crema-ink); outline-offset: 3px; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 14px; }
+.app { height: 100%; display: grid; grid-template-columns: minmax(300px, 380px) 1fr; }
+.panel { background: var(--panel); border-right: 1px solid var(--rule); display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.head { padding: 22px 20px 14px; display: grid; gap: 10px; border-bottom: 1px solid var(--rule); }
+h1 { font-family: var(--display); font-weight: 700; font-size: 28px; line-height: 1.05; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0; line-height: 1.45; max-width: 60ch; }
+.tally { display: flex; gap: 18px; font-family: var(--mono); font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.tally b { display: block; font-family: var(--display); font-size: 22px; color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+.controls { padding: 12px 20px; display: grid; gap: 10px; border-bottom: 1px solid var(--rule); }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg button { font: 500 12px var(--body); border: 1px solid var(--rule); background: transparent; color: var(--ink); padding: 5px 10px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.seg button:focus-visible, .row:focus-visible, #q:focus-visible { outline: 2px solid var(--crema); outline-offset: 2px; }
+#q { width: 100%; box-sizing: border-box; font: 14px var(--body); padding: 8px 10px; border: 1px solid var(--rule); border-radius: 6px; background: var(--bg); color: var(--ink); }
+.list { overflow-y: auto; flex: 1; min-height: 0; }
+.row { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: baseline; padding: 10px 20px; border-bottom: 1px solid var(--rule); cursor: pointer; }
+.row:hover, .row.on { background: color-mix(in srgb, var(--crema) 10%, transparent); }
+.row .n { font-family: var(--mono); font-size: 15px; font-weight: 500; color: var(--crema-ink); text-align: right; font-variant-numeric: tabular-nums; }
+.row .nm { font-weight: 600; min-width: 0; }
+.row .ar { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.row .dt { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+.chip { display: inline-block; font: 500 10px var(--body); text-transform: uppercase; letter-spacing: .06em; padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: 1px; }
+.chip.branch { border: 1px dashed var(--crema-ink); color: var(--crema-ink); }
+.chip.approx { background: color-mix(in srgb, var(--approx) 30%, transparent); color: var(--ink); }
+.chip.check { border: 1px solid var(--check); color: var(--check); }
+.sect { padding: 16px 20px 6px; font: 600 11px var(--body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.unplaced .row { cursor: default; }
+.foot { padding: 14px 20px 20px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.mapwrap { position: relative; min-width: 0; }
+#map { position: absolute; inset: 0; background: var(--bg); }
+.leaflet-tile-pane { filter: var(--tiles); }
+.leaflet-container { font-family: var(--body); background: var(--bg); }
+.leaflet-control-attribution { background: color-mix(in srgb, var(--panel) 85%, transparent) !important; color: var(--muted) !important; font-size: 10px; }
+.leaflet-control-attribution a { color: var(--muted) !important; }
+.leaflet-bar a { background: var(--panel); color: var(--ink); border-bottom-color: var(--rule); }
+.leaflet-bar a:hover { background: var(--bg); }
+.legend { position: absolute; z-index: 500; right: 12px; bottom: 26px; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; display: grid; gap: 6px; font-size: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.legend div { display: flex; align-items: center; gap: 8px; }
+.legend .sw { width: 14px; height: 14px; border-radius: 50%; box-sizing: border-box; flex: none; }
+/* pins */
+.pin { border-radius: 50%; box-sizing: border-box; display: grid; place-items: center; font: 600 10px var(--mono); color: #fff; background: var(--crema); border: 2px solid var(--pin-ring); box-shadow: 0 1px 4px rgba(0,0,0,.25); transition: transform .15s; }
+.pin.branch { background: color-mix(in srgb, var(--crema) 35%, var(--panel)); color: var(--ink); border: 2px dashed var(--crema-ink); }
+.pin.approx { background: var(--approx); color: var(--ink); border: 2px solid color-mix(in srgb, var(--pin-ring) 45%, transparent); }
+.pin.check { background: var(--crema); border: 3px solid var(--check); }
+.leaflet-marker-icon:hover .pin, .pin.on { transform: scale(1.18); }
+.sw.ok { background: var(--crema); border: 2px solid var(--pin-ring); }
+.sw.branch { background: color-mix(in srgb, var(--crema) 35%, var(--panel)); border: 2px dashed var(--crema-ink); }
+.sw.approx { background: var(--approx); }
+.sw.check { background: var(--crema); border: 3px solid var(--check); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--panel); color: var(--ink); }
+.leaflet-popup-content { margin: 12px 14px; line-height: 1.45; }
+.pop h3 { font-family: var(--display); font-size: 17px; margin: 0 0 2px; font-weight: 700; }
+.pop .meta { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.pop p { margin: 0; font-size: 13px; }
+.leaflet-tooltip { background: var(--panel); color: var(--ink); border-color: var(--rule); font: 500 12px var(--body); }
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: 52vh auto; height: auto; }
+  .mapwrap { order: -1; height: 52vh; }
+  .panel { border-right: 0; }
+  .list { overflow: visible; }
+  .head { padding-top: 16px; }
+  h1 { font-size: 24px; }
+  .legend { bottom: 18px; right: 8px; padding: 6px 8px; gap: 3px; font-size: 11px; }
+  .legend .sw { width: 11px; height: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { .pin { transition: none; } }
+</style>
+
+</head><body>
+<div class="app">
+  <aside class="panel">
+    <header class="head">
+<nav class="city-nav" aria-label="Cafe maps"><a href="/">Naman</a><a href="/cafes/melbourne/">Melbourne</a><a href="/cafes/new-york/" aria-current="page">New York</a></nav>
+      <h1>New York Cafe Map</h1>
+      <p class="sub">New York cafes from my card history across four trips (Mar 2023 – Sep 2026), sized by how often I paid there. Chains are pinned per branch where the bank recorded one.</p>
+      <div class="tally" id="tally"></div>
+    </header>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Show">
+        <button id="f-all" data-f="all" aria-pressed="true">All</button>
+        <button id="f-flag" data-f="flag" aria-pressed="false">Needs a look</button>
+      </div>
+      <div class="seg" role="group" aria-label="Sort">
+        <button id="s-visits" data-s="visits" aria-pressed="true">Most visits</button>
+        <button id="s-last" data-s="last" aria-pressed="false">Most recent</button>
+        <button id="s-name" data-s="name" aria-pressed="false">A–Z</button>
+      </div>
+      <input id="q" type="search" placeholder="Search cafe or suburb" aria-label="Search cafe or suburb">
+    </div>
+    <div class="list" id="list"></div>
+  </aside>
+  <main class="mapwrap">
+    <div id="map" aria-label="Map of cafes"></div>
+    <div class="legend" aria-label="Legend">
+      <div><span class="sw ok"></span>Address confirmed</div>
+      <div><span class="sw branch"></span>Branch unclear</div>
+      <div><span class="sw approx"></span>Suburb only</div>
+      <div><span class="sw check"></span>Assumption, check</div>
+    </div>
+  </main>
+</div>
+
+<script src="/cafes/leaflet.js"></script>
+<script>
+// ---- DATA: one line per cafe. To add a cafe, add a line with name, visits, last (YYYY-MM-DD),
+// lat/lng, status (ok | branch | approx | check), area and a short note. ----
+const CAFES = [
+  {"name": "Devoción Flatiron", "area": "Flatiron", "visits": 3, "last": "2026-09-03", "lat": 40.73904, "lng": -73.98917, "status": "ok", "note": "25 E 20th St"},
+  {"name": "Devoción Lexington", "area": "Midtown East", "visits": 2, "last": "2024-11-11", "lat": 40.75803, "lng": -73.97142, "status": "ok", "note": "600 Lexington Ave"},
+  {"name": "Devoción Williamsburg", "area": "Williamsburg", "visits": 1, "last": "2024-09-07", "lat": 40.71476, "lng": -73.96223, "status": "ok", "note": "Grand St, Williamsburg"},
+  {"name": "WatchHouse 5th Ave", "area": "Midtown", "visits": 6, "last": "2026-09-01", "lat": 40.76007, "lng": -73.97665, "status": "branch", "note": "660 5th Ave. Only 1 of the 6 purchases names 5th Ave; the other 5 (27–30 Aug 2026) name no branch. WatchHouse also has Park Ave South and Lexington shops."},
+  {"name": "Bright Side", "area": "Williamsburg", "visits": 6, "last": "2024-11-24", "lat": 40.71868, "lng": -73.96405, "status": "ok", "note": "N 4th St, Williamsburg"},
+  {"name": "All The King's Horses", "area": "East Village", "visits": 6, "last": "2023-08-18", "lat": 40.72882, "lng": -73.98018, "status": "ok", "note": "521 E 12th St. Closed at the end of 2023."},
+  {"name": "Butler South Williamsburg", "area": "Williamsburg", "visits": 2, "last": "2023-08-09", "lat": 40.71183, "lng": -73.96472, "status": "ok", "note": "95 S 5th St"},
+  {"name": "Butler Dumbo", "area": "Dumbo", "visits": 1, "last": "2024-09-03", "lat": 40.70319, "lng": -73.99242, "status": "ok", "note": "40 Water St"},
+  {"name": "Butler North Williamsburg", "area": "Williamsburg", "visits": 1, "last": "2024-09-05", "lat": 40.7203, "lng": -73.9575, "status": "approx", "note": "Bank says 'North Williamsburg'; street address not found, so the pin is approximate."},
+  {"name": "La Cabra", "area": "NoHo", "visits": 4, "last": "2025-10-12", "lat": 40.72424, "lng": -73.9962, "status": "branch", "note": "Pinned at 284 Lafayette St. La Cabra also has East Village (2nd Ave) and Bushwick shops."},
+  {"name": "Poetica Coffee Smith St", "area": "Carroll Gardens", "visits": 2, "last": "2023-03-22", "lat": 40.6818, "lng": -73.9934, "status": "approx", "note": "Bank says Smith St; exact number not found."},
+  {"name": "Poetica Coffee Kent Ave", "area": "Williamsburg", "visits": 1, "last": "2024-10-31", "lat": 40.7167, "lng": -73.9653, "status": "approx", "note": "Bank says Kent Ave; exact number not found."},
+  {"name": "Poetica Coffee Lorimer", "area": "Williamsburg", "visits": 1, "last": "2024-12-10", "lat": 40.71372, "lng": -73.94948, "status": "ok", "note": "561 Lorimer St"},
+  {"name": "Ruby's Murray Hill", "area": "Murray Hill", "visits": 2, "last": "2026-09-07", "lat": 40.74361, "lng": -73.97989, "status": "ok", "note": "442 3rd Ave"},
+  {"name": "Ruby's East Village", "area": "East Village", "visits": 1, "last": "2023-08-06", "lat": 40.73131, "lng": -73.98881, "status": "ok", "note": "198 E 11th St"},
+  {"name": "Le Café Coffee", "area": "Midtown", "visits": 3, "last": "2025-10-13", "lat": 40.75415, "lng": -73.98614, "status": "branch", "note": "Pinned at 1440 Broadway. Many Manhattan branches (W 57th, Lexington, …)."},
+  {"name": "Two Hands Tribeca", "area": "Tribeca", "visits": 2, "last": "2023-08-11", "lat": 40.71781, "lng": -74.00545, "status": "ok", "note": "251 Church St"},
+  {"name": "Two Hands Williamsburg", "area": "Williamsburg", "visits": 1, "last": "2023-08-07", "lat": 40.7161, "lng": -73.96634, "status": "ok", "note": "262 Kent Ave"},
+  {"name": "Partners Coffee Williamsburg", "area": "Williamsburg", "visits": 3, "last": "2025-10-15", "lat": 40.71797, "lng": -73.95918, "status": "ok", "note": "125 N 6th St. 2 purchases name Williamsburg; the Oct 2025 one names no branch and is counted here."},
+  {"name": "Bluestone Lane Carmine St", "area": "West Village", "visits": 1, "last": "2023-03-16", "lat": 40.73002, "lng": -74.00284, "status": "ok", "note": "30 Carmine St"},
+  {"name": "Bluestone Lane Chelsea", "area": "Chelsea", "visits": 1, "last": "2023-03-28", "lat": 40.75227, "lng": -73.9988, "status": "branch", "note": "Pinned at 435 W 31st St. Could be the Chelsea Piers cafe."},
+  {"name": "Bluestone Lane East 90th", "area": "Carnegie Hill", "visits": 1, "last": "2023-03-27", "lat": 40.78384, "lng": -73.95842, "status": "ok", "note": "E 90th St"},
+  {"name": "Compilation Coffee", "area": "Brooklyn", "visits": 3, "last": "2025-10-15", "lat": 40.69381, "lng": -73.98289, "status": "check", "note": "Work card, no location recorded. Pinned at the only Compilation Coffee found, Gold St."},
+  {"name": "Variety Coffee Roasters", "area": "Chelsea", "visits": 2, "last": "2026-09-06", "lat": 40.74521, "lng": -73.99461, "status": "branch", "note": "Pinned at 261 7th Ave. Many branches (UWS, UES, Williamsburg…)."},
+  {"name": "Ninth Street Espresso", "area": "East Village", "visits": 2, "last": "2026-09-05", "lat": 40.72705, "lng": -73.98011, "status": "branch", "note": "Pinned at the E 10th St original. Also Midtown and Chelsea."},
+  {"name": "% Arabica Dumbo", "area": "Dumbo", "visits": 2, "last": "2026-09-02", "lat": 40.7026, "lng": -73.99414, "status": "ok", "note": "20 Old Fulton St"},
+  {"name": "Acre", "area": "Greenpoint", "visits": 2, "last": "2026-08-31", "lat": 40.72628, "lng": -73.95469, "status": "check", "note": "Pinned at Acre, 64 Meserole Ave (tagged as a restaurant). Merchant just says 'Acre Brooklyn'."},
+  {"name": "Little Collins", "area": "Midtown East", "visits": 2, "last": "2024-12-10", "lat": 40.75239, "lng": -73.9735, "status": "ok", "note": "708 3rd Ave"},
+  {"name": "Maman Bryant Park", "area": "Midtown", "visits": 1, "last": "2023-03-19", "lat": 40.75448, "lng": -73.98558, "status": "ok", "note": "114 W 41st St"},
+  {"name": "Maman Lexington", "area": "Midtown East", "visits": 1, "last": "2024-12-09", "lat": 40.7599, "lng": -73.96968, "status": "ok", "note": "667 Lexington Ave"},
+  {"name": "Ange Noir Cafe", "area": "East Williamsburg", "visits": 2, "last": "2024-11-18", "lat": 40.70418, "lng": -73.93416, "status": "ok", "note": "247 Varet St"},
+  {"name": "Think Coffee Tribeca", "area": "Tribeca", "visits": 1, "last": "2024-10-31", "lat": 40.71745, "lng": -74.00452, "status": "ok", "note": "350 Broadway"},
+  {"name": "Think Coffee Devoe St", "area": "Williamsburg", "visits": 1, "last": "2024-11-17", "lat": 40.71298, "lng": -73.95098, "status": "ok", "note": "10 Devoe St"},
+  {"name": "Citizens of Chelsea", "area": "Chelsea", "visits": 1, "last": "2024-11-02", "lat": 40.74798, "lng": -74.00058, "status": "ok", "note": "401 W 25th St"},
+  {"name": "Citizens of Gramercy", "area": "Gramercy", "visits": 1, "last": "2023-08-08", "lat": 40.73666, "lng": -73.98154, "status": "ok", "note": "362 2nd Ave"},
+  {"name": "St Kilda Coffee", "area": "Hell's Kitchen", "visits": 2, "last": "2024-09-02", "lat": 40.76075, "lng": -73.9905, "status": "branch", "note": "Pinned at W 46th St. Also W 44th St and 8th Ave, Chelsea."},
+  {"name": "Saltwater Coffee", "area": "Greenwich Village", "visits": 2, "last": "2023-08-08", "lat": 40.73265, "lng": -73.9998, "status": "branch", "note": "Pinned at Waverly Pl. Also E 12th St."},
+  {"name": "Ralph's Coffee", "area": "Upper East Side", "visits": 2, "last": "2023-03-21", "lat": 40.77163, "lng": -73.96573, "status": "branch", "note": "Pinned at 888 Madison Ave. Ralph's has other Manhattan cafes."},
+  {"name": "Voyager Espresso", "area": "Financial District", "visits": 1, "last": "2026-09-04", "lat": 40.70878, "lng": -74.00677, "status": "ok", "note": "110 William St, lower level"},
+  {"name": "Caffè Panna", "area": "Gramercy", "visits": 1, "last": "2026-09-04", "lat": 40.737, "lng": -73.98675, "status": "ok", "note": "77 Irving Pl"},
+  {"name": "Suited", "area": "Financial District", "visits": 1, "last": "2026-09-02", "lat": 40.70924, "lng": -74.00788, "status": "ok", "note": "45 John St"},
+  {"name": "Villager", "area": "Prospect Heights", "visits": 1, "last": "2026-08-31", "lat": 40.67197, "lng": -73.96097, "status": "ok", "note": "841 Classon Ave"},
+  {"name": "Radio Bakery", "area": "Prospect Heights", "visits": 1, "last": "2026-08-31", "lat": 40.67499, "lng": -73.96689, "status": "ok", "note": "186 Underhill Ave (merchant says 'Radio Bakery 2', the second shop)"},
+  {"name": "Asano", "area": "West Village", "visits": 1, "last": "2026-08-29", "lat": 40.73215, "lng": -74.0033, "status": "check", "note": "Merchant reads 'Asano Cafe (Noortw…'. Asano runs daytime cafes inside restaurants, so pinned at The Noortwyck, 289 Bleecker St."},
+  {"name": "Rhythm Zero", "area": "Greenpoint", "visits": 1, "last": "2024-12-11", "lat": 40.73025, "lng": -73.9598, "status": "ok", "note": "38 Kent St"},
+  {"name": "Do Not Feed Alligators", "area": "West Village", "visits": 1, "last": "2024-12-09", "lat": 40.73368, "lng": -74.00426, "status": "ok", "note": "337 Bleecker St"},
+  {"name": "Clockface Coffee", "area": "Bay Ridge", "visits": 1, "last": "2024-12-09", "lat": 40.63235, "lng": -74.02784, "status": "ok", "note": "275 74th St"},
+  {"name": "Blue Brown Cafe", "area": "Williamsburg", "visits": 1, "last": "2024-12-03", "lat": 40.71529, "lng": -73.95385, "status": "ok", "note": "45 Havemeyer St"},
+  {"name": "Hungry Ghost Coffee", "area": "Fort Greene", "visits": 1, "last": "2024-12-02", "lat": 40.68364, "lng": -73.96813, "status": "branch", "note": "Pinned at 810 Fulton St. Several Brooklyn branches."},
+  {"name": "Picky Barista", "area": "Upper West Side", "visits": 1, "last": "2024-12-02", "lat": 40.77947, "lng": -73.98321, "status": "branch", "note": "Pinned at W 72nd St. Several UWS branches."},
+  {"name": "Kaffe Landskap", "area": "Tribeca", "visits": 1, "last": "2024-11-28", "lat": 40.72091, "lng": -74.00968, "status": "branch", "note": "Pinned at 401 Greenwich St. Merchant says 'KL2', possibly the 275 Greenwich St shop."},
+  {"name": "Laughing Man Cafe", "area": "Battery Park City", "visits": 1, "last": "2024-11-26", "lat": 40.71457, "lng": -74.01715, "status": "ok", "note": "Battery Park City"},
+  {"name": "Pueblo Querido Coffee", "area": "Astoria", "visits": 1, "last": "2024-11-16", "lat": 40.75001, "lng": -73.93617, "status": "check", "note": "Only one found is on Northern Blvd, Queens, but the bank says Brooklyn."},
+  {"name": "Marcy and Myrtle", "area": "Brooklyn", "visits": 1, "last": "2024-11-15", "lat": 40.69506, "lng": -73.94929, "status": "branch", "note": "Pinned at Marcy Ave. Also N 10th St, Williamsburg."},
+  {"name": "Dudleys", "area": "Lower East Side", "visits": 1, "last": "2024-11-15", "lat": 40.71808, "lng": -73.99037, "status": "ok", "note": "85 Orchard St"},
+  {"name": "Caffè Valencia", "area": "Williamsburg", "visits": 1, "last": "2024-11-13", "lat": 40.71491, "lng": -73.96277, "status": "ok", "note": "255 Berry St"},
+  {"name": "La Parisienne", "area": "Financial District", "visits": 1, "last": "2024-11-12", "lat": 40.70961, "lng": -74.00933, "status": "ok", "note": "9 Maiden Ln"},
+  {"name": "Stumptown Coffee Roasters", "area": "NoMad", "visits": 1, "last": "2024-11-10", "lat": 40.74566, "lng": -73.98805, "status": "branch", "note": "Pinned at 20 W 29th St (Ace Hotel). Also W 8th St."},
+  {"name": "Cafe Hugo", "area": "Hudson Square", "visits": 1, "last": "2024-11-07", "lat": 40.72639, "lng": -74.00873, "status": "ok", "note": "Hotel Hugo, 525 Greenwich St"},
+  {"name": "Copper Mug Coffee", "area": "Williamsburg", "visits": 1, "last": "2024-11-07", "lat": 40.71649, "lng": -73.95981, "status": "ok", "note": "131 N 4th St"},
+  {"name": "Gasoline Alley Coffee", "area": "NoHo", "visits": 1, "last": "2024-11-05", "lat": 40.7255, "lng": -73.99478, "status": "branch", "note": "Pinned at 325 Lafayette St. Has other branches."},
+  {"name": "Birch Coffee", "area": "Manhattan", "visits": 1, "last": "2024-09-05", "lat": 40.72657, "lng": -73.99962, "status": "branch", "note": "Merchant says 'Birch Coffee West…'. Pinned at W Houston St; many branches."},
+  {"name": "Gumption Coffee", "area": "Times Square", "visits": 1, "last": "2024-09-01", "lat": 40.75689, "lng": -73.98349, "status": "ok", "note": "W 45th St"},
+  {"name": "The Roost", "area": "Alphabet City", "visits": 1, "last": "2023-08-18", "lat": 40.72906, "lng": -73.97845, "status": "ok", "note": "222 Avenue B"},
+  {"name": "Joe Coffee 23rd St", "area": "Chelsea", "visits": 1, "last": "2023-08-17", "lat": 40.74678, "lng": -74.00162, "status": "ok", "note": "405 W 23rd St"},
+  {"name": "Merriweather Coffee + Kitchen", "area": "West Village", "visits": 1, "last": "2023-08-17", "lat": 40.73056, "lng": -74.00654, "status": "ok", "note": "428 Hudson St"},
+  {"name": "Matchaful", "area": "Tribeca", "visits": 1, "last": "2023-08-17", "lat": 40.7191, "lng": -74.01066, "status": "branch", "note": "Pinned at Harrison St. Also Canal St and Williamsburg."},
+  {"name": "Drip Drop Cafe", "area": "SoHo", "visits": 1, "last": "2023-08-17", "lat": 40.72533, "lng": -74.00062, "status": "ok", "note": "98 Thompson St"},
+  {"name": "787 Coffee", "area": "Upper East Side", "visits": 1, "last": "2023-08-15", "lat": 40.76658, "lng": -73.95738, "status": "branch", "note": "Pinned at E 70th St. Many branches."},
+  {"name": "Good Thanks Cafe", "area": "Lower East Side", "visits": 1, "last": "2023-08-10", "lat": 40.71972, "lng": -73.98952, "status": "ok", "note": "131 Orchard St"},
+  {"name": "Ground Support", "area": "SoHo", "visits": 1, "last": "2023-08-09", "lat": 40.72426, "lng": -74.00199, "status": "ok", "note": "399 W Broadway"},
+  {"name": "Hutch and Waldo", "area": "Upper East Side", "visits": 1, "last": "2023-08-07", "lat": 40.77487, "lng": -73.95428, "status": "check", "note": "Pinned at 247 E 81st St, but the merchant reads 'Hutch And Waldo Irvi…', which may be another (Irving Pl?) location."},
+  {"name": "Yafa Cafe", "area": "Boerum Hill", "visits": 1, "last": "2023-03-31", "lat": 40.68567, "lng": -73.97927, "status": "branch", "note": "Pinned at State St. Also Sunset Park."},
+  {"name": "Buddies Coffee", "area": "Williamsburg", "visits": 1, "last": "2023-03-27", "lat": 40.71475, "lng": -73.96221, "status": "ok", "note": "150 Grand St (closed 2025)"},
+  {"name": "Koré Coffee", "area": "Nolita", "visits": 1, "last": "2023-03-26", "lat": 40.71615, "lng": -73.99709, "status": "ok", "note": "26A Elizabeth St"},
+  {"name": "Pause Cafe", "area": "Lower East Side", "visits": 1, "last": "2023-03-24", "lat": 40.72123, "lng": -73.98409, "status": "ok", "note": "3 Clinton St"},
+  {"name": "Cafe Serafina", "area": "Midtown", "visits": 1, "last": "2023-03-20", "lat": 40.76637, "lng": -73.97966, "status": "check", "note": "Pinned at 922 7th Ave, the Serafina cafe that opened in 2022."},
+  {"name": "Arcane Estate Coffee", "area": "West Village", "visits": 1, "last": "2026-08-26", "lat": 40.73126, "lng": -74.0028, "status": "check", "note": "Work card, no location recorded; New York inferred from trip dates. Cornelia St."},
+  {"name": "Interlude Coffee and Tea", "area": "Tribeca", "visits": 1, "last": "2026-08-26", "lat": 40.72117, "lng": -74.00857, "status": "branch", "note": "Work card, no location. Pinned at 145 Hudson St; also Murray St."},
+  {"name": "Black Fox Coffee", "area": "Midtown East", "visits": 1, "last": "2026-08-26", "lat": 40.76142, "lng": -73.97387, "status": "branch", "note": "Work card, no location. Pinned at E 55th St; also Pine St (FiDi)."},
+  {"name": "Stone Street Coffee", "area": "Chelsea", "visits": 1, "last": "2026-08-23", "lat": 40.74359, "lng": -74.00321, "status": "branch", "note": "Work card, no location. Pinned at 9th Ave, Chelsea; also Park Slope."},
+  {"name": "Dawn's Til Dusk", "area": "Dumbo", "visits": 1, "last": "2025-10-09", "lat": 40.70334, "lng": -73.99056, "status": "check", "note": "Work card, no location; New York inferred from trip dates. 33 Main St, Dumbo."},
+  {"name": "Starbucks Reserve (store 47906)", "area": "Chelsea", "visits": 4, "last": "2024-12-03", "lat": 40.74161, "lng": -74.00515, "status": "check", "note": "Merchant 'Siren47906'. Store number not matched; pinned at the Reserve Roastery, 61 9th Ave, as a guess."},
+  {"name": "Starbucks Reserve (store 57845)", "area": "Midtown", "visits": 3, "last": "2023-08-26", "lat": 40.74844, "lng": -73.98566, "status": "check", "note": "Merchant 'Siren57845'. Store number not matched; pinned at the Empire State Building Reserve as a guess."}
+];
+
+const UNPLACED = [
+  {"name": "Starbucks", "visits": 7, "last": "2025-10-10", "note": "Several stores: #47020 Manhattan (3), #22596 and #07646 Brooklyn, #2338 Flushing (likely LaGuardia), 1 with no location."},
+  {"name": "Dunkin'", "visits": 5, "last": "2024-12-16", "note": "Stores in Brooklyn and Queens plus 2 at an airport (Hudson). Store locations not recorded."},
+  {"name": "Blue Bottle Coffee", "visits": 5, "last": "2026-08-22", "note": "4 in Manhattan, 1 in Brooklyn; no branch recorded."},
+  {"name": "Joe & The Juice", "visits": 3, "last": "2026-09-01", "note": "No branch recorded."},
+  {"name": "Butler (no branch)", "visits": 1, "last": "2026-08-25", "note": "Work card; no branch recorded. You've been to three Butler shops."},
+  {"name": "Gregorys Coffee", "visits": 1, "last": "2024-12-02", "note": "Chain; no branch recorded."},
+  {"name": "Blank Street", "visits": 1, "last": "2024-09-02", "note": "Chain; no branch recorded."},
+  {"name": "Western Coffee Shop", "visits": 1, "last": "2023-08-18", "note": "Not found. Possibly a diner."},
+  {"name": "Gs Coffee", "visits": 1, "last": "2023-03-21", "note": "Not found (bank says Brooklyn)."},
+  {"name": "Coffee Table", "visits": 1, "last": "2025-10-13", "note": "Work card; not found."}
+];
+
+const AS_AT = "14 Oct 2026";
+// ---- end of data ----
+
+const FLAGGED = new Set(["branch", "approx", "check"]);
+const LABEL = { branch: "Branch?", approx: "Approx", check: "Check" };
+const fmtDate = d => new Date(d + "T00:00:00").toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const size = v => Math.round(9 + 4.4 * Math.sqrt(v));
+
+const totalVisits = CAFES.reduce((a, c) => a + c.visits, 0) + UNPLACED.reduce((a, c) => a + c.visits, 0);
+const flaggedCount = CAFES.filter(c => FLAGGED.has(c.status)).length;
+document.getElementById("tally").innerHTML =
+  `<span><b>${CAFES.length + UNPLACED.length}</b>cafes</span><span><b>${totalVisits}</b>visits</span><span><b>${CAFES.length}</b>on the map</span><span><b>${flaggedCount + UNPLACED.length}</b>to check</span>`;
+
+const map = L.map("map", { zoomSnap: 0.5, minZoom: 11, maxZoom: 18, maxBounds: [[40.50, -74.25], [40.92, -73.70]] });
+// Base tiles cover the whole city to zoom 14; sharper zoom-15 tiles cover Manhattan below 60th St and north Brooklyn.
+L.tileLayer("/cafes/new-york/osm/{z}/{x}/{y}.png", { minZoom: 11, maxNativeZoom: 14, maxZoom: 18,
+  bounds: [[40.61, -74.05], [40.80, -73.91]],
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+L.tileLayer("/cafes/new-york/osm/{z}/{x}/{y}.png", { minZoom: 15, maxNativeZoom: 15, maxZoom: 18,
+  bounds: [[40.695, -74.02], [40.765, -73.94]] }).addTo(map);
+
+const markers = new Map();
+[...CAFES].sort((a, b) => a.visits - b.visits).forEach(c => {
+  const s = size(c.visits);
+  const icon = L.divIcon({ className: "", iconSize: [s, s], iconAnchor: [s / 2, s / 2],
+    html: `<div class="pin ${c.status}" style="width:${s}px;height:${s}px">${c.visits > 2 ? c.visits : ""}</div>` });
+  const m = L.marker([c.lat, c.lng], { icon, title: c.name, riseOnHover: true, zIndexOffset: c.visits * 10 })
+    .bindTooltip(`${esc(c.name)} · ${c.visits}`, { direction: "top", offset: [0, -s / 2] })
+    .bindPopup(`<div class="pop"><h3>${esc(c.name)}</h3><div class="meta">${c.visits} visit${c.visits > 1 ? "s" : ""} · last ${fmtDate(c.last)}</div><p>${esc(c.note)}</p>${c.bank ? "" : '<p class="meta" style="margin-top:6px">Location looked up by name (no location in bank data)</p>'}</div>`)
+    .addTo(map);
+  markers.set(c.name, m);
+});
+map.fitBounds(L.latLngBounds(CAFES.map(c => [c.lat, c.lng])), { padding: [30, 30] });
+
+let filter = "all", sort = "visits", q = "";
+try { const saved = localStorage.getItem("cafe-sort"); if (["visits", "last", "name"].includes(saved)) sort = saved; } catch (e) {}
+
+function render() {
+  document.querySelectorAll("[data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === filter));
+  document.querySelectorAll("[data-s]").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === sort));
+  const match = c => !q || (c.name + " " + (c.area || "")).toLowerCase().includes(q);
+  const rows = CAFES.filter(c => (filter === "all" || FLAGGED.has(c.status)) && match(c));
+  const cmp = { visits: (a, b) => b.visits - a.visits || b.last.localeCompare(a.last),
+                last: (a, b) => b.last.localeCompare(a.last), name: (a, b) => a.name.localeCompare(b.name) }[sort];
+  rows.sort(cmp);
+  markers.forEach((m, name) => {
+    const c = CAFES.find(x => x.name === name);
+    const show = (filter === "all" || FLAGGED.has(c.status)) && match(c);
+    if (show && !map.hasLayer(m)) m.addTo(map); else if (!show && map.hasLayer(m)) map.removeLayer(m);
+  });
+  const row = c => `<div class="row" tabindex="0" data-name="${esc(c.name)}">
+      <span class="n">${c.visits}</span>
+      <div class="nm">${esc(c.name)}${LABEL[c.status] ? `<span class="chip ${c.status}">${LABEL[c.status]}</span>` : ""}<div class="ar">${esc(c.area || "")}</div></div>
+      <span class="dt">${fmtDate(c.last)}</span></div>`;
+  const un = UNPLACED.filter(match).sort(cmp);
+  document.getElementById("list").innerHTML =
+    (rows.length ? rows.map(row).join("") : `<p class="foot">No mapped cafes match “${esc(q)}”.</p>`) +
+    (un.length ? `<div class="sect">Not on the map · couldn't find these</div><div class="unplaced">` +
+      un.map(c => `<div class="row"><span class="n">${c.visits}</span><div class="nm">${esc(c.name)}<div class="ar">${esc(c.note)}</div></div><span class="dt">${fmtDate(c.last)}</span></div>`).join("") + `</div>` : "") +
+    `<p class="foot">Visits are card purchases, so cash visits and other people's shouts are missing. Work-card purchases record no city; New York is inferred from trip dates. Data as at ${AS_AT}, from the Notion page “Cafe Visits”.</p>`;
+}
+
+function focusCafe(name) {
+  const m = markers.get(name); if (!m) return;
+  if (!map.hasLayer(m)) m.addTo(map);
+  map.flyTo(m.getLatLng(), Math.max(map.getZoom(), 15), { duration: matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 0.6 });
+  m.openPopup();
+  if (matchMedia("(max-width: 760px)").matches) document.querySelector(".mapwrap").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+}
+document.getElementById("list").addEventListener("click", e => { const r = e.target.closest(".row[data-name]"); if (r) focusCafe(r.dataset.name); });
+document.getElementById("list").addEventListener("keydown", e => { const r = e.target.closest(".row[data-name]"); if (r && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); focusCafe(r.dataset.name); } });
+document.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { filter = b.dataset.f; render(); });
+document.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { sort = b.dataset.s; try { localStorage.setItem("cafe-sort", sort); } catch (e) {} render(); });
+document.getElementById("q").addEventListener("input", e => { q = e.target.value.trim().toLowerCase(); render(); });
+render();
+</script>
+
+</body></html>
