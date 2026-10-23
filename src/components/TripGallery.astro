@@ -248,9 +248,10 @@ const accentCss = `:root { --color-accent: ${accent.onDark}; --trip-accent: ${ac
               <figcaption class="photo-caption pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-black/60 to-transparent px-6 pt-5 pb-14 text-center font-sans text-sm font-light text-white/90">
                 {splitCaption(photo.caption).top}
               </figcaption>
-              {(splitCaption(photo.caption).bottom || photo.time) && (
+              {(splitCaption(photo.caption).bottom || photo.time || photo.date) && (
                 <figcaption class="photo-caption pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-6 pt-14 pb-5 font-sans text-sm font-light text-white/90">
-                  {photo.time ? (
+                  {/* A date without a time (no EXIF) still shows on the left. */}
+                  {photo.time || photo.date ? (
                     <div class="grid grid-cols-3 items-center">
                       <span class="text-left">{photo.date}</span>
                       <span class="text-center">{splitCaption(photo.caption).bottom ?? ""}</span>

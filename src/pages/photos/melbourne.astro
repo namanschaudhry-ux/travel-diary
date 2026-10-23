@@ -15,12 +15,29 @@ import dji0036 from "../../assets/photos/melbourne-2026/DJI_20260928162218_0036_
 import dji0040 from "../../assets/photos/melbourne-2026/DJI_20260928162602_0040_D.jpeg";
 import dji0044 from "../../assets/photos/melbourne-2026/DJI_20260928162919_0044_D.jpeg";
 import dji0048 from "../../assets/photos/melbourne-2026/DJI_20260928163402_0048_D.jpeg";
+import oct01 from "../../assets/photos/melbourne-2026/melbourne-oct-01.jpg";
+import oct02 from "../../assets/photos/melbourne-2026/melbourne-oct-02.jpg";
+import oct03 from "../../assets/photos/melbourne-2026/melbourne-oct-03.jpg";
+import oct04 from "../../assets/photos/melbourne-2026/melbourne-oct-04.jpg";
+import oct05 from "../../assets/photos/melbourne-2026/melbourne-oct-05.jpg";
+import oct06 from "../../assets/photos/melbourne-2026/melbourne-oct-06.jpg";
+import oct07 from "../../assets/photos/melbourne-2026/melbourne-oct-07.jpg";
+import oct08 from "../../assets/photos/melbourne-2026/melbourne-oct-08.jpg";
+import oct09 from "../../assets/photos/melbourne-2026/melbourne-oct-09.jpg";
+import oct10 from "../../assets/photos/melbourne-2026/melbourne-oct-10.jpg";
+import oct11 from "../../assets/photos/melbourne-2026/melbourne-oct-11.jpg";
+import oct12 from "../../assets/photos/melbourne-2026/melbourne-oct-12.jpg";
+import oct13 from "../../assets/photos/melbourne-2026/melbourne-oct-13.jpg";
+import oct14 from "../../assets/photos/melbourne-2026/melbourne-oct-14.jpg";
+import oct15 from "../../assets/photos/melbourne-2026/melbourne-oct-15.jpg";
 
 // Mirrors the Notion Photo library (Trip = Melbourne), in "Order". Captions,
 // neighbourhoods and categories come from Notion; dates and times are local
 // capture times from each photo's EXIF. Category order follows the Melbourne
 // row in Travel page setup. `gps` is photo GPS only (iPhone photos); the DJI
 // photos have none, so they use `approxLocation` from the caption place.
+// The October photos (melbourne-oct-*) came without EXIF, so they have no
+// times; only the Melbourne Marathon ones carry a date (race day, 11 Oct).
 const categories = ["beach", "buildings", "green", "cafes"];
 
 // Soundtrack shown above the season label: "Tomorrow's Dust" by Tame Impala, from The Slow Rush.
@@ -50,6 +67,21 @@ const photos = [
   { id: "melbourne-dji-0040", image: dji0040, alt: "A lime green four-wheel drive parked outside Bench Coffee Co. in a red brick building.", caption: "Bench Coffee Co., Cremorne", category: "cafes", date: "Sep 28 '26", time: "16:26", approxLocation: [-37.829317, 144.994349] },
   { id: "melbourne-dji-0044", image: dji0044, alt: "Inside a café with a long counter, a barista at the machine and people at tables.", caption: "Bench Coffee Co., Cremorne", category: "cafes", date: "Sep 28 '26", time: "16:29", approxLocation: [-37.829317, 144.994349] },
   { id: "melbourne-dji-0048", image: dji0048, alt: "A vintage Rosella tomato sauce mural on the side of a brick building.", caption: "Rosella mural, Cremorne", category: "buildings", date: "Sep 28 '26", time: "16:34", approxLocation: [-37.8305, 144.9941] },
+  { id: "melbourne-oct-01", image: oct01, alt: "A piccolo latte in a glass on a granite café table beside a pair of sunglasses.", caption: "Crew Plus, Hawthorn", category: "cafes", approxLocation: [-37.8226, 145.0353] },
+  { id: "melbourne-oct-02", image: oct02, alt: "People walking along the raised path beside the MCG towards the city skyline.", caption: "Outside the MCG, East Melbourne", category: "buildings", date: "Oct 11 '26", approxLocation: [-37.8213, 144.9847] },
+  { id: "melbourne-oct-03", image: oct03, alt: "Marathon runners on the final stretch around the MCG ground in front of a crowd.", caption: "MCG, East Melbourne", category: "buildings", date: "Oct 11 '26", approxLocation: [-37.82, 144.9834] },
+  { id: "melbourne-oct-04", image: oct04, alt: "Railway tracks leading towards the city skyline between John Cain Arena and the MCG.", caption: "Rail yards, Richmond", category: "buildings", approxLocation: [-37.8222, 144.9905] },
+  { id: "melbourne-oct-05", image: oct05, alt: "Runners passing palm trees and a bluestone building while spectators watch from the grass.", caption: "St Kilda Road, Southbank", category: "green", date: "Oct 11 '26", approxLocation: [-37.8306, 144.9718] },
+  { id: "melbourne-oct-06", image: oct06, alt: "Spreading low conifers and tall gum trees in a garden under a blue sky.", caption: "Fordham Gardens, Camberwell", category: "green", approxLocation: [-37.8418, 145.0782] },
+  { id: "melbourne-oct-07", image: oct07, alt: "A person in white doing tai chi on a timber deck with bamboo railings above a pond.", caption: "Fordham Gardens, Camberwell", category: "green", approxLocation: [-37.8418, 145.0782] },
+  { id: "melbourne-oct-08", image: oct08, alt: "A tall tree in bright spring leaf on a sunny lawn.", caption: "Anniversary Trail", category: "green" },
+  { id: "melbourne-oct-09", image: oct09, alt: "A basketball hoop in front of a quiet street lined with leafy trees.", caption: "Anniversary Trail", category: "green" },
+  { id: "melbourne-oct-10", image: oct10, alt: "A tall tree against a blue sky with soft afternoon clouds.", caption: "Anniversary Trail", category: "green" },
+  { id: "melbourne-oct-11", image: oct11, alt: "A large old tree spreading over the footpath beside a brick garage with a green door.", caption: "Anniversary Trail", category: "green" },
+  { id: "melbourne-oct-12", image: oct12, alt: "An orange sunset over the suburbs seen from a hilltop park, framed by trees.", caption: "Anderson Park, Hawthorn East", category: "green", approxLocation: [-37.8343, 145.0468] },
+  { id: "melbourne-oct-13", image: oct13, alt: "People on picnic blankets on a grassy hill watching the city skyline at sunset.", caption: "Anderson Park, Hawthorn East", category: "green", approxLocation: [-37.8343, 145.0468] },
+  { id: "melbourne-oct-14", image: oct14, alt: "A pink and purple sunset over the city from a sloping lawn with picnickers.", caption: "Anderson Park, Hawthorn East", category: "green", approxLocation: [-37.8343, 145.0468] },
+  { id: "melbourne-oct-15", image: oct15, alt: "The city skyline under pink clouds at dusk, with people on the grass in the foreground.", caption: "Anderson Park, Hawthorn East", category: "green", approxLocation: [-37.8343, 145.0468] },
 ];
 ---
 
