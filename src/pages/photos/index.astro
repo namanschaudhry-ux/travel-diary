@@ -1,7 +1,11 @@
 ---
-// Trip selector draft. Existing gallery destinations and cover images are preserved.
+// The photos page as an open SD card case (from the "SD card case" mood board card).
+// The dial sits top-left with a preview of the selected trip beside it; the case holds
+// one SD card per trip. Turning the dial or clicking a card selects that trip and lifts
+// its card; clicking the selected card or the preview opens the trip.
 import Layout from "../../layouts/Layout.astro";
 import { Image } from "astro:assets";
+import SdCard from "../../components/SdCard.astro";
 import { japanPhotos } from "../../data/japan-photos";
 import melbourneCover from "../../assets/photos/melbourne-2026/IMG_9247.jpeg";
 import nycCover from "../../assets/photos/new-york/brooklyn-bridge.jpg";
@@ -14,65 +18,78 @@ const japanCover = japanFiles[`/src/assets/photos/japan-2025/${japanPhotos[0].id
 import melbourneAutumnCover from "../../assets/photos/melbourne-autumn-2026/IMG_7508.jpeg";
 import sanFranciscoCover from "../../assets/photos/san-francisco-2026/IMG_9083.jpeg";
 
+// card: each trip's SD card in the case. The numbers mirror that trip page's own
+// card (photos, categories, shooting days), so update them here when photos are
+// added to or removed from a trip.
 const trips = [
-  { href: "/photos/melbourne/", code: "MEL S", place: "Melbourne", season: "Spring ’26", image: melbourneCover, alt: "Melbourne skyline across the bay at sunset.", accent: "#c5e063", title: "#8eaf62", focus: "50% 80%" },
-  { href: "/photos/san-francisco/", code: "SF", place: "San Francisco", season: "Summer ’26", image: sanFranciscoCover, alt: "A corner bookshop in San Francisco.", accent: "#ffd60a", title: "#b9ac48" },
-  { href: "/photos/new-york/", code: "NYC", place: "New York", season: "Summer ’26", image: nycCover, alt: "Walkers on the Brooklyn Bridge promenade toward its stone tower.", accent: "#ffd60a", title: "#b9ac48" },
-  { href: "/photos/new-zealand/", code: "NZ W", place: "New Zealand", season: "Winter ’26", image: nzWinterCover, alt: "A lakeside beach and snow-capped mountains at dusk.", accent: "#8fd4ff", title: "#78a0c2" },
-  { href: "/photos/melbourne-autumn/", code: "MEL A", place: "Melbourne", season: "Autumn ’26", image: melbourneAutumnCover, alt: "Melbourne skyline at sunset.", accent: "#f4a259", title: "#af7e45" },
-  { href: "/photos/new-zealand-autumn/", code: "NZ A", place: "New Zealand", season: "Autumn ’26", image: nzAutumnCover, alt: "A panorama of jagged peaks from a stony ridge in Arthur's Pass.", accent: "#f4a259", title: "#af7e45" },
-  { href: "/photos/japan/", code: "JPN", place: "Japan", season: "Winter ’25", image: japanCover, alt: japanPhotos[0].alt, accent: "#8fd4ff", title: "#78a0c2" },
+  { href: "/photos/melbourne/", card: { slug: "melbourne", code: "MEL", count: 34, categories: 4, days: 5 }, code: "MEL S", place: "Melbourne", season: "Spring ’26", image: melbourneCover, alt: "Melbourne skyline across the bay at sunset.", accent: "#c5e063", title: "#8eaf62", focus: "50% 80%" },
+  { href: "/photos/san-francisco/", card: { slug: "san-francisco", code: "SFO", count: 8, categories: 5, days: 5 }, code: "SF", place: "San Francisco", season: "Summer ’26", image: sanFranciscoCover, alt: "A corner bookshop in San Francisco.", accent: "#ffd60a", title: "#b9ac48" },
+  { href: "/photos/new-york/", card: { slug: "new-york", code: "NYC", count: 42, categories: 5, days: 11 }, code: "NYC", place: "New York", season: "Summer ’26", image: nycCover, alt: "Walkers on the Brooklyn Bridge promenade toward its stone tower.", accent: "#ffd60a", title: "#b9ac48" },
+  { href: "/photos/new-zealand/", card: { slug: "new-zealand", code: "NZ", count: 7, categories: 0, days: 3 }, code: "NZ W", place: "New Zealand", season: "Winter ’26", image: nzWinterCover, alt: "A lakeside beach and snow-capped mountains at dusk.", accent: "#8fd4ff", title: "#78a0c2" },
+  { href: "/photos/melbourne-autumn/", card: { slug: "melbourne-autumn", code: "MEL", count: 24, categories: 4, days: 18 }, code: "MEL A", place: "Melbourne", season: "Autumn ’26", image: melbourneAutumnCover, alt: "Melbourne skyline at sunset.", accent: "#f4a259", title: "#af7e45" },
+  { href: "/photos/new-zealand-autumn/", card: { slug: "new-zealand-autumn", code: "CHC", count: 37, categories: 6, days: 7 }, code: "NZ A", place: "New Zealand", season: "Autumn ’26", image: nzAutumnCover, alt: "A panorama of jagged peaks from a stony ridge in Arthur's Pass.", accent: "#f4a259", title: "#af7e45" },
+  { href: "/photos/japan/", card: { slug: "japan", code: "JPN", count: 14, categories: 0, days: 0 }, code: "JPN", place: "Japan", season: "Winter ’25", image: japanCover, alt: japanPhotos[0].alt, accent: "#8fd4ff", title: "#78a0c2" },
 ].filter((trip) => trip.image);
 ---
-
 <Layout title="Photos — Naman" description="Photo diaries from every trip.">
-  <section class="photos-page">
-    <header><h1>photos</h1><span>{trips.length} trips · a few places, through my lens</span></header>
-    <div class="trip-picker" style={`--active-accent: ${trips[0].accent}`}>
-      <div class="trip-stage">
+  <section class="case-page" style={`--active-accent: ${trips[0].accent}`}>
+    <div class="case-top">
+      <div class="dial-wrap">
+        <span class="dial-pointer" aria-hidden="true"></span>
+        <div class="camera-dial" role="group" aria-label="Choose a trip">
+          {trips.map((trip, index) => (
+            <div class="dial-position" style={`--position: ${index * 360 / trips.length}deg`}>
+              <button class="dial-stop" data-trip={index} data-accent={trip.accent} data-label={`${trip.place} · ${trip.season}`} aria-pressed={index === 0} aria-label={`${trip.place}, ${trip.season}`}><span>{trip.code}</span></button>
+            </div>
+          ))}
+        </div>
+        <div class="dial-hub" aria-hidden="true">TRIPS</div>
+      </div>
+      <div class="preview">
         {trips.map((trip, index) => (
-          <a href={trip.href} class:list={["featured-trip", { "is-active": index === 0 }]} data-feature={index} style={`--trip-accent: ${trip.accent}; --trip-title: ${trip.title};`} aria-hidden={index !== 0 ? "true" : undefined} tabindex={index === 0 ? 0 : -1} aria-label={`Open ${trip.place}, ${trip.season}`}>
-            <Image src={trip.image!} alt={trip.alt} widths={[800, 1200, 1600]} sizes="(min-width: 640px) 560px, 90vw" quality={88} format="webp" loading={index === 0 ? "eager" : "lazy"} style={`object-position: ${trip.focus ?? "50% 50%"}`} />
-            <span class="feature-shade"></span>
-            <span class="feature-copy"><span class="eyebrow">{trip.season}</span><span class="feature-place">{trip.place}</span><span class="open-gallery">open diary ↗</span></span>
+          <a href={trip.href} class:list={["preview-photo", { "is-active": index === 0 }]} data-preview={index} aria-label={`${trip.place}, ${trip.season}`} aria-hidden={index !== 0 ? "true" : undefined} tabindex={index === 0 ? 0 : -1}>
+            <Image src={trip.image!} alt={trip.alt} widths={[800, 1200, 1600]} sizes="(min-width: 900px) 760px, 90vw" quality={88} format="webp" loading={index === 0 ? "eager" : "lazy"} style={`object-position: ${trip.focus ?? "50% 50%"}`} />
           </a>
         ))}
       </div>
-      <div class="dial-orbit" style={`--count: ${trips.length}`}>
-        <span class="orbit-track" aria-hidden="true"></span>
-        <div class="dial-wrap">
-          <span class="dial-pointer" aria-hidden="true"></span>
-          <div class="camera-dial" role="group" aria-label="Choose a trip">
-            {trips.map((trip, index) => (
-              <div class="dial-position" style={`--position: ${index * 360 / trips.length}deg`}>
-                <button class="dial-stop" data-trip={index} data-accent={trip.accent} data-label={`${trip.place} · ${trip.season}`} aria-pressed={index === 0} aria-label={`${trip.place}, ${trip.season}`}><span>{trip.code}</span></button>
-              </div>
-            ))}
-          </div>
-          <div class="dial-hub" aria-hidden="true">TRIPS</div>
-        </div>
-        {trips.map((trip, index) => (
-          <button class="mini-trip" data-mini={index} style={`--position: ${index * 360 / trips.length}deg; --trip-accent: ${trip.accent}; --trip-title: ${trip.title};`} aria-pressed={index === 0} aria-hidden={index === 0 ? "true" : undefined} tabindex={index === 0 ? -1 : 0} aria-label={`Select ${trip.place}, ${trip.season}`}>
-            <span class="mini-card">
-              <Image src={trip.image!} alt="" widths={[240, 480]} sizes="140px" format="webp" loading="eager" style={`object-position: ${trip.focus ?? "50% 50%"}`} />
-              <span><strong>{trip.place}</strong><small>{trip.season}</small></span>
-            </span>
-          </button>
-        ))}
-      </div>
-      {/* Announces the selected trip to screen readers; the dial and card show it visually. */}
-      <p class="selected-label sr-only" aria-live="polite" aria-atomic="true">{trips[0].place} · {trips[0].season}</p>
     </div>
+
+    {/* The open case: lid on top, base below, joined by the hinge. Four slots a half,
+        newest trip first; the spare slot is room for the next trip. */}
+    <div class="sd-case">
+      <span class="case-latch" aria-hidden="true"></span>
+      {[trips.slice(0, 4), trips.slice(4, 8)].map((half, halfIndex) => (
+        <>
+          {halfIndex === 1 && <span class="case-hinge" aria-hidden="true"><i></i><i></i></span>}
+          <div class="case-half">
+            <div class="micro-slots" aria-hidden="true">{[0, 1, 2, 3].map(() => <span></span>)}</div>
+            {[0, 1, 2, 3].map((slot) => {
+              const index = halfIndex * 4 + slot;
+              const trip = trips[index];
+              return (
+                <div class="slot">
+                  {trip && (
+                    <a href={trip.href} class:list={["slot-card", { "is-active": index === 0 }]} data-card={index} aria-label={`${trip.place}, ${trip.season}`} aria-pressed={index === 0 ? "true" : "false"}>
+                      <SdCard slug={trip.card.slug} season={trip.season.toLowerCase()} code={trip.card.code} accent={trip.accent} count={trip.card.count} categories={trip.card.categories} days={trip.card.days} />
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ))}
+    </div>
+    <p class="selected-label sr-only" aria-live="polite" aria-atomic="true">{trips[0].place} · {trips[0].season}</p>
   </section>
 </Layout>
 
 <script>
-  const picker = document.querySelector<HTMLElement>(".trip-picker")!;
-  const dial = picker.querySelector<HTMLElement>(".camera-dial")!;
-  const stops = Array.from(picker.querySelectorAll<HTMLButtonElement>("[data-trip]"));
-  const cards = Array.from(picker.querySelectorAll<HTMLAnchorElement>("[data-feature]"));
-  const minis = Array.from(picker.querySelectorAll<HTMLButtonElement>("[data-mini]"));
-  const orbit = picker.querySelector<HTMLElement>(".dial-orbit")!;
+  const page = document.querySelector<HTMLElement>(".case-page")!;
+  const dial = page.querySelector<HTMLElement>(".camera-dial")!;
+  const stops = Array.from(page.querySelectorAll<HTMLButtonElement>("[data-trip]"));
+  const previews = Array.from(page.querySelectorAll<HTMLAnchorElement>("[data-preview]"));
+  const cards = Array.from(page.querySelectorAll<HTMLAnchorElement>("[data-card]"));
   let selected = 0;
   let rotation = 0;
   function select(index: number) {
@@ -83,24 +100,26 @@ const trips = [
     rotation -= distance * 360 / stops.length;
     selected = next;
     dial.style.setProperty("--rotation", `${rotation}deg`);
-    orbit.style.setProperty("--rotation", `${rotation}deg`);
-    picker.style.setProperty("--active-accent", stops[next].dataset.accent!);
+    page.style.setProperty("--active-accent", stops[next].dataset.accent!);
     stops.forEach((stop, i) => stop.setAttribute("aria-pressed", String(i === next)));
-    minis.forEach((mini, i) => {
-      mini.setAttribute("aria-pressed", String(i === next));
-      if (i === next) mini.setAttribute("aria-hidden", "true"); else mini.removeAttribute("aria-hidden");
-      mini.tabIndex = i === next ? -1 : 0;
+    previews.forEach((preview, i) => {
+      preview.classList.toggle("is-active", i === next);
+      preview.setAttribute("aria-hidden", String(i !== next));
+      preview.tabIndex = i === next ? 0 : -1;
     });
     cards.forEach((card, i) => {
       card.classList.toggle("is-active", i === next);
-      card.setAttribute("aria-hidden", String(i !== next));
-      card.tabIndex = i === next ? 0 : -1;
+      card.setAttribute("aria-pressed", String(i === next));
     });
-    picker.querySelector(".selected-label")!.textContent = stops[next].dataset.label!;
+    page.querySelector(".selected-label")!.textContent = stops[next].dataset.label!;
   }
   stops.forEach((stop, i) => stop.addEventListener("click", () => select(i)));
-  minis.forEach((mini, i) => mini.addEventListener("click", () => select(i)));
-  picker.querySelectorAll<HTMLButtonElement>("[data-step]").forEach(button => button.addEventListener("click", () => select(selected + Number(button.dataset.step))));
+  // First click on a card picks it out of the case; clicking it again opens the trip.
+  cards.forEach((card, i) => card.addEventListener("click", (event) => {
+    if (i === selected) return;
+    event.preventDefault();
+    select(i);
+  }));
   dial.addEventListener("keydown", event => {
     if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
     event.preventDefault();
@@ -119,26 +138,10 @@ const trips = [
 </script>
 
 <style>
-  .photos-page { max-width: 1080px; margin: auto; padding: 36px 24px 72px; }
-  header { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin-bottom: 38px; }
-  h1 { font: 800 36px/.95 "Inter Tight", "Inter", sans-serif; letter-spacing: -.05em; margin: 0; }
-  header > span { font: 10px/1.5 monospace; color: var(--color-paper-dim); }
-  .trip-stage { position: relative; width: min(100%, 560px); aspect-ratio: 16/10; margin: auto; }
-  .featured-trip { position: absolute; inset: 0; border-radius: 14px; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(18px) scale(.95); transition: opacity .4s, transform .5s, visibility .4s; text-decoration: none; }
-  .featured-trip.is-active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); box-shadow: 0 0 0 1px color-mix(in srgb, var(--active-accent) 50%, transparent), 0 12px 60px color-mix(in srgb, var(--active-accent) 17%, transparent); }
-  .featured-trip img { width: 100%; height: 100%; object-fit: cover; }
-  .feature-shade { position: absolute; inset: 0; background: linear-gradient(transparent 30%, #000b); }
-  .feature-copy { position: absolute; inset: auto 28px 26px; display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
-  .eyebrow { font: 11px monospace; text-transform: uppercase; letter-spacing: .13em; color: var(--trip-accent); }
-  .feature-place { font: 800 clamp(32px, 5vw, 52px)/.95 "Inter Tight", "Inter", sans-serif; letter-spacing: -.045em; color: var(--trip-title); text-shadow: 0 2px 18px rgb(0 0 0 / 35%); }
-  .open-gallery { position: absolute; bottom: 0; right: 0; font: 11px monospace; color: #fff; }
-  /* The dial sits in the middle of a ring of trip cards. Cards orbit with the
-     dial; the trip in focus sits at the top under the pointer and fades out. */
-  /* --cy is the dial centre: low enough that the cards beside the top slot
-     clear the trip card above, for any number of trips. */
-  .dial-orbit { --rotation: 0deg; --radius: 190px; --card-w: 128px; --card-h: 92px; --cy: max(112px, calc(var(--radius) * cos(360deg / var(--count)) + var(--card-h) / 2 + 6px)); position: relative; height: calc(var(--cy) + var(--radius) + var(--card-h) / 2 + 8px); margin-top: 22px; }
-  .orbit-track { position: absolute; left: 50%; top: var(--cy); width: calc(var(--radius) * 2); height: calc(var(--radius) * 2); translate: -50% -50%; border-radius: 50%; border: 1px dashed #ffffff14; pointer-events: none; mask: linear-gradient(transparent 0 22%, #000 34%); }
-  .dial-wrap { position: absolute; left: calc(50% - 95px); top: calc(var(--cy) - 95px); width: 190px; height: 190px; z-index: 1; }
+  .case-page { max-width: 1080px; margin: auto; padding: 36px 24px 72px; }
+  /* Dial top-left, preview of the selected trip filling the rest of the row. */
+  .case-top { display: grid; grid-template-columns: 200px 1fr; align-items: center; gap: 40px; margin-bottom: 36px; }
+  .dial-wrap { position: relative; width: 190px; height: 190px; margin: 5px; }
   /* Modelled on the Fujifilm FILM dial: a black disc with a knurled rim,
      thick white labels fixed to the disc (they turn with it, so the selected
      trip reads level at the top), the selected one boxed in white, and a
@@ -164,28 +167,40 @@ const trips = [
   .dial-stop[aria-pressed="true"] span { background: #fff; color: #050505; }
   @media (hover: hover) and (pointer: fine) { .dial-stop:not([aria-pressed="true"]):hover span { box-shadow: inset 0 0 0 1.5px #fff; } }
   .dial-hub { position: absolute; top: 50%; left: 50%; width: 68px; height: 68px; transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 40% 30%, #161616 0%, #000 65%); border: 1px solid #000; box-shadow: 0 0 0 1px #1a1a1a, 0 3px 8px rgba(0,0,0,.7); font: 800 14px / 1 "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; letter-spacing: .03em; color: #fff; pointer-events: none; }
-  .mini-trip { --angle: calc(var(--position) + var(--rotation)); position: absolute; left: calc(50% - var(--card-w) / 2); top: calc(var(--cy) - var(--card-h) / 2); width: var(--card-w); height: var(--card-h); padding: 0; border: 0; background: none; cursor: pointer; transform: rotate(var(--angle)) translateY(calc(-1 * var(--radius))) rotate(calc(-1 * var(--angle))); transition: transform 420ms cubic-bezier(.22,1,.36,1), opacity .35s; }
-  .mini-card { position: absolute; inset: 0; display: block; border: 1px solid #ffffff14; border-radius: 8px; overflow: hidden; background: #111; text-align: left; transition: border-color .3s, scale .3s; }
-  .mini-card img { width: 100%; height: 100%; object-fit: cover; opacity: .2; transition: opacity .3s; }
-  .mini-card > span { position: absolute; inset: auto 10px 9px; display: flex; flex-direction: column; gap: 3px; color: #ddd; }
-  /* Trips out of focus stay dim; the trip colours are muted toward grey until hover. */
-  .mini-trip strong { font: 700 12px "Inter Tight", "Inter", sans-serif; color: color-mix(in srgb, var(--trip-title) 45%, #3a3a3a); transition: color .3s; }
-  .mini-trip small { font: 9px monospace; color: color-mix(in srgb, var(--trip-accent) 40%, #3a3a3a); transition: color .3s; }
-  .mini-trip:hover .mini-card { border-color: color-mix(in srgb, var(--active-accent) 60%, transparent); scale: 1.05; }
-  .mini-trip:hover img { opacity: .55; }
-  .mini-trip:hover strong { color: var(--trip-title); }
-  .mini-trip:hover small { color: var(--trip-accent); }
-  .mini-trip[aria-pressed="true"] { opacity: 0; pointer-events: none; }
+  .preview { position: relative; aspect-ratio: 16 / 7; border-radius: 14px; overflow: hidden; background: #111; }
+  .preview-photo { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .4s, visibility .4s; }
+  .preview-photo.is-active { opacity: 1; visibility: visible; }
+  .preview-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* The case: moulded black plastic shell, lid above the base, flat foam inside. */
+  .sd-case { position: relative; padding: 20px; border-radius: 30px; background: linear-gradient(#232325, #161618); box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), inset 0 0 0 1px #000, 0 24px 50px rgb(0 0 0 / 55%); }
+  .case-latch { position: absolute; top: -14px; left: 50%; width: 120px; height: 18px; translate: -50% 0; border-radius: 6px 6px 3px 3px; background: linear-gradient(#2c2c2f, #1a1a1c); box-shadow: inset 0 1px 0 rgb(255 255 255 / 10%), 0 0 0 1px #000; }
+  .case-half { display: grid; grid-template-columns: 88px repeat(4, 1fr); gap: 14px; padding: 18px; border-radius: 18px; background: #0d0d0e url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.32'/></filter><rect width='120' height='120' filter='url(%23f)'/></svg>"); box-shadow: inset 0 3px 10px rgb(0 0 0 / 80%), inset 0 0 0 1px #000; }
+  .case-hinge { display: flex; justify-content: space-between; height: 14px; margin: 8px 60px; }
+  .case-hinge i { width: 80px; height: 100%; border-radius: 4px; background: linear-gradient(#2a2a2d, #141416); box-shadow: 0 0 0 1px #000, inset 0 1px 0 rgb(255 255 255 / 8%); }
+  /* microSD slots, two by two, as in the reference case (empty: decoration). */
+  .micro-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: center; }
+  .micro-slots span { aspect-ratio: 11 / 15; border-radius: 4px; background: #070708; box-shadow: inset 0 2px 4px #000, 0 1px 0 rgb(255 255 255 / 5%); }
+  /* SD slot: a recess in the foam with a round finger notch at the top. */
+  .slot { position: relative; display: grid; place-items: center; padding: 16px 0 10px; border-radius: 10px; background: #070708; box-shadow: inset 0 3px 8px #000, 0 1px 0 rgb(255 255 255 / 5%); }
+  .slot::before { content: ""; position: absolute; top: -6px; left: 50%; width: 34px; height: 20px; translate: -50% 0; border-radius: 0 0 17px 17px; background: #050506; box-shadow: inset 0 -2px 4px #000; }
+  .slot-card { position: relative; display: block; zoom: .8; transition: transform 320ms cubic-bezier(.22,1,.36,1), filter 320ms; filter: brightness(.72) saturate(.8); text-decoration: none; }
+  .slot-card:hover { filter: none; transform: translateY(-6px); }
+  /* The selected trip's card is pulled up out of its slot. */
+  .slot-card.is-active { filter: drop-shadow(0 14px 18px rgb(0 0 0 / 70%)); transform: translateY(-20px); }
   button:focus-visible, a:focus-visible { outline: 2px solid var(--active-accent); outline-offset: 5px; }
-  @media (max-width: 600px) {
-    header > span { max-width: 140px; text-align: right; }
-    .feature-copy { inset: auto 20px 20px; }
-    .open-gallery { position: static; margin-top: 4px; }
-    .dial-orbit { --radius: 128px; --card-w: 78px; --card-h: 58px; }
-    .dial-wrap { scale: .8; }
-    .mini-card > span { inset: auto 6px 5px; }
-    .mini-trip strong { font-size: 10px; }
-    .mini-trip small { font-size: 8px; }
+  @media (max-width: 760px) {
+    .case-top { grid-template-columns: 1fr; justify-items: center; gap: 20px; }
+    .preview { width: 100%; aspect-ratio: 16 / 9; }
+    .sd-case { padding: 10px; border-radius: 20px; }
+    .case-half { grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 10px; }
+    .micro-slots { display: none; }
+    .case-hinge { margin: 6px 30px; height: 10px; }
+    .case-hinge i { width: 50px; }
+    .slot { padding: 12px 0 6px; }
+    .slot::before { width: 22px; height: 14px; }
+    .slot-card { zoom: .52; }
+    .slot-card.is-active { transform: translateY(-14px); }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before { transition: none !important; } }
 </style>

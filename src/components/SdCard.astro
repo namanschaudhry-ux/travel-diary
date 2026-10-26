@@ -1,0 +1,163 @@
+---
+// A trip's SD card, measured from a SanDisk Extreme PRO: season where the
+// product line is, photo count where the speed is, the airport code as the
+// capacity and the city name on the logo bar. Used as the trip-page heading
+// (TripGallery) and on the trip dial (/photos/).
+import { wordsAttr, cityTitles } from "../data/i18n";
+
+interface Props {
+  slug: keyof typeof cityTitles; // city name words from i18n.ts
+  season: string; // e.g. "winter ’25"
+  code: string; // big code, e.g. "SFO"
+  accent: string; // code and logo bar colour (the trip's on-dark accent)
+  count: number; // photos
+  categories: number; // "U" mark
+  days: number; // circle mark (shooting days); hidden when 0
+  heading?: boolean; // trip page: the city name is the page's h1 and the count updates with the filter
+  class?: string;
+}
+
+const { slug, season, code, accent, count, categories, days, heading = false, class: className } = Astro.props;
+const words = cityTitles[slug].en;
+const Name = heading ? "h1" : "span";
+// Every card draws its own gradients and grain, so their ids must differ when a page has several cards.
+const uid = `sd-${slug}-${Math.random().toString(36).slice(2, 7)}`;
+// The season label follows the language filter too ("winter ’25" -> "invierno ’25" / "hiver ’25").
+const seasonNames: Record<string, { es: string; fr: string }> = {
+  spring: { es: "primavera", fr: "printemps" },
+  summer: { es: "verano", fr: "été" },
+  autumn: { es: "otoño", fr: "automne" },
+  winter: { es: "invierno", fr: "hiver" },
+};
+const [seasonWord, ...seasonRest] = season.split(" ");
+const seasonIn = (lang: "es" | "fr") => {
+  const name = seasonNames[seasonWord.toLowerCase()];
+  return name ? [name[lang], ...seasonRest].join(" ") : season;
+};
+const seasonYear = season.match(/\d+/)?.[0] ?? "";
+// The city name sits where the card's logo would; shrink it so the longest translation fits the label.
+const longestName = Math.max(...(["en", "es", "fr"] as const).map((lang) => (cityTitles[slug][lang] ?? words).join(" ").length));
+const nameSize = Math.min(17, Math.round((100 / (0.56 * longestName)) * 10) / 10);
+// The big code is 51px (the height of the "1" in "1TB") unless its letters are too wide for the 95px
+// between the lock icon and the face's right margin. Widths are Inter ExtraBold advances in em, measured.
+const codeGlyphs: Record<string, number> = { C: .7, E: .6, F: .58, H: .76, J: .6, L: .55, M: .9, N: .76, O: .78, P: .67, S: .64, Y: .68, Z: .64 };
+const codeEm = [...code].reduce((width, letter) => width + (codeGlyphs[letter] ?? .78) - .04, 0);
+const codeSize = Math.min(51, Math.floor(95 / codeEm));
+// Keep the code's cap top level with the "1" whatever its size (Inter's cap top sits .137em into a 1.0 line box).
+const codeTop = Math.round((56 - .137 * codeSize) * 10) / 10;
+---
+
+<div class:list={["sd-card", className]} style={`--sd-name-size: ${nameSize}px; --sd-code-size: ${codeSize}px; --sd-code-top: ${codeTop}px; --sd-accent: ${accent};`} aria-hidden={heading ? undefined : "true"}>
+  <!-- Body outline traced from a real SD card: clipped top-right corner, lock-switch recess on the left, side notch on the right, groove along the bottom. -->
+  <svg class="sd-body" viewBox="0 0 216 287" aria-hidden="true">
+    <defs>
+      <linearGradient id={`${uid}-body-fill`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#505155" />
+        <stop offset="1" stop-color="#393a3e" />
+      </linearGradient>
+      <linearGradient id={`${uid}-slider-fill`} x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#dddee2" />
+        <stop offset=".5" stop-color="#a5a8af" />
+        <stop offset="1" stop-color="#c7c8cd" />
+      </linearGradient>
+      <filter id={`${uid}-grain-light`}><feTurbulence type="fractalNoise" baseFrequency="2" numOctaves="2" seed="4" /><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .6 -.3" /><feComposite in2="SourceGraphic" operator="in" /></filter>
+      <filter id={`${uid}-grain-dark`}><feTurbulence type="fractalNoise" baseFrequency="2" numOctaves="2" seed="9" /><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .6 -.3" /><feComposite in2="SourceGraphic" operator="in" /></filter>
+    </defs>
+    <path d="M7 0H180Q182 0 183.5 1.5L214.5 33Q216 34.5 216 37V89H211V101H216V282Q216 287 211 287H5Q0 287 0 282V132H6V69H0V7Q0 0 7 0Z" fill={`url(#${uid}-body-fill)`} />
+    <path d="M7 0H180Q182 0 183.5 1.5L214.5 33Q216 34.5 216 37V89H211V101H216V282Q216 287 211 287H5Q0 287 0 282V132H6V69H0V7Q0 0 7 0Z" fill="#fff" filter={`url(#${uid}-grain-light)`} />
+    <path d="M7 0H180Q182 0 183.5 1.5L214.5 33Q216 34.5 216 37V89H211V101H216V282Q216 287 211 287H5Q0 287 0 282V132H6V69H0V7Q0 0 7 0Z" fill="#fff" filter={`url(#${uid}-grain-dark)`} />
+    <rect x="0" y="73" width="5.5" height="25" rx="1" fill={`url(#${uid}-slider-fill)`} />
+    <rect x="40" y="273" width="136" height="4" rx="2" fill="#18181a" />
+    <rect x="42" y="277" width="132" height="1" rx=".5" fill="#6a6b6f" />
+  </svg>
+  <div class="sd-face">
+    <span class="sd-brand" aria-hidden="true">naman</span>
+    <span class="city-season sd-season" aria-hidden="true" data-i18n-en={season} data-i18n-es={seasonIn("es")} data-i18n-fr={seasonIn("fr")}>{season}</span>
+    <span class="sd-rule" aria-hidden="true"></span>
+    <p class="sd-speed" aria-live={heading ? "polite" : undefined} aria-atomic={heading ? "true" : undefined}><span class="sd-count-number" id={heading ? "image-count-number" : undefined}>{count}</span>{" "}<span class="sd-count-word" id={heading ? "image-count" : undefined} data-i18n-en={count === 1 ? "image" : "images"} data-i18n-es={count === 1 ? "imagen" : "imágenes"} data-i18n-fr={count === 1 ? "image" : "images"}>{count === 1 ? "image" : "images"}</span></p>
+    <span class="sd-marks" aria-hidden="true">
+      <span class="sd-mark-row"><span class="sd-mark-u">{categories}</span>{days > 0 && <span class="sd-mark-c">{days}</span>}</span>
+      <span class="sd-mark-vi"><span class="sd-mark-v">V{seasonYear}</span><span class="sd-mark-i">I</span></span>
+    </span>
+    <svg class="sd-lock-icon" viewBox="0 0 6 13" aria-hidden="true"><path d="M.8 0h4.4L3 2.6Z" fill="currentColor" /><path d="M1.6 7.4V6a1.4 1.4 0 0 1 2.8 0v1.4" fill="none" stroke="currentColor" stroke-width=".9" /><rect x=".6" y="7.3" width="4.8" height="4.6" rx=".6" fill="currentColor" /></svg>
+    <span class="sd-code" aria-hidden="true">{code}</span>
+    <span class="sd-label" aria-hidden="true"></span>
+    <Name class="city-title sd-name" aria-label={heading ? `${season} — ${words.join(" ")}` : undefined}>
+      <span
+        class="city-words"
+        data-i18n-words
+        data-i18n-en={wordsAttr(slug, "en")}
+        data-i18n-es={wordsAttr(slug, "es")}
+        data-i18n-fr={wordsAttr(slug, "fr")}
+      >
+        {words.map((word) => <span>{word}</span>)}
+      </span>
+    </Name>
+  </div>
+</div>
+
+<style is:global>
+  /* SD card, measured from a SanDisk Extreme PRO: the body is the SVG outline,
+     the face and every label line sit at the same positions as on the real card
+     (scaled to 138px wide). Colours are the card's own, apart from the capacity
+     code and logo bar, which take the trip accent. It stays dark in light mode. */
+  .sd-card { position: relative; width: 138px; aspect-ratio: 216 / 287; }
+  .sd-body { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .sd-face {
+    position: absolute;
+    left: 7.41%;
+    top: 11.5%;
+    width: 84.26%;
+    height: 79.44%;
+    background: #231f20;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px #67676a, inset 0 0 0 1px #151314;
+    overflow: hidden;
+    color: #f4f4f4;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    line-height: 1;
+  }
+  .sd-face > * { position: absolute; margin: 0; }
+  .sd-brand { left: 10.9px; top: 4px; font-size: 8px; font-weight: 500; color: #9a9078; }
+  .sd-season { left: 10.9px; top: 10.2px; font-size: 14px; font-weight: 800; font-style: italic; letter-spacing: -.01em; color: #b8a676; white-space: nowrap; }
+  .sd-rule { left: 10.9px; right: 10.2px; top: 28.8px; height: 1.6px; background: #b8a676; }
+  .sd-speed { left: 10.9px; top: 32.6px; display: flex; align-items: baseline; gap: 2px; white-space: nowrap; }
+  .sd-count-number { font-size: 13.5px; font-weight: 800; letter-spacing: -.02em; }
+  .sd-count-word { font-size: 8px; font-weight: 600; }
+  /* U and circle marks sit where the real card prints its SDXC logo, so a three-letter code never runs into them. */
+  .sd-marks { right: 10.2px; top: 33px; display: flex; align-items: flex-start; gap: 4px; font-weight: 800; }
+  .sd-mark-vi { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .sd-mark-v { font-size: 9px; letter-spacing: -.02em; }
+  .sd-mark-i { font: 700 8px / 1 Georgia, serif; }
+  .sd-mark-row { display: flex; align-items: center; gap: 3px; margin-top: 1px; }
+  .sd-mark-u { display: grid; place-items: center; width: 10px; height: 11px; border: 1.3px solid currentColor; border-top: 0; border-radius: 0 0 5px 5px; font-size: 6.5px; }
+  .sd-mark-c { display: grid; place-items: center; width: 12px; height: 12px; border: 1.3px solid currentColor; border-radius: 50%; font-size: 6px; }
+  .sd-lock-icon { left: 4.5px; top: 48px; width: 6.5px; height: 14px; }
+  .sd-code { left: 11px; top: var(--sd-code-top); font-size: var(--sd-code-size); font-weight: 800; letter-spacing: -.04em; color: var(--sd-accent); }
+  .sd-label {
+    left: 4.5px;
+    right: 3.2px;
+    top: 97px;
+    height: 23.5px;
+    background: #c8c8c8;
+    border-top: 1px solid #dcdcdc;
+    border-radius: 3px 3px 0 0;
+    box-shadow: inset 0 -1.5px 0 #dcdcdc;
+  }
+  .sd-label::after { content: ""; position: absolute; left: 5%; right: 5%; bottom: 2.5px; height: 1px; background: #5f5f5f; }
+  .city-title.sd-name {
+    left: 4.5px;
+    right: 3.2px;
+    top: 120.5px;
+    bottom: .6px;
+    display: grid;
+    place-items: center;
+    background: var(--sd-accent);
+    border-radius: 0 0 3.5px 3.5px;
+    color: #231f20;
+    font: 700 var(--sd-name-size) / 1 Optima, Candara, "Segoe UI", sans-serif;
+    letter-spacing: 0;
+    text-align: center;
+  }
+  .sd-name .city-words { display: flex; justify-content: center; column-gap: .25em; white-space: nowrap; text-transform: capitalize; }
+</style>
