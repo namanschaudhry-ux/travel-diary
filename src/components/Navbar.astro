@@ -4,8 +4,8 @@ import NameOrbit from "./NameOrbit.astro";
 
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 
-// Photos menu, newest first. Each link takes its own trip page's accent
-// (dark and light theme values from that page), whatever page you're on.
+// Trip pages and their accents (dark and light theme values from each page),
+// used to colour the name logo on that trip's page.
 const photoLinks = [
   { slug: "melbourne", label: "Melbourne Spring '26", dark: "#c5e063", light: "#4f7a12" },
   { slug: "san-francisco", label: "San Francisco Summer '26", dark: "#ffd60a", light: "#806600" },
@@ -53,20 +53,16 @@ const productLinks = [
     <nav
       class="hidden gap-8 text-sm lowercase text-paper-dim peer-checked:flex peer-checked:flex-col peer-checked:gap-4 peer-checked:absolute peer-checked:left-0 peer-checked:right-0 peer-checked:top-full peer-checked:border-b peer-checked:border-line/70 peer-checked:bg-ink peer-checked:px-6 peer-checked:py-6 sm:static sm:flex sm:flex-row sm:border-none sm:bg-transparent sm:px-0 sm:py-0"
     >
-      <details class="photos-dropdown nav-dropdown relative">
-        <summary class:list={[
-          "flex cursor-pointer list-none items-center gap-2 transition-colors hover:text-accent",
-          path.startsWith("/photos/") && "text-accent",
-        ]}>
-          Photos
-          <svg class="country-chevron h-3 w-3 transition-transform" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.2" /></svg>
-        </summary>
-        <div class="mt-3 min-w-40 rounded-[12px] border border-line bg-ink p-2 shadow-lg sm:absolute sm:left-0 sm:top-full">
-          {photoLinks.map((link) => (
-            <a href={`/photos/${link.slug}/`} aria-current={path === `/photos/${link.slug}` ? "page" : undefined} style={`--item-dark: ${link.dark}; --item-light: ${link.light};`} class="trip-link block whitespace-nowrap rounded-lg px-4 py-2 transition-colors">{link.label}</a>
-          ))}
-        </div>
-      </details>
+      {/* Photos goes straight to the photos page (the SD card case of every trip). */}
+      <a
+        href="/photos/"
+        class:list={[
+          "transition-colors hover:text-accent",
+          (path === "/photos" || path.startsWith("/photos/")) && "text-accent",
+        ]}
+      >
+        Photos
+      </a>
       <a
         href="/moving/"
         class:list={[
@@ -98,30 +94,18 @@ const productLinks = [
   .trip-link { --item: var(--item-dark); }
   :global(:root[data-theme="light"]) .trip-link { --item: var(--item-light); }
   .trip-link:hover, .trip-link:focus-visible, .trip-link[aria-current="page"] { color: var(--item); }
-  /* Name logo: the current trip's colour on trip pages, otherwise paper.
-     --name-hover is set while a city in the Photos menu is hovered. */
-  .brand-logo { --logo: var(--logo-dark); color: var(--name-hover, var(--logo, var(--color-paper))); }
+  /* Name logo: the current trip's colour on trip pages, otherwise paper. */
+  .brand-logo { --logo: var(--logo-dark); color: var(--logo, var(--color-paper)); }
   :global(:root[data-theme="light"]) .brand-logo { --logo: var(--logo-light); }
   .brand-logo:hover { color: var(--color-accent); }
 </style>
 <script>
-  const countryDropdown = document.querySelector<HTMLDetailsElement>(".photos-dropdown");
   const dropdowns = document.querySelectorAll<HTMLDetailsElement>(".nav-dropdown");
   // Clicking anywhere outside a menu closes it (so opening one closes the other).
   document.addEventListener("click", (event) => {
     dropdowns.forEach((dropdown) => {
       if (event.target instanceof Node && !dropdown.contains(event.target)) dropdown.removeAttribute("open");
     });
-  });
-  // Hovering a city in the Photos menu tints the name (homepage arch or logo) in that city's colour.
-  const root = document.documentElement;
-  countryDropdown?.querySelectorAll<HTMLAnchorElement>(".trip-link").forEach((link) => {
-    const preview = () => root.style.setProperty("--name-hover", getComputedStyle(link).getPropertyValue("--item").trim());
-    const clear = () => root.style.removeProperty("--name-hover");
-    link.addEventListener("mouseenter", preview);
-    link.addEventListener("focus", preview);
-    link.addEventListener("mouseleave", clear);
-    link.addEventListener("blur", clear);
   });
   dropdowns.forEach((dropdown) => dropdown.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
