@@ -180,4 +180,13 @@ const stats = [
   -webkit-mask:url('/images/nyc-runners.png') center/contain no-repeat; mask:url('/images/nyc-runners.png') center/contain no-repeat; }
  .turtle { display:block; height:var(--h); aspect-ratio:610/270; background:var(--color-paper); opacity:.9;
   -webkit-mask:url('/images/turtle.png') center/contain no-repeat; mask:url('/images/turtle.png') center/contain no-repeat; }
+ /* Hovering an artwork tints it and the "Naman" arch (via --name-hover) in a trip colour. The watch photo and the metro map stay as they are. */
+ .watch-home { --tint-relay:#b9ac48; --tint-turtle:#8eaf62; --tint-flower:#8fd4ff; --tint-runners:#4a78e0; }
+ :global(:root[data-theme="light"]) .watch-home { --tint-relay:#806600; --tint-turtle:#5f7a45; --tint-flower:#3a9ad6; --tint-runners:#1a3f8f; }
+ .relay,.turtle,.nyc-runners { transition:background-color .25s ease, opacity .25s ease; }
+ .globe-flower { transition:color .25s ease, opacity .25s ease; }
+ .relay:hover { background:var(--tint-relay); opacity:1; } .turtle:hover { background:var(--tint-turtle); opacity:1; }
+ .globe-flower:hover { color:var(--tint-flower); opacity:1; } .nyc-runners:hover { background:var(--tint-runners); opacity:1; }
+ .watch-home:has(.relay:hover) { --name-hover:var(--tint-relay); } .watch-home:has(.turtle:hover) { --name-hover:var(--tint-turtle); }
+ .watch-home:has(.globe-flower:hover) { --name-hover:var(--tint-flower); } .watch-home:has(.nyc-runners:hover) { --name-hover:var(--tint-runners); }
 </style>
