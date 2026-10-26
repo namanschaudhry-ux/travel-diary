@@ -6,6 +6,8 @@
 // session (add ?intro to the URL to replay). Skipped for reduced motion and
 // when JavaScript is off.
 import { getImage } from "astro:assets";
+// "Welcome" in the NameArc lettering, arch flipped upside down (scripts/generate-welcome-lettering.py).
+import welcomeLettering from "../assets/welcome-lettering.svg?raw";
 
 // Hand-picked: the 8 most striking photos across the trips. Paths are
 // relative to src/assets/photos/. Swap entries here to change the intro.
@@ -44,7 +46,7 @@ const tiles = await Promise.all(
     ))}
   </div>
   <div class="intro-scrim" aria-hidden="true"></div>
-  <p class="intro-title">Welcome</p>
+  <p class="intro-title" role="img" aria-label="Welcome" set:html={welcomeLettering} />
 </div>
 
 <script is:inline>
@@ -234,14 +236,15 @@ const tiles = await Promise.all(
     text-align: center;
     opacity: 0;
     pointer-events: none;
-    /* Same face as the "Naman" wordmark in the navbar. */
-    font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    font-size: clamp(2.75rem, 8vw, 6.5rem);
-    line-height: 1;
-    color: #f4f1ea;
-    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
+    /* San Francisco's mustard, the trip accent on dark. */
+    color: #ffd60a;
+  }
+  .intro-title :global(svg) {
+    display: block;
+    width: min(78vw, 640px);
+    height: auto;
+    overflow: visible;
+    filter: drop-shadow(0 2px 24px rgba(0, 0, 0, 0.8));
   }
 
 </style>
