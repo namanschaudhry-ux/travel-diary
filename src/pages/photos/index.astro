@@ -18,6 +18,7 @@ const japanCover = japanFiles[`/src/assets/photos/japan-2025/${japanPhotos[0].id
 import melbourneAutumnCover from "../../assets/photos/melbourne-autumn-2026/IMG_7508.jpeg";
 import sanFranciscoCover from "../../assets/photos/san-francisco-2026/IMG_9083.jpeg";
 import nycWinterCover from "../../assets/photos/new-york-winter-2024/IMG_6224.jpg";
+import nycSummer24Cover from "../../assets/photos/new-york-summer-2024/IMG_3576.jpg";
 
 // card: each trip's SD card in the case. The numbers mirror that trip page's own
 // card (photos, categories, shooting days), so update them here when photos are
@@ -25,13 +26,15 @@ import nycWinterCover from "../../assets/photos/new-york-winter-2024/IMG_6224.jp
 const trips = [
   { href: "/photos/melbourne/", card: { slug: "melbourne", code: "MEL", count: 34, categories: 4, days: 5 }, code: "MEL S", place: "Melbourne", season: "Spring ’26", image: melbourneCover, alt: "Melbourne skyline across the bay at sunset.", accent: "#c5e063", title: "#8eaf62", focus: "50% 80%" },
   { href: "/photos/san-francisco/", card: { slug: "san-francisco", code: "SFO", count: 8, categories: 5, days: 5 }, code: "SF", place: "San Francisco", season: "Summer ’26", image: sanFranciscoCover, alt: "A corner bookshop in San Francisco.", accent: "#ffd60a", title: "#b9ac48" },
-  { href: "/photos/new-york/", card: { slug: "new-york", code: "NYC", count: 42, categories: 5, days: 11 }, code: "NYC", place: "New York", season: "Summer ’26", image: nycCover, alt: "Walkers on the Brooklyn Bridge promenade toward its stone tower.", accent: "#ffd60a", title: "#b9ac48" },
+  { href: "/photos/new-york/", card: { slug: "new-york", code: "EWR", count: 42, categories: 5, days: 11 }, code: "NYC", place: "New York", season: "Summer ’26", image: nycCover, alt: "Walkers on the Brooklyn Bridge promenade toward its stone tower.", accent: "#ffd60a", title: "#b9ac48" },
   { href: "/photos/new-zealand/", card: { slug: "new-zealand", code: "NZ", count: 7, categories: 0, days: 3 }, code: "NZ W", place: "New Zealand", season: "Winter ’26", image: nzWinterCover, alt: "A lakeside beach and snow-capped mountains at dusk.", accent: "#8fd4ff", title: "#78a0c2" },
   { href: "/photos/melbourne-autumn/", card: { slug: "melbourne-autumn", code: "MEL", count: 24, categories: 4, days: 18 }, code: "MEL A", place: "Melbourne", season: "Autumn ’26", image: melbourneAutumnCover, alt: "Melbourne skyline at sunset.", accent: "#f4a259", title: "#af7e45" },
   { href: "/photos/new-zealand-autumn/", card: { slug: "new-zealand-autumn", code: "CHC", count: 37, categories: 6, days: 7 }, code: "NZ A", place: "New Zealand", season: "Autumn ’26", image: nzAutumnCover, alt: "A panorama of jagged peaks from a stony ridge in Arthur's Pass.", accent: "#f4a259", title: "#af7e45" },
   { href: "/photos/japan/", card: { slug: "japan", code: "JPN", count: 14, categories: 0, days: 0 }, code: "JPN", place: "Japan", season: "Winter ’25", image: japanCover, alt: japanPhotos[0].alt, accent: "#8fd4ff", title: "#78a0c2" },
-  { href: "/photos/new-york-winter/", card: { slug: "new-york-winter", code: "JFK", count: 89, categories: 6, days: 29 }, code: "NYC W", place: "New York", season: "Winter ’24", image: nycWinterCover, alt: "The FDR Drive curving under the Brooklyn Bridge at sunset.", accent: "#8fd4ff", title: "#78a0c2", focus: "50% 60%" },
+  { href: "/photos/new-york-winter/", card: { slug: "new-york-winter", code: "EWR", count: 89, categories: 6, days: 29 }, code: "NYC W", place: "New York", season: "Winter ’24", image: nycWinterCover, alt: "The FDR Drive curving under the Brooklyn Bridge at sunset.", accent: "#8fd4ff", title: "#78a0c2", focus: "50% 60%" },
+  { href: "/photos/new-york-summer/", card: { slug: "new-york-summer", code: "JFK", count: 33, categories: 6, days: 8 }, code: "NYC 24", place: "New York", season: "Summer ’24", image: nycSummer24Cover, alt: "The Chrysler Building's spire against a deep blue sky.", accent: "#ffd60a", title: "#b9ac48", focus: "50% 30%" },
 ].filter((trip) => trip.image);
+const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
 ---
 <Layout title="Photos — Naman" description="Photo diaries from every trip.">
   <section class="case-page" style={`--active-accent: ${trips[0].accent}`}>
@@ -56,17 +59,17 @@ const trips = [
       </div>
     </div>
 
-    {/* The open case: lid on top, base below, joined by the hinge. Four slots a half,
-        newest trip first; the spare slot is room for the next trip. */}
-    <div class="sd-case">
+    {/* The open case: lid on top, base below, joined by the hinge. At least four slots a
+        half, newest trip first; the case widens a slot a half once the trips outgrow it. */}
+    <div class="sd-case" style={`--slots: ${slotsPerHalf}`}>
       <span class="case-latch" aria-hidden="true"></span>
-      {[trips.slice(0, 4), trips.slice(4, 8)].map((half, halfIndex) => (
+      {[0, 1].map((halfIndex) => (
         <>
           {halfIndex === 1 && <span class="case-hinge" aria-hidden="true"><i></i><i></i></span>}
           <div class="case-half">
             <div class="micro-slots" aria-hidden="true">{[0, 1, 2, 3].map(() => <span></span>)}</div>
-            {[0, 1, 2, 3].map((slot) => {
-              const index = halfIndex * 4 + slot;
+            {Array.from({ length: slotsPerHalf }, (_, slot) => {
+              const index = halfIndex * slotsPerHalf + slot;
               const trip = trips[index];
               return (
                 <div class="slot">
@@ -177,7 +180,7 @@ const trips = [
   /* The case: moulded black plastic shell, lid above the base, flat foam inside. */
   .sd-case { position: relative; padding: 20px; border-radius: 30px; background: linear-gradient(#232325, #161618); box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), inset 0 0 0 1px #000, 0 24px 50px rgb(0 0 0 / 55%); }
   .case-latch { position: absolute; top: -14px; left: 50%; width: 120px; height: 18px; translate: -50% 0; border-radius: 6px 6px 3px 3px; background: linear-gradient(#2c2c2f, #1a1a1c); box-shadow: inset 0 1px 0 rgb(255 255 255 / 10%), 0 0 0 1px #000; }
-  .case-half { display: grid; grid-template-columns: 88px repeat(4, 1fr); gap: 14px; padding: 18px; border-radius: 18px; background: #0d0d0e url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.32'/></filter><rect width='120' height='120' filter='url(%23f)'/></svg>"); box-shadow: inset 0 3px 10px rgb(0 0 0 / 80%), inset 0 0 0 1px #000; }
+  .case-half { display: grid; grid-template-columns: 88px repeat(var(--slots, 4), 1fr); gap: 14px; padding: 18px; border-radius: 18px; background: #0d0d0e url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.32'/></filter><rect width='120' height='120' filter='url(%23f)'/></svg>"); box-shadow: inset 0 3px 10px rgb(0 0 0 / 80%), inset 0 0 0 1px #000; }
   .case-hinge { display: flex; justify-content: space-between; height: 14px; margin: 8px 60px; }
   .case-hinge i { width: 80px; height: 100%; border-radius: 4px; background: linear-gradient(#2a2a2d, #141416); box-shadow: 0 0 0 1px #000, inset 0 1px 0 rgb(255 255 255 / 8%); }
   /* microSD slots, two by two, as in the reference case (empty: decoration). */
@@ -195,13 +198,14 @@ const trips = [
     .case-top { grid-template-columns: 1fr; justify-items: center; gap: 20px; }
     .preview { width: 100%; aspect-ratio: 16 / 9; }
     .sd-case { padding: 10px; border-radius: 20px; }
-    .case-half { grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 10px; }
+    .case-half { grid-template-columns: repeat(var(--slots, 4), 1fr); gap: 6px; padding: 10px; }
     .micro-slots { display: none; }
     .case-hinge { margin: 6px 30px; height: 10px; }
     .case-hinge i { width: 50px; }
     .slot { padding: 12px 0 6px; }
     .slot::before { width: 22px; height: 14px; }
-    .slot-card { zoom: .52; }
+    /* .52 fits four slots across a phone; shrink in step when the case has more. */
+    .slot-card { zoom: calc(2.08 / var(--slots, 4)); }
     .slot-card.is-active { transform: translateY(-14px); }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before { transition: none !important; } }

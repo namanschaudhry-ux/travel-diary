@@ -1,0 +1,81 @@
+---
+import TripGallery from "../../components/TripGallery.astro";
+import photo3320 from "../../assets/photos/new-york-summer-2024/IMG_3320.jpg";
+import photo3323 from "../../assets/photos/new-york-summer-2024/IMG_3323.jpg";
+import photo3325 from "../../assets/photos/new-york-summer-2024/IMG_3325.jpg";
+import photo3327 from "../../assets/photos/new-york-summer-2024/IMG_3327.jpg";
+import photo3331 from "../../assets/photos/new-york-summer-2024/IMG_3331.jpg";
+import photo3374 from "../../assets/photos/new-york-summer-2024/IMG_3374.jpg";
+import photo3381 from "../../assets/photos/new-york-summer-2024/IMG_3381.jpg";
+import photo3387 from "../../assets/photos/new-york-summer-2024/IMG_3387.jpg";
+import photo3411 from "../../assets/photos/new-york-summer-2024/IMG_3411.jpg";
+import photo3430 from "../../assets/photos/new-york-summer-2024/IMG_3430.jpg";
+import photo3432 from "../../assets/photos/new-york-summer-2024/IMG_3432.jpg";
+import photo3441 from "../../assets/photos/new-york-summer-2024/IMG_3441.jpg";
+import photo3443 from "../../assets/photos/new-york-summer-2024/IMG_3443.jpg";
+import photo3463 from "../../assets/photos/new-york-summer-2024/IMG_3463.jpg";
+import photo3468 from "../../assets/photos/new-york-summer-2024/IMG_3468.jpg";
+import photo3478 from "../../assets/photos/new-york-summer-2024/IMG_3478.jpg";
+import photo3489 from "../../assets/photos/new-york-summer-2024/IMG_3489.jpg";
+import photo3502 from "../../assets/photos/new-york-summer-2024/IMG_3502.jpg";
+import photo3543 from "../../assets/photos/new-york-summer-2024/IMG_3543.jpg";
+import photo3547 from "../../assets/photos/new-york-summer-2024/IMG_3547.jpg";
+import photo3565 from "../../assets/photos/new-york-summer-2024/IMG_3565.jpg";
+import photo3576 from "../../assets/photos/new-york-summer-2024/IMG_3576.jpg";
+import photo3581 from "../../assets/photos/new-york-summer-2024/IMG_3581.jpg";
+import photo3635 from "../../assets/photos/new-york-summer-2024/IMG_3635.jpg";
+import photo3689 from "../../assets/photos/new-york-summer-2024/IMG_3689.jpg";
+import photo3693 from "../../assets/photos/new-york-summer-2024/IMG_3693.jpg";
+import photo3717 from "../../assets/photos/new-york-summer-2024/IMG_3717.jpg";
+import photo3746 from "../../assets/photos/new-york-summer-2024/IMG_3746.jpg";
+import photo3771 from "../../assets/photos/new-york-summer-2024/IMG_3771.jpg";
+import photo3773 from "../../assets/photos/new-york-summer-2024/IMG_3773.jpg";
+import photo3819 from "../../assets/photos/new-york-summer-2024/IMG_3819.jpg";
+import photo3880 from "../../assets/photos/new-york-summer-2024/IMG_3880.jpg";
+import photo3896 from "../../assets/photos/new-york-summer-2024/IMG_3896.jpg";
+
+// Mirrors the Notion Photo library (Trip = New York Summer), in "Order", which
+// is capture order. Dates and times are local capture times from each photo's
+// EXIF (New York time); gps is the photo's own GPS.
+// Source files: Photos/NYC Spring '24 in the website folder; the copies here
+// are re-encoded with metadata removed, since the repository is public.
+const categories = ["art", "buildings", "shops", "cafes", "green", "harbour"];
+
+const photos = [
+  { id: "new-york-summer-3320", image: photo3320, alt: "A huge multicoloured mural of faces on a building behind a fenced lot.", caption: "Mural, Hudson Square", category: "art", date: "Aug 31 '24", time: "08:58", gps: [40.729081, -74.007125] },
+  { id: "new-york-summer-3323", image: photo3323, alt: "A tall mural of a woman with a third eye, moons and cacti on a blue wall.", caption: "Mural, Hudson Square", category: "art", date: "Aug 31 '24", time: "08:58", gps: [40.728881, -74.007172] },
+  { id: "new-york-summer-3325", image: photo3325, alt: "The stacked glass tower of 56 Leonard Street above red-brick rooftops on a grey day.", caption: "56 Leonard Street, Tribeca", category: "buildings", date: "Aug 31 '24", time: "09:03", gps: [40.72205, -74.008247] },
+  { id: "new-york-summer-3327", image: photo3327, alt: "The flower-filled front of Café Atelier under a cast-iron facade.", caption: "Café Atelier, Tribeca", category: "cafes", date: "Aug 31 '24", time: "09:06", gps: [40.719628, -74.008667] },
+  { id: "new-york-summer-3331", image: photo3331, alt: "Red-brick warehouses with fire escapes beside a tall brick tower.", caption: "Hudson Street, Tribeca", category: "buildings", date: "Aug 31 '24", time: "09:07", gps: [40.718994, -74.008714] },
+  { id: "new-york-summer-3374", image: photo3374, alt: "A brick-walled shop with framed portraits and a \"New York or Nowhere\" sign above a marble counter.", caption: "New York or Nowhere, Nolita", category: "shops", date: "Aug 31 '24", time: "10:12", gps: [40.723103, -73.996667] },
+  { id: "new-york-summer-3381", image: photo3381, alt: "A bold blue painting above wooden tables and woven pendant lamps in a café.", caption: "Café, Nolita", category: "cafes", date: "Aug 31 '24", time: "10:29", gps: [40.724067, -73.996192] },
+  { id: "new-york-summer-3387", image: photo3387, alt: "A mural of Einstein with a heart and \"We love NY\" on a black building.", caption: "Einstein mural, Chelsea", category: "art", date: "Aug 31 '24", time: "11:05", gps: [40.744031, -73.999253] },
+  { id: "new-york-summer-3411", image: photo3411, alt: "A suspended sculpture and a fan of grey fabric among clothes on rails.", caption: "Shop installation, Nolita", category: "shops", date: "Aug 31 '24", time: "15:56", gps: [40.724819, -73.994317] },
+  { id: "new-york-summer-3430", image: photo3430, alt: "A tall, colourful mural of a woman with a lyre on the side of a building.", caption: "Mural, NoMad", category: "art", date: "Sep 1 '24", time: "10:14", gps: [40.743828, -73.987822] },
+  { id: "new-york-summer-3432", image: photo3432, alt: "Looking up at the Empire State Building between Midtown towers on a grey day.", caption: "Fifth Avenue, Midtown", category: "buildings", date: "Sep 1 '24", time: "10:21", gps: [40.750478, -73.983025] },
+  { id: "new-york-summer-3441", image: photo3441, alt: "A selfie in Times Square with its billboards behind.", caption: "Times Square, Midtown", category: "buildings", date: "Sep 1 '24", time: "10:32", gps: [40.758225, -73.985214] },
+  { id: "new-york-summer-3443", image: photo3443, alt: "The red HOPE sculpture on a Midtown corner surrounded by traffic cones.", caption: "HOPE sculpture, Midtown", category: "art", date: "Sep 1 '24", time: "10:36", gps: [40.762756, -73.982589] },
+  { id: "new-york-summer-3463", image: photo3463, alt: "Rowboats on the green water of the Central Park Lake.", caption: "The Lake, Central Park", category: "green", date: "Sep 1 '24", time: "11:00", gps: [40.775392, -73.971314] },
+  { id: "new-york-summer-3468", image: photo3468, alt: "A sidewalk sign reading \"Central Park is your backyard\" by a food cart.", caption: "Fifth Avenue, Upper East Side", category: "green", date: "Sep 1 '24", time: "11:07", gps: [40.776967, -73.963989] },
+  { id: "new-york-summer-3478", image: photo3478, alt: "A giant photo of a young skateboarder on the side of a building.", caption: "Madison Avenue, NoMad", category: "art", date: "Sep 1 '24", time: "11:47", gps: [40.745761, -73.982492] },
+  { id: "new-york-summer-3489", image: photo3489, alt: "Sneakers on wooden shelves under a \"New Balance made in U.S.A.\" sign.", caption: "New Balance, Flatiron", category: "shops", date: "Sep 1 '24", time: "13:39", gps: [40.739769, -73.991172] },
+  { id: "new-york-summer-3502", image: photo3502, alt: "The corner front of Think Coffee with flower planters outside.", caption: "Think Coffee, NoMad", category: "cafes", date: "Sep 1 '24", time: "14:52", gps: [40.744492, -73.987297] },
+  { id: "new-york-summer-3543", image: photo3543, alt: "An orange sunset at the end of a quiet Williamsburg street.", caption: "Wythe Avenue, Williamsburg", category: "buildings", date: "Sep 1 '24", time: "19:14", gps: [40.717872, -73.960647] },
+  { id: "new-york-summer-3547", image: photo3547, alt: "A \"Here goes something\" mural along a sidewalk by the Brooklyn Navy Yard.", caption: "Brooklyn Navy Yard, Vinegar Hill", category: "art", date: "Sep 2 '24", time: "09:52", gps: [40.700778, -73.980356] },
+  { id: "new-york-summer-3565", image: photo3565, alt: "Midtown's skyline across the East River from a Williamsburg pier.", caption: "Marsha P. Johnson Park, Williamsburg", category: "harbour", date: "Sep 2 '24", time: "11:17", gps: [40.72095, -73.964553] },
+  { id: "new-york-summer-3576", image: photo3576, alt: "The Chrysler Building's spire against a deep blue sky.", caption: "Chrysler Building, Midtown", category: "buildings", date: "Sep 2 '24", time: "17:41", gps: [40.753431, -73.978644] },
+  { id: "new-york-summer-3581", image: photo3581, alt: "Manhattan's lights across the dark East River after sunset.", caption: "Marsha P. Johnson Park, Williamsburg", category: "harbour", date: "Sep 2 '24", time: "19:58", gps: [40.721011, -73.964378] },
+  { id: "new-york-summer-3635", image: photo3635, alt: "Someone holding a handwritten coffeepass sign in Times Square at night.", caption: "Times Square, Midtown", category: "buildings", date: "Sep 3 '24", time: "19:58", gps: [40.757942, -73.984908] },
+  { id: "new-york-summer-3689", image: photo3689, alt: "A busy crossing with One World Trade Center far down the avenue.", caption: "Sixth Avenue, Chelsea", category: "buildings", date: "Sep 4 '24", time: "11:48", gps: [40.737431, -73.996925] },
+  { id: "new-york-summer-3693", image: photo3693, alt: "\"Leave every day better than you found it\" painted on a shop window.", caption: "Sixth Avenue, Chelsea", category: "art", date: "Sep 4 '24", time: "11:49", gps: [40.737667, -73.997047] },
+  { id: "new-york-summer-3717", image: photo3717, alt: "A \"A better place is hard to find\" sign above the marble counter of a brick-walled shop.", caption: "New York or Nowhere, Nolita", category: "shops", date: "Sep 4 '24", time: "18:23", gps: [40.723408, -73.996672] },
+  { id: "new-york-summer-3746", image: photo3746, alt: "Midtown's skyline across a calm East River in early morning light.", caption: "Marsha P. Johnson Park, Williamsburg", category: "harbour", date: "Sep 5 '24", time: "07:42", gps: [40.721511, -73.964333] },
+  { id: "new-york-summer-3771", image: photo3771, alt: "Pamela Rosenkranz's bright red tree sculpture on the High Line Plinth.", caption: "Old Tree, High Line", category: "art", date: "Sep 5 '24", time: "14:11", gps: [40.752278, -74.0008] },
+  { id: "new-york-summer-3773", image: photo3773, alt: "The East River and Manhattan beyond the lawns of Domino Park.", caption: "Domino Park, Williamsburg", category: "green", date: "Sep 5 '24", time: "17:57", gps: [40.715983, -73.967117] },
+  { id: "new-york-summer-3819", image: photo3819, alt: "A \"World's largest fish market that does not sell fish\" sign over a crowded street.", caption: "Canal Street, Chinatown", category: "buildings", date: "Sep 6 '24", time: "18:51", gps: [40.7198, -74.001489] },
+  { id: "new-york-summer-3880", image: photo3880, alt: "Two friends on a railing at night with a \"ClassPass but for coffee?\" sign and the skyline behind.", caption: "Marsha P. Johnson Park, Williamsburg", category: "harbour", date: "Sep 7 '24", time: "20:00", gps: [40.720825, -73.964897] },
+  { id: "new-york-summer-3896", image: photo3896, alt: "Matteo Pericoli's drawing of the Manhattan skyline on an airport wall.", caption: "JFK Airport, Queens", category: "art", date: "Sep 7 '24", time: "23:42", gps: [40.648517, -73.791039] },
+];
+---
+
+<TripGallery title="New York Summer — Naman" slug="new-york-summer" season="summer ’24" photos={photos} categories={categories} map={{ place: "New York", code: "JFK" }} accent={{ onDark: "#ffd60a", onLight: "#8a6642" }} />
