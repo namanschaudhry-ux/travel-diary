@@ -118,6 +118,7 @@ const categoryNames: Record<string, { en: string; es: string; fr: string }> = {
   flights: { en: "flights", es: "vuelos", fr: "vols" },
   art: { en: "art", es: "arte", fr: "art" },
   shops: { en: "shops", es: "tiendas", fr: "boutiques" },
+  sport: { en: "sport", es: "deporte", fr: "sport" },
 };
 const dialIcons: Record<string, string> = {
   all: `<path d="M2 20 9 8l4 6 3-4 6 10Z"/><path d="M7.5 10.5 9 12l1.5-1.5"/>`,
@@ -132,6 +133,7 @@ const dialIcons: Record<string, string> = {
   marathon: `<circle cx="14" cy="4" r="2"/><path d="m8 21 3-6 3 2v5"/><path d="M6 11l3-3 4 1 2 4 3 1"/><path d="M11 15l2-6"/>`,
   art: `<path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="14.5" cy="7" r="1"/>`,
   shops: `<path d="M5 8h14l-1 13H6L5 8Z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/>`,
+  sport: `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18"/><path d="M5.6 5.6c3 2.5 3 10.3 0 12.8M18.4 5.6c-3 2.5-3 10.3 0 12.8"/>`,
   flights: `<path d="M2 16 22 8"/><path d="M10 13 7 21h3l5-10"/><path d="M8 13.5 5 9H3l2 6"/><path d="M14 10.5 12 4h3l4 5"/>`,
 };
 // "all" is not a dial position (the FILM hub shows all photos), but its names
@@ -285,19 +287,22 @@ const accentCss = `:root { --trip-accent-dark: ${accent.onDark}; --color-accent:
       ))}
     </div>
   </section>
-  <dialog id="portrait-view" aria-label="Enlarged photograph">
-    {/* The previous and next photos peek in at the screen edges in a soft wash of the trip colour. */}
-    <button type="button" class="portrait-peek portrait-peek-prev" tabindex="-1" aria-label="Previous photo" hidden><img alt="" /><span class="portrait-peek-tint"></span></button>
-    <button type="button" class="portrait-peek portrait-peek-next" tabindex="-1" aria-label="Next photo" hidden><img alt="" /><span class="portrait-peek-tint"></span></button>
-    <div class="portrait-stage">
-      <Image src={photos[0].image} alt={photos[0].alt} widths={[800, 1200, 1600]} sizes="90vw" format="webp" class="portrait-large" />
-      <p class="portrait-label"></p>
-      <button type="button" class="portrait-close" aria-label="Close enlarged photo" autofocus><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" /></svg></button>
-    </div>
-    <button type="button" class="portrait-nav portrait-prev" aria-label="Previous photo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 4l-6 6 6 6" /></svg></button>
-    <button type="button" class="portrait-nav portrait-next" aria-label="Next photo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 4l6 6-6 6" /></svg></button>
-    <p class="portrait-position" aria-live="polite" aria-atomic="true"></p>
-  </dialog>
+  {/* The enlarged-photo viewer; left out while a trip is still waiting for its photos. */}
+  {photos.length > 0 && (
+    <dialog id="portrait-view" aria-label="Enlarged photograph">
+      {/* The previous and next photos peek in at the screen edges in a soft wash of the trip colour. */}
+      <button type="button" class="portrait-peek portrait-peek-prev" tabindex="-1" aria-label="Previous photo" hidden><img alt="" /><span class="portrait-peek-tint"></span></button>
+      <button type="button" class="portrait-peek portrait-peek-next" tabindex="-1" aria-label="Next photo" hidden><img alt="" /><span class="portrait-peek-tint"></span></button>
+      <div class="portrait-stage">
+        <Image src={photos[0].image} alt={photos[0].alt} widths={[800, 1200, 1600]} sizes="90vw" format="webp" class="portrait-large" />
+        <p class="portrait-label"></p>
+        <button type="button" class="portrait-close" aria-label="Close enlarged photo" autofocus><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" /></svg></button>
+      </div>
+      <button type="button" class="portrait-nav portrait-prev" aria-label="Previous photo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 4l-6 6 6 6" /></svg></button>
+      <button type="button" class="portrait-nav portrait-next" aria-label="Next photo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 4l6 6-6 6" /></svg></button>
+      <p class="portrait-position" aria-live="polite" aria-atomic="true"></p>
+    </dialog>
+  )}
 </Layout>
 
 <script>

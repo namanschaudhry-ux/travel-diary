@@ -1,0 +1,57 @@
+---
+import TripGallery from "../../components/TripGallery.astro";
+import photo9939 from "../../assets/photos/chicago-2023/IMG_9939.jpg";
+import photo9948 from "../../assets/photos/chicago-2023/IMG_9948.jpg";
+import photo9970 from "../../assets/photos/chicago-2023/IMG_9970.jpg";
+import photo9971 from "../../assets/photos/chicago-2023/IMG_9971.jpg";
+import photo9979 from "../../assets/photos/chicago-2023/IMG_9979.jpg";
+import photo9993 from "../../assets/photos/chicago-2023/IMG_9993.jpg";
+import photo0002 from "../../assets/photos/chicago-2023/IMG_0002.jpg";
+import photo0013 from "../../assets/photos/chicago-2023/IMG_0013.jpg";
+import photo8136 from "../../assets/photos/chicago-2023/IMG_8136.jpg";
+import photo0133 from "../../assets/photos/chicago-2023/IMG_0133.jpg";
+import photo0144 from "../../assets/photos/chicago-2023/IMG_0144.jpg";
+import photo0155 from "../../assets/photos/chicago-2023/IMG_0155.jpg";
+import photo0174 from "../../assets/photos/chicago-2023/IMG_0174.jpg";
+import photo0227 from "../../assets/photos/chicago-2023/IMG_0227.jpg";
+import photo0238 from "../../assets/photos/chicago-2023/IMG_0238.jpg";
+import photo0296 from "../../assets/photos/chicago-2023/IMG_0296.jpg";
+import photo0298 from "../../assets/photos/chicago-2023/IMG_0298.jpg";
+import photo0362 from "../../assets/photos/chicago-2023/IMG_0362.jpg";
+import photo0368 from "../../assets/photos/chicago-2023/IMG_0368.jpg";
+import photo0370 from "../../assets/photos/chicago-2023/IMG_0370.jpg";
+
+// Chicago, March–April 2023 (straight after New York Spring ’23), in capture order.
+// Dates and times are local capture times from each photo's EXIF (Chicago time); gps is
+// the photo's own GPS. Photos sent by friends have no EXIF, so they carry an
+// approximate location from the caption.
+// Source files: Photos/Chicago Mar '23 in the website folder; the copies here are
+// re-encoded with metadata removed, since the repository is public.
+// The card code is a placeholder until the arrival airport is known.
+const categories = ["cafes", "harbour", "art", "beach", "buildings", "sport"];
+
+const photos = [
+  { id: "chicago-9939", image: photo9939, alt: "The curved glass front of the Starbucks Reserve Roastery on a grey corner.", caption: "Starbucks Reserve Roastery, Magnificent Mile", category: "cafes", date: "Mar 31 '23", time: "16:30", gps: [41.89383, -87.624175] },
+  { id: "chicago-9948", image: photo9948, alt: "Arms out in front of Giordano's glowing neon sign.", caption: "Giordano's, Near North Side", category: "cafes", date: "Mar 31 '23", time: "18:01", approxLocation: [41.8957, -87.6254] },
+  { id: "chicago-9970", image: photo9970, alt: "The long main coffee bar inside the Starbucks Reserve Roastery.", caption: "Starbucks Reserve Roastery, Magnificent Mile", category: "cafes", date: "Apr 1 '23", time: "10:13", gps: [41.894017, -87.624245] },
+  { id: "chicago-9971", image: photo9971, alt: "Looking down the Roastery's copper cask tower through its spiral floors.", caption: "Starbucks Reserve Roastery, Magnificent Mile", category: "cafes", date: "Apr 1 '23", time: "10:14", gps: [41.89423, -87.62442] },
+  { id: "chicago-9979", image: photo9979, alt: "A split-flap welcome board above a roaster and sacks of coffee beans.", caption: "Starbucks Reserve Roastery, Magnificent Mile", category: "cafes", date: "Apr 1 '23", time: "10:21", gps: [41.894008, -87.624253] },
+  { id: "chicago-9993", image: photo9993, alt: "Chicago's skyline across turquoise Lake Michigan under heavy clouds.", caption: "Navy Pier, Streeterville", category: "harbour", date: "Apr 1 '23", time: "11:23", gps: [41.892237, -87.598938] },
+  { id: "chicago-0002", image: photo0002, alt: "Sitting on a bench at the end of Navy Pier with the skyline behind.", caption: "Navy Pier, Streeterville", category: "harbour", date: "Apr 1 '23", time: "11:25", gps: [41.891492, -87.599197] },
+  { id: "chicago-0013", image: photo0013, alt: "A runner on the empty lakefront path toward the skyline.", caption: "Lakefront Trail, Grant Park", category: "harbour", date: "Apr 1 '23", time: "11:39", gps: [41.883003, -87.613425] },
+  { id: "chicago-8136", image: photo8136, alt: "Two friends reflected with the city and crowds in Cloud Gate's mirrored steel.", caption: "Cloud Gate, Millennium Park", category: "art", date: "Apr 1 '23", time: "11:48", gps: [41.88258, -87.623413] },
+  { id: "chicago-0133", image: photo0133, alt: "The lakefront path beside Oak Street Beach, the Hancock tower ahead.", caption: "Oak Street Beach, Gold Coast", category: "beach", date: "Apr 2 '23", time: "11:07", gps: [41.906478, -87.624755] },
+  { id: "chicago-0144", image: photo0144, alt: "Downtown Chicago's towers and Lake Michigan from high above.", caption: "360 Chicago, Streeterville", category: "buildings", date: "Apr 2 '23", time: "13:20", gps: [41.898678, -87.622742] },
+  { id: "chicago-0155", image: photo0155, alt: "Lake Shore Drive and Oak Street Beach curving north along the lake, far below.", caption: "360 Chicago, Streeterville", category: "beach", date: "Apr 2 '23", time: "13:25", gps: [41.898997, -87.622872] },
+  { id: "chicago-0174", image: photo0174, alt: "The Michael Jordan statue in the United Center atrium.", caption: "Michael Jordan statue, United Center", category: "sport", date: "Apr 2 '23", time: "14:36", gps: [41.880978, -87.672937] },
+  { id: "chicago-0227", image: photo0227, alt: "Leaping in a Jordan pose in front of his statue.", caption: "Michael Jordan statue, United Center", category: "sport", date: "Apr 2 '23", time: "17:19", gps: [41.880992, -87.672967] },
+  { id: "chicago-0238", image: photo0238, alt: "A smiling selfie with two friends in the United Center concourse.", caption: "United Center, Near West Side", category: "sport", date: "Apr 2 '23", time: "17:22", gps: [41.880833, -87.672792] },
+  { id: "chicago-0296", image: photo0296, alt: "A \"Global Favorites\" menu board of burgers from around the world.", caption: "McDonald's global menu, West Loop", category: "cafes", date: "Apr 3 '23", time: "15:41", gps: [41.88417, -87.65387] },
+  { id: "chicago-0298", image: photo0298, alt: "A colourful Nike Dunk on a lit metal display.", caption: "Nike Chicago, Magnificent Mile", category: "sport", date: "Apr 3 '23", time: "17:20", gps: [41.894478, -87.624183] },
+  { id: "chicago-0362", image: photo0362, alt: "Framed photos and bronze busts in a wood-panelled display case.", caption: "Harry Caray's, Water Tower Place", category: "sport", date: "Apr 4 '23", time: "12:40", gps: [41.898095, -87.622445] },
+  { id: "chicago-0368", image: photo0368, alt: "A Space Jam pinball machine glowing in a dark corner.", caption: "Harry Caray's, Water Tower Place", category: "sport", date: "Apr 4 '23", time: "12:42", gps: [41.898175, -87.622192] },
+  { id: "chicago-0370", image: photo0370, alt: "A framed Chicago Tribune front page reading \"The joy of six\".", caption: "Harry Caray's, Water Tower Place", category: "sport", date: "Apr 4 '23", time: "12:43", gps: [41.898155, -87.622187] },
+];
+---
+
+<TripGallery title="Chicago — Naman" slug="chicago" season="spring ’23" photos={photos} categories={categories} map={{ place: "Chicago", code: "CHI" }} accent={{ onDark: "#c5e063", onLight: "#4f7a12" }} />

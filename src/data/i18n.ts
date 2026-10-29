@@ -26,6 +26,12 @@ export const cityTitles: Record<string, Record<Lang, string[]>> = {
     es: ["ciudad", "de", "nueva york"],
     fr: ["ville", "de", "new york"],
   },
+  "new-york-spring": {
+    en: ["new", "york", "city"],
+    es: ["ciudad", "de", "nueva york"],
+    fr: ["ville", "de", "new york"],
+  },
+  chicago: { en: ["chicago"], es: ["chicago"], fr: ["chicago"] },
   "new-zealand": {
     en: ["new", "zealand"],
     es: ["nueva", "zelanda"],

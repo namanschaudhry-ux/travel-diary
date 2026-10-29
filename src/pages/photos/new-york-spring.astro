@@ -1,0 +1,107 @@
+---
+import TripGallery from "../../components/TripGallery.astro";
+import photo9140 from "../../assets/photos/new-york-spring-2023/IMG_9140.jpg";
+import photo9202 from "../../assets/photos/new-york-spring-2023/IMG_9202.jpg";
+import photo9205 from "../../assets/photos/new-york-spring-2023/IMG_9205.jpg";
+import photo9209 from "../../assets/photos/new-york-spring-2023/IMG_9209.jpg";
+import photo9259 from "../../assets/photos/new-york-spring-2023/IMG_9259.jpg";
+import photo9335 from "../../assets/photos/new-york-spring-2023/IMG_9335.jpg";
+import photo9337 from "../../assets/photos/new-york-spring-2023/IMG_9337.jpg";
+import photo9338 from "../../assets/photos/new-york-spring-2023/IMG_9338.jpg";
+import photo9343 from "../../assets/photos/new-york-spring-2023/IMG_9343.jpg";
+import photo9381 from "../../assets/photos/new-york-spring-2023/IMG_9381.jpg";
+import photo9510 from "../../assets/photos/new-york-spring-2023/IMG_9510.jpg";
+import photo9524 from "../../assets/photos/new-york-spring-2023/IMG_9524.jpg";
+import photo9551 from "../../assets/photos/new-york-spring-2023/IMG_9551.jpg";
+import photo9554 from "../../assets/photos/new-york-spring-2023/IMG_9554.jpg";
+import photo9566 from "../../assets/photos/new-york-spring-2023/IMG_9566.jpg";
+import photo9575 from "../../assets/photos/new-york-spring-2023/IMG_9575.jpg";
+import photo9583 from "../../assets/photos/new-york-spring-2023/IMG_9583.jpg";
+import photo9592 from "../../assets/photos/new-york-spring-2023/IMG_9592.jpg";
+import photo9680 from "../../assets/photos/new-york-spring-2023/IMG_9680.jpg";
+import photo9681 from "../../assets/photos/new-york-spring-2023/IMG_9681.jpg";
+import photo9690 from "../../assets/photos/new-york-spring-2023/IMG_9690.jpg";
+import photo9715 from "../../assets/photos/new-york-spring-2023/IMG_9715.jpg";
+import photo9717 from "../../assets/photos/new-york-spring-2023/IMG_9717.jpg";
+import photo9742 from "../../assets/photos/new-york-spring-2023/IMG_9742.jpg";
+import photo9743 from "../../assets/photos/new-york-spring-2023/IMG_9743.jpg";
+import photo9750 from "../../assets/photos/new-york-spring-2023/IMG_9750.jpg";
+import photo9753 from "../../assets/photos/new-york-spring-2023/IMG_9753.jpg";
+import photo9758 from "../../assets/photos/new-york-spring-2023/IMG_9758.jpg";
+import photo9781 from "../../assets/photos/new-york-spring-2023/IMG_9781.jpg";
+import photo9785 from "../../assets/photos/new-york-spring-2023/IMG_9785.jpg";
+import photo9804 from "../../assets/photos/new-york-spring-2023/IMG_9804.jpg";
+import photo9810 from "../../assets/photos/new-york-spring-2023/IMG_9810.jpg";
+import photo9811 from "../../assets/photos/new-york-spring-2023/IMG_9811.jpg";
+import photo9825 from "../../assets/photos/new-york-spring-2023/IMG_9825.jpg";
+import photo9836 from "../../assets/photos/new-york-spring-2023/IMG_9836.jpg";
+import photo9847 from "../../assets/photos/new-york-spring-2023/IMG_9847.jpg";
+import photo9850 from "../../assets/photos/new-york-spring-2023/IMG_9850.jpg";
+import photo9868 from "../../assets/photos/new-york-spring-2023/IMG_9868.jpg";
+import photo9870 from "../../assets/photos/new-york-spring-2023/IMG_9870.jpg";
+import photo9878 from "../../assets/photos/new-york-spring-2023/IMG_9878.jpg";
+import photo9879 from "../../assets/photos/new-york-spring-2023/IMG_9879.jpg";
+import photo9883 from "../../assets/photos/new-york-spring-2023/IMG_9883.jpg";
+import photo9890 from "../../assets/photos/new-york-spring-2023/IMG_9890.jpg";
+import photo9894 from "../../assets/photos/new-york-spring-2023/IMG_9894.jpg";
+import photo9899 from "../../assets/photos/new-york-spring-2023/IMG_9899.jpg";
+
+// New York, March 2023 (the same trip as Chicago), in capture order. Dates and times
+// are local capture times from each photo's EXIF (New York time); gps is the photo's own
+// GPS. Shots from where Naman stayed and other private windows and balconies have no pin;
+// photos sent by friends have no EXIF, so they carry an approximate location or none.
+// Source files: Photos/NYC Mar '23 in the website folder; the copies here are
+// re-encoded with metadata removed, since the repository is public.
+// The card code is a placeholder until the arrival airport is known.
+const categories = ["marathon", "buildings", "bridges", "harbour", "green", "art", "cafes", "sport"];
+
+const photos = [
+  { id: "new-york-spring-9140", image: photo9140, alt: "Manhattan's lights from a plane window at night, the Empire State Building lit in the middle.", caption: "Flying in over Brooklyn", category: "buildings", date: "Mar 15 '23", time: "19:56", gps: [40.700397, -73.936958] },
+  { id: "new-york-spring-9202", image: photo9202, alt: "Midtown's skyline and the Empire State Building above Williamsburg rooftops.", caption: "Midtown from Williamsburg", category: "buildings", date: "Mar 16 '23", time: "12:11" },
+  { id: "new-york-spring-9205", image: photo9205, alt: "The Empire State Building framed by tall concrete-and-glass windows.", caption: "Empire State through the glass, Williamsburg", category: "buildings", date: "Mar 16 '23", time: "12:12" },
+  { id: "new-york-spring-9209", image: photo9209, alt: "A huge mural of colourful cartoon figures stacked on each other on a red-brick building.", caption: "Mural, Chelsea", category: "art", date: "Mar 16 '23", time: "13:08", gps: [40.738238, -73.998688] },
+  { id: "new-york-spring-9259", image: photo9259, alt: "The Empire State Building lit green on a misty night, with green lasers on a building below.", caption: "Empire State in green for St. Patrick's Day, Midtown", category: "buildings", date: "Mar 18 '23", time: "01:10" },
+  { id: "new-york-spring-9335", image: photo9335, alt: "Runners on a bridge roadway beside a concrete barrier, Lower Manhattan rooftops beyond.", caption: "NYC Half, Manhattan Bridge", category: "marathon", date: "Mar 19 '23", time: "08:46", gps: [40.71333, -73.993797] },
+  { id: "new-york-spring-9337", image: photo9337, alt: "A selfie in a beanie and sunglasses among runners on the bridge.", caption: "NYC Half, Manhattan Bridge", category: "marathon", date: "Mar 19 '23", time: "08:46", gps: [40.71348, -73.99388] },
+  { id: "new-york-spring-9338", image: photo9338, alt: "Runners heading up an empty highway toward the Midtown skyline under a clear blue sky.", caption: "NYC Half, FDR Drive", category: "marathon", date: "Mar 19 '23", time: "09:09", gps: [40.728138, -73.971563] },
+  { id: "new-york-spring-9343", image: photo9343, alt: "Runners passing the billboards of Times Square on a sunny morning.", caption: "NYC Half, Times Square", category: "marathon", date: "Mar 19 '23", time: "09:33", gps: [40.757478, -73.98562] },
+  { id: "new-york-spring-9381", image: photo9381, alt: "Runners crossing a suspension bridge under its white cables and glass towers.", caption: "NYC Half, Manhattan Bridge", category: "marathon", date: "Mar 19 '23", approxLocation: [40.7075, -73.9908] },
+  { id: "new-york-spring-9510", image: photo9510, alt: "A packed Madison Square Garden under purple lights during a Knicks game.", caption: "Knicks game, Madison Square Garden", category: "sport", date: "Mar 20 '23", time: "20:01", gps: [40.750728, -73.99385] },
+  { id: "new-york-spring-9524", image: photo9524, alt: "A round billboard about an oat milk newsletter glowing over traffic at night.", caption: "Billboard, Seventh Avenue", category: "buildings", date: "Mar 20 '23", time: "22:10", gps: [40.750408, -73.991088] },
+  { id: "new-york-spring-9551", image: photo9551, alt: "The tall wooden canopy of an Apple Store against a deep blue sky.", caption: "Apple Downtown Brooklyn, Fort Greene", category: "buildings", date: "Mar 21 '23", time: "12:25", gps: [40.685342, -73.97818] },
+  { id: "new-york-spring-9554", image: photo9554, alt: "A smiling portrait mural on a brick wall above a green subway entrance.", caption: "Mural, Fort Greene", category: "art", date: "Mar 21 '23", time: "12:34", gps: [40.68713, -73.974647] },
+  { id: "new-york-spring-9566", image: photo9566, alt: "The long red-brick front of Katz's Delicatessen and its neon signs on a sunny day.", caption: "Katz's Delicatessen, Lower East Side", category: "cafes", date: "Mar 21 '23", time: "14:52", gps: [40.722092, -73.987258] },
+  { id: "new-york-spring-9575", image: photo9575, alt: "Manhattan's skyline under a soft pink sunset from a Brooklyn terrace.", caption: "Sunset over Manhattan, Williamsburg", category: "buildings", date: "Mar 21 '23", time: "19:17" },
+  { id: "new-york-spring-9583", image: photo9583, alt: "A \"Just to see your face\" mural behind bare branches and parked cars.", caption: "Mural, Williamsburg", category: "art", date: "Mar 22 '23", time: "10:17", gps: [40.71787, -73.959153] },
+  { id: "new-york-spring-9592", image: photo9592, alt: "People working at tables under tall wooden shelves in a café.", caption: "Café, Williamsburg", category: "cafes", date: "Mar 22 '23", time: "11:42", gps: [40.718012, -73.959213] },
+  { id: "new-york-spring-9680", image: photo9680, alt: "Midtown's towers lit up at night above brownstone rooftops from a balcony.", caption: "Midtown at night, Hell's Kitchen", category: "buildings", date: "Mar 23 '23", time: "21:43" },
+  { id: "new-york-spring-9681", image: photo9681, alt: "A big run club group posing on a riverside deck with Lower Manhattan behind.", caption: "Run club, Brooklyn waterfront", category: "marathon", date: "Mar 24 '23", time: "10:22" },
+  { id: "new-york-spring-9690", image: photo9690, alt: "A hand holding an iced coffee dusted with cocoa.", caption: "Iced coffee, Chinatown", category: "cafes", date: "Mar 25 '23", time: "13:18", gps: [40.716247, -73.997155] },
+  { id: "new-york-spring-9715", image: photo9715, alt: "A smiling selfie in a beanie by the river under the Manhattan Bridge on a grey day.", caption: "Manhattan Bridge, Two Bridges", category: "bridges", date: "Mar 25 '23", time: "14:57", gps: [40.709683, -73.990905] },
+  { id: "new-york-spring-9717", image: photo9717, alt: "The Brooklyn Bridge's stone tower over choppy grey water.", caption: "Brooklyn Bridge, South Street Seaport", category: "bridges", date: "Mar 25 '23", time: "15:03", gps: [40.70763, -73.999955] },
+  { id: "new-york-spring-9742", image: photo9742, alt: "A hand holding a blue-and-white Greek diner coffee cup reading \"It's our pleasure to serve you\".", caption: "Coffee, Williamsburg", category: "cafes", date: "Mar 26 '23", time: "11:19", gps: [40.714833, -73.96225] },
+  { id: "new-york-spring-9743", image: photo9743, alt: "Manhattan's skyline across the wide blue East River.", caption: "Domino Park, Williamsburg", category: "harbour", date: "Mar 26 '23", time: "11:29", gps: [40.714522, -73.968308] },
+  { id: "new-york-spring-9750", image: photo9750, alt: "The Williamsburg Bridge stretching over the East River from a sunny waterfront path.", caption: "Williamsburg Bridge, Domino Park", category: "bridges", date: "Mar 26 '23", time: "11:33", gps: [40.713147, -73.968467] },
+  { id: "new-york-spring-9753", image: photo9753, alt: "People on a waterfront lawn beside the old sugar refinery silos.", caption: "Domino Park, Williamsburg", category: "green", date: "Mar 26 '23", time: "11:33", gps: [40.713487, -73.968422] },
+  { id: "new-york-spring-9758", image: photo9758, alt: "A wide green meadow with Billionaires' Row towers rising beyond the trees.", caption: "Sheep Meadow, Central Park", category: "green", date: "Mar 26 '23", time: "13:35", gps: [40.77375, -73.973197] },
+  { id: "new-york-spring-9781", image: photo9781, alt: "Elevated train tracks at sunset with the Williamsburgh Savings Bank dome on the skyline.", caption: "Marcy Avenue station, Williamsburg", category: "buildings", date: "Mar 26 '23", time: "19:09", gps: [40.7086, -73.958497] },
+  { id: "new-york-spring-9785", image: photo9785, alt: "The Hudson River and Lower Manhattan beyond a ring of rusted steel posts.", caption: "Little Island, Hudson River Park", category: "harbour", date: "Mar 27 '23", time: "09:23", gps: [40.741853, -74.011361] },
+  { id: "new-york-spring-9804", image: photo9804, alt: "A running track and football field under heavy clouds, the Empire State Building far off.", caption: "McCarren Park, Williamsburg", category: "green", date: "Mar 28 '23", time: "09:31", gps: [40.719605, -73.950622] },
+  { id: "new-york-spring-9810", image: photo9810, alt: "One World Trade Center rising beside the white ribs of the Oculus.", caption: "One World Trade Center, Financial District", category: "buildings", date: "Mar 28 '23", time: "10:53", gps: [40.711595, -74.010322] },
+  { id: "new-york-spring-9811", image: photo9811, alt: "The sun flaring off One World Trade Center's glass against blue sky and clouds.", caption: "One World Trade Center, Financial District", category: "buildings", date: "Mar 28 '23", time: "12:38", gps: [40.711195, -74.012078] },
+  { id: "new-york-spring-9825", image: photo9825, alt: "A smiling selfie on a sunny riverside promenade lined with benches.", caption: "Battery Park City Esplanade", category: "harbour", date: "Mar 29 '23", time: "13:08", gps: [40.712105, -74.017831] },
+  { id: "new-york-spring-9836", image: photo9836, alt: "A close-up of the bronze Charging Bull's head.", caption: "Charging Bull, Financial District", category: "art", date: "Mar 29 '23", time: "14:18", gps: [40.705483, -74.013244] },
+  { id: "new-york-spring-9847", image: photo9847, alt: "The Brooklyn and Manhattan Bridges far below a high window.", caption: "The bridges from above, Financial District", category: "bridges", date: "Mar 29 '23", time: "14:54" },
+  { id: "new-york-spring-9850", image: photo9850, alt: "A busy avenue with ornate lampposts, looking down to One World Trade Center.", caption: "Sixth Avenue, Flatiron", category: "buildings", date: "Mar 29 '23", time: "16:14", gps: [40.742345, -73.993295] },
+  { id: "new-york-spring-9868", image: photo9868, alt: "Two friends with drinks on a rooftop by glass igloos, the Empire State Building behind.", caption: "230 Fifth rooftop, NoMad", category: "buildings", date: "Mar 29 '23", time: "18:56", approxLocation: [40.7443, -73.9882] },
+  { id: "new-york-spring-9870", image: photo9870, alt: "The Empire State Building tilted against a pale evening sky.", caption: "Empire State Building, NoMad", category: "buildings", date: "Mar 29 '23", time: "19:02", gps: [40.74503, -73.988075] },
+  { id: "new-york-spring-9878", image: photo9878, alt: "The Empire State Building lit orange and blue above Midtown at dusk.", caption: "Empire State Building at dusk, NoMad", category: "buildings", date: "Mar 29 '23", time: "19:39", gps: [40.745363, -73.988113] },
+  { id: "new-york-spring-9879", image: photo9879, alt: "The Empire State Building's lit spire over Midtown's windows at blue hour.", caption: "Empire State Building at dusk, NoMad", category: "buildings", date: "Mar 29 '23", time: "19:39", gps: [40.745363, -73.988097] },
+  { id: "new-york-spring-9883", image: photo9883, alt: "Manhattan's lights across the dark East River from a Brooklyn rooftop.", caption: "Manhattan from Westlight, Williamsburg", category: "buildings", date: "Mar 29 '23", time: "20:48", gps: [40.721578, -73.958733] },
+  { id: "new-york-spring-9890", image: photo9890, alt: "Lower Manhattan's skyline far beyond the Brooklyn rooftops and lawn of a hilltop park.", caption: "Sunset Park, Brooklyn", category: "green", date: "Mar 30 '23", time: "09:27", gps: [40.648688, -74.004586] },
+  { id: "new-york-spring-9894", image: photo9894, alt: "A red tote bag with a quote beside a Mets cap on a shop wall.", caption: "Shop, Midtown", category: "sport", date: "Mar 30 '23", time: "11:54", gps: [40.761253, -73.97795] },
+  { id: "new-york-spring-9899", image: photo9899, alt: "Crowds under the glass roof and player banners of Yankee Stadium's Great Hall.", caption: "Opening Day, Yankee Stadium", category: "sport", date: "Mar 30 '23", time: "13:24", gps: [40.828362, -73.926208] },
+];
+---
+
+<TripGallery title="New York Spring — Naman" slug="new-york-spring" season="spring ’23" photos={photos} categories={categories} map={{ place: "New York", code: "NYC" }} accent={{ onDark: "#c5e063", onLight: "#4f7a12" }} />
