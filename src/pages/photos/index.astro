@@ -173,22 +173,26 @@ const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
   button:focus-visible, a:focus-visible { outline: 2px solid var(--active-accent); outline-offset: 5px; }
   /* Too narrow for the case beside the dial: dial above, case full width, no microSD slots. */
   @media (max-width: 1100px) {
-    .case-top { grid-template-columns: 1fr; justify-items: center; gap: 36px; }
+    .case-top { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 36px; }
     .case-top .sd-case { width: 100%; margin-top: 0; }
     .case-half { grid-template-columns: repeat(var(--slots, 4), 1fr); }
     .micro-slots { display: none; }
   }
   @media (max-width: 760px) {
     .sd-case { padding: 10px; border-radius: 20px; }
-    .case-half { grid-template-columns: repeat(var(--slots, 4), 1fr); gap: 6px; padding: 10px; }
+    /* Six slots across a phone makes the cards too small to read, so each half folds into rows of three. */
+    .case-half { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 6px; padding: 10px; }
     .micro-slots { display: none; }
     .case-hinge { margin: 6px 30px; height: 10px; }
     .case-hinge i { width: 50px; }
     .slot { padding: 12px 0 6px; }
     .slot::before { width: 22px; height: 14px; }
-    /* .52 fits four slots across a phone; shrink in step when the case has more. */
-    .slot-card { zoom: calc(2.08 / var(--slots, 4)); }
+    .slot-card { zoom: .6; }
     .slot-card.is-active { transform: translateY(-14px); }
+  }
+  /* The smallest phones. */
+  @media (max-width: 360px) {
+    .slot-card { zoom: .5; }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before { transition: none !important; } }
 </style>
