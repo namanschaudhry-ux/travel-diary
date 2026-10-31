@@ -3,7 +3,7 @@
 // product line is, photo count where the speed is, the airport code as the
 // capacity and the city name on the logo bar. Used as the trip-page heading
 // (TripGallery) and on the trip dial (/photos/).
-import { wordsAttr, cityTitles } from "../data/i18n";
+import { cityTitles } from "../data/i18n";
 
 interface Props {
   slug: keyof typeof cityTitles; // city name words from i18n.ts
@@ -22,22 +22,9 @@ const words = cityTitles[slug].en;
 const Name = heading ? "h1" : "span";
 // Every card draws its own gradients and grain, so their ids must differ when a page has several cards.
 const uid = `sd-${slug}-${Math.random().toString(36).slice(2, 7)}`;
-// The season label follows the language filter too ("winter ’25" -> "invierno ’25" / "hiver ’25").
-const seasonNames: Record<string, { es: string; fr: string }> = {
-  spring: { es: "primavera", fr: "printemps" },
-  summer: { es: "verano", fr: "été" },
-  autumn: { es: "otoño", fr: "automne" },
-  winter: { es: "invierno", fr: "hiver" },
-};
-const [seasonWord, ...seasonRest] = season.split(" ");
-const seasonIn = (lang: "es" | "fr") => {
-  const name = seasonNames[seasonWord.toLowerCase()];
-  return name ? [name[lang], ...seasonRest].join(" ") : season;
-};
 const seasonYear = season.match(/\d+/)?.[0] ?? "";
-// The city name sits where the card's logo would; shrink it so the longest translation fits the label.
-const longestName = Math.max(...(["en", "es", "fr"] as const).map((lang) => (cityTitles[slug][lang] ?? words).join(" ").length));
-const nameSize = Math.min(17, Math.round((100 / (0.56 * longestName)) * 10) / 10);
+// The city name sits where the card's logo would; shrink it so it fits the label. Cards stay in English whatever the language filter says.
+const nameSize = Math.min(17, Math.round((100 / (0.56 * words.join(" ").length)) * 10) / 10);
 // The big code is 51px (the height of the "1" in "1TB") unless its letters are too wide for the 95px
 // between the lock icon and the face's right margin. Widths are Inter ExtraBold advances in em, measured.
 const codeGlyphs: Record<string, number> = { C: .7, E: .6, F: .58, H: .76, J: .6, L: .55, M: .9, N: .76, O: .78, P: .67, S: .64, Y: .68, Z: .64 };
@@ -72,9 +59,9 @@ const codeTop = Math.round((56 - .137 * codeSize) * 10) / 10;
   </svg>
   <div class="sd-face">
     <span class="sd-brand" aria-hidden="true">naman</span>
-    <span class="city-season sd-season" aria-hidden="true" data-i18n-en={season} data-i18n-es={seasonIn("es")} data-i18n-fr={seasonIn("fr")}>{season}</span>
+    <span class="city-season sd-season" aria-hidden="true">{season}</span>
     <span class="sd-rule" aria-hidden="true"></span>
-    <p class="sd-speed" aria-live={heading ? "polite" : undefined} aria-atomic={heading ? "true" : undefined}><span class="sd-count-number" id={heading ? "image-count-number" : undefined}>{count}</span>{" "}<span class="sd-count-word" id={heading ? "image-count" : undefined} data-i18n-en={count === 1 ? "image" : "images"} data-i18n-es={count === 1 ? "imagen" : "imágenes"} data-i18n-fr={count === 1 ? "image" : "images"}>{count === 1 ? "image" : "images"}</span></p>
+    <p class="sd-speed" aria-live={heading ? "polite" : undefined} aria-atomic={heading ? "true" : undefined}><span class="sd-count-number" id={heading ? "image-count-number" : undefined}>{count}</span>{" "}<span class="sd-count-word" id={heading ? "image-count" : undefined}>{count === 1 ? "image" : "images"}</span></p>
     <span class="sd-marks" aria-hidden="true">
       <span class="sd-mark-row"><span class="sd-mark-u">{categories}</span>{days > 0 && <span class="sd-mark-c">{days}</span>}</span>
       <span class="sd-mark-vi"><span class="sd-mark-v">V{seasonYear}</span><span class="sd-mark-i">I</span></span>
@@ -83,13 +70,7 @@ const codeTop = Math.round((56 - .137 * codeSize) * 10) / 10;
     <span class="sd-code" aria-hidden="true">{code}</span>
     <span class="sd-label" aria-hidden="true"></span>
     <Name class="city-title sd-name" aria-label={heading ? `${season} — ${words.join(" ")}` : undefined}>
-      <span
-        class="city-words"
-        data-i18n-words
-        data-i18n-en={wordsAttr(slug, "en")}
-        data-i18n-es={wordsAttr(slug, "es")}
-        data-i18n-fr={wordsAttr(slug, "fr")}
-      >
+      <span class="city-words">
         {words.map((word) => <span>{word}</span>)}
       </span>
     </Name>
@@ -123,13 +104,13 @@ const codeTop = Math.round((56 - .137 * codeSize) * 10) / 10;
   .sd-rule { left: 10.9px; right: 10.2px; top: 28.8px; height: 1.6px; background: #b8a676; }
   .sd-speed { left: 10.9px; top: 32.6px; display: flex; align-items: baseline; gap: 2px; white-space: nowrap; }
   .sd-count-number { font-size: 13.5px; font-weight: 800; letter-spacing: -.02em; }
-  .sd-count-word { font-size: 8px; font-weight: 600; }
+  .sd-count-word { font-size: 7px; font-weight: 600; }
   /* U and circle marks sit where the real card prints its SDXC logo, so a three-letter code never runs into them. */
-  .sd-marks { right: 10.2px; top: 33px; display: flex; align-items: flex-start; gap: 4px; font-weight: 800; }
+  .sd-marks { right: 10.2px; top: 33px; display: flex; align-items: flex-start; gap: 2px; font-weight: 800; }
   .sd-mark-vi { display: flex; flex-direction: column; align-items: center; gap: 1px; }
   .sd-mark-v { font-size: 9px; letter-spacing: -.02em; }
   .sd-mark-i { font: 700 8px / 1 Georgia, serif; }
-  .sd-mark-row { display: flex; align-items: center; gap: 3px; margin-top: 1px; }
+  .sd-mark-row { display: flex; align-items: center; gap: 2px; margin-top: 1px; }
   .sd-mark-u { display: grid; place-items: center; width: 10px; height: 11px; border: 1.3px solid currentColor; border-top: 0; border-radius: 0 0 5px 5px; font-size: 6.5px; }
   .sd-mark-c { display: grid; place-items: center; width: 12px; height: 12px; border: 1.3px solid currentColor; border-radius: 50%; font-size: 6px; }
   .sd-lock-icon { left: 4.5px; top: 48px; width: 6.5px; height: 14px; }

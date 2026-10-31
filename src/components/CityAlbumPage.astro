@@ -1,0 +1,46 @@
+---
+// A city's runs as an album cover: the city as the artist, the map as the cover photo,
+// the distance as the album title and every run's name as the lyrics. On a white sleeve in both themes.
+import Layout from "../layouts/Layout.astro";
+import { allCityRuns } from "../data/city-all-runs";
+import { cityTileLines } from "../data/city-routes";
+import RouteOverlay from "./RouteOverlay.astro";
+
+interface Props { city: string }
+const { city } = Astro.props;
+const routes = allCityRuns(city);
+const km = Math.round(routes.reduce((total, route) => total + route.distanceKm, 0));
+---
+
+<Layout title={`${city} runs — Naman Chaudhry`} description={`Every run in ${city}, drawn on one map.`}>
+  <section class="album-page">
+    <div class="album-top">
+      <a href="/moving/">← moving</a>
+    </div>
+    <article class="album">
+      <div class="album-inner">
+        <h1>{city.toLowerCase()}</h1>
+        <RouteOverlay routes={routes} backgroundLines={cityTileLines(city).run} album />
+        <p class="album-count"><strong>{km} km</strong></p>
+      </div>
+    </article>
+  </section>
+</Layout>
+
+<style>
+  .album-page { max-width: 900px; margin: auto; padding: 32px 24px 72px; }
+  .album-top { margin-bottom: 20px; font: 12px var(--font-sans); letter-spacing: .15em; text-transform: uppercase; color: var(--color-muted-60); }
+  .album-top a:hover { color: var(--color-accent); }
+  .album { container-type: inline-size; padding: 8px; background: #fff; border-radius: 6px; }
+  .album-inner { display: flex; flex-direction: column; padding: 8cqw 9.5cqw 7cqw; border: 1.1cqw solid #000; color: #000; }
+  h1 { margin: 0 0 1.6cqw; font: 800 14.1cqw / 1 "Inter Tight", Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: -.055em; white-space: nowrap; }
+  .album-count { order: 1; display: flex; justify-content: flex-end; align-items: center; margin: 1cqw 0 3.5cqw; }
+  .album-count strong { font: 800 14.1cqw / 1 "Inter Tight", Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: -.055em; }
+  .album-inner > :global(.overlay-names) { order: 2; }
+  /* Phones: less white around the map, so it and the names get the room. */
+  @container (max-width: 500px) {
+    .album-inner { padding: 6cqw 5cqw 5cqw; }
+    h1, .album-count strong { font-size: 15.4cqw; }
+    .album-inner :global(.overlay-map) { aspect-ratio: 1.25; }
+  }
+</style>

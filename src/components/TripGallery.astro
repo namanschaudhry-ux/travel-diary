@@ -720,11 +720,9 @@ const accentCss = `:root { --trip-accent-dark: ${accent.onDark}; --color-accent:
       const counter = document.getElementById("image-count");
       const counterNumber = document.getElementById("image-count-number");
       if (counter && counterNumber) {
-        // The number and word are styled apart on the SD card ("200 MB/s"); the word follows the language toggle.
+        // The number and word are styled apart on the SD card ("200 MB/s").
         counterNumber.textContent = String(count);
-        const words = { en: ["image", "images"], es: ["imagen", "imágenes"], fr: ["image", "images"] };
-        for (const [lang, [one, many]] of Object.entries(words)) counter.setAttribute(`data-i18n-${lang}`, count === 1 ? one : many);
-        counter.textContent = counter.getAttribute(`data-i18n-${document.documentElement.dataset.lang ?? "en"}`) ?? "images";
+        counter.textContent = count === 1 ? "image" : "images";
       }
       version += 1;
       const myVersion = version;

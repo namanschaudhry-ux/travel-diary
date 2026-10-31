@@ -19,9 +19,10 @@ const stats = [
     <span class="watch-cap cap-previous" aria-hidden="true"></span>
     <span class="watch-cap cap-next" aria-hidden="true"></span>
     <NameArc />
-    <img class="watch-product" src="/images/instinct-teal-front.png" alt="Garmin Instinct watch with a teal strap" width="1254" height="1254" fetchpriority="high" />
+    <img class="watch-product" src="/images/instinct-teal-cities.png" alt="Garmin Instinct watch with a teal strap and city codes engraved around its case" width="1254" height="1254" fetchpriority="high" />
     <button class="watch-button previous" aria-label="Previous statistic" title="Previous statistic"></button>
     <button class="watch-button next" aria-label="Next statistic" title="Next statistic"></button>
+    <button class="watch-button colour" aria-label="Change watch text colour" title="Change watch text colour"></button>
     <div class="watch-bezel">
       <div class="watch-screen">
         <p class="watch-date"><span class="weekday">---</span><span class="day">--</span></p>
@@ -111,6 +112,13 @@ const stats = [
   };
   watch.querySelector('.previous')?.addEventListener('click', () => { press(watch.querySelector('.cap-previous')); rotate(-1); });
   watch.querySelector('.next')?.addEventListener('click', () => { press(watch.querySelector('.cap-next')); rotate(1); });
+  // Upper right button: steps the screen text through the trip colours, then back to the original.
+  const textColours = ['#d3d5d0', '#e0cf4f', '#8eaf62', '#8fd4ff', '#4a78e0'];
+  let textColour = 0;
+  watch.querySelector('.colour')?.addEventListener('click', () => {
+   textColour = (textColour + 1) % textColours.length;
+   watch.style.setProperty('--watch-text', textColours[textColour]);
+  });
   const tick = () => {
    const now = new Date();
    watch.querySelector('.hours')!.textContent = now.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
@@ -130,7 +138,7 @@ const stats = [
  .watch-home { min-height:80vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 12px; gap:12px; }
  .watch-body { position:relative; width:min(720px,100%); aspect-ratio:1; container-type:inline-size; }
  .watch-product { position:relative; z-index:1; display:block; width:100%; height:auto; }
- .watch-bezel,.watch-screen { position:absolute; inset:0; z-index:2; pointer-events:none; font-family:"Arial Narrow",Arial,sans-serif; color:#d3d5d0; }
+ .watch-bezel,.watch-screen { position:absolute; inset:0; z-index:2; pointer-events:none; font-family:"Arial Narrow",Arial,sans-serif; color:var(--watch-text,#d3d5d0); transition:color .2s ease; }
  .watch-date { position:absolute; left:54.5%; top:33.3%; width:10%; height:8%; margin:0; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#141916; font-weight:800; font-style:italic; line-height:1;  }
  .weekday { text-transform:uppercase; font-size:2.5cqw; } .day { font-size:4.5cqw; }
  .watch-clock { position:absolute; left:35%; top:45%; width:30%; white-space:nowrap; font-size:8.5cqw; font-weight:800; font-stretch:condensed; line-height:1; letter-spacing:-.055em;  font-variant-numeric:tabular-nums; }
@@ -141,9 +149,9 @@ const stats = [
  .stat-number { font-size:5.2cqw; line-height:1; font-weight:800; font-stretch:condensed; letter-spacing:-.04em; font-variant-numeric:tabular-nums; margin-top:.4cqw; }
  .stat-number :global(small) { font-size:1.6cqw; margin-left:.6cqw; letter-spacing:0; font-weight:700; }
  .watch-dots { position:absolute; top:37%; left:42%; display:flex; gap:.6cqw;  }
- .watch-dots span { width:.5cqw; height:.5cqw; border-radius:50%; background:#59605a; } .watch-dots .active { background:#d3d5d0; }
+ .watch-dots span { width:.5cqw; height:.5cqw; border-radius:50%; background:#59605a; } .watch-dots .active { background:var(--watch-text,#d3d5d0); }
  .watch-button { position:absolute; z-index:3; padding:0; border:0; background:transparent; cursor:pointer; min-width:34px; min-height:44px; touch-action:manipulation; border-radius:12px; }
- .previous { left:15%; top:40.5%; width:7%; height:10.5%; } .next { left:78%; top:40.5%; width:7%; height:10.5%; }
+ .previous { left:15%; top:40.5%; width:7%; height:10.5%; } .next { left:78%; top:40.5%; width:7%; height:10.5%; } .colour { left:78%; top:29%; width:6%; height:11.5%; }
  /* Middle side buttons: a cap sits under the case and pokes out past the edge. */
  .watch-cap { position:absolute; z-index:0; top:41.8%; height:7.8%; width:3.4%; pointer-events:none;
   background:repeating-linear-gradient(0deg,#ffffff0d 0 .22cqw,transparent .22cqw .5cqw),linear-gradient(90deg,#3b3f3d,#1c1f1e 55%,#0d0f0e);
@@ -174,9 +182,9 @@ const stats = [
  .globe-flower { display:block; height:calc(var(--h) * .82); width:auto; aspect-ratio:1; color:var(--color-paper); opacity:.9; }
  /* Subway-map diagram in off-whites with a grainy print texture: every line meets at NYC. Shades mix the theme's paper and ink. */
  .metro { display:block; height:var(--h); width:auto; aspect-ratio:370/220; }
- .metro .g1 { stroke:var(--color-paper); } .metro .g2 { stroke:color-mix(in srgb,var(--color-paper) 92%,var(--color-ink)); }
- .metro .g3 { stroke:color-mix(in srgb,var(--color-paper) 84%,var(--color-ink)); } .metro .g4 { stroke:color-mix(in srgb,var(--color-paper) 76%,var(--color-ink)); }
- .metro .g5 { stroke:color-mix(in srgb,var(--color-paper) 68%,var(--color-ink)); } .metro .g6 { stroke:color-mix(in srgb,var(--color-paper) 60%,var(--color-ink)); }
+ .metro .g1 { stroke:var(--metro-colour,var(--color-paper)); } .metro .g2 { stroke:color-mix(in srgb,var(--metro-colour,var(--color-paper)) 92%,var(--color-ink)); }
+ .metro .g3 { stroke:color-mix(in srgb,var(--metro-colour,var(--color-paper)) 84%,var(--color-ink)); } .metro .g4 { stroke:color-mix(in srgb,var(--metro-colour,var(--color-paper)) 76%,var(--color-ink)); }
+ .metro .g5 { stroke:color-mix(in srgb,var(--metro-colour,var(--color-paper)) 68%,var(--color-ink)); } .metro .g6 { stroke:color-mix(in srgb,var(--metro-colour,var(--color-paper)) 60%,var(--color-ink)); }
  .metro .dot { fill:var(--color-ink); stroke:none; }
  .metro .codes { font:700 13px Inter,system-ui,sans-serif; fill:var(--color-ink); stroke:none; }
  /* Three runners under the New York skyline with 2024, cut out from Naman's marathon graphic. Coloured by the theme via a mask. */
@@ -184,13 +192,14 @@ const stats = [
   -webkit-mask:url('/images/nyc-runners.png') center/contain no-repeat; mask:url('/images/nyc-runners.png') center/contain no-repeat; }
  .turtle { display:block; height:var(--h); aspect-ratio:610/270; background:var(--color-paper); opacity:.9;
   -webkit-mask:url('/images/turtle.png') center/contain no-repeat; mask:url('/images/turtle.png') center/contain no-repeat; }
- /* Hovering an artwork tints it and the "Naman" arch (via --name-hover) in a trip colour. The watch photo and the metro map stay as they are. */
- .watch-home { --tint-relay:#b9ac48; --tint-turtle:#8eaf62; --tint-flower:#8fd4ff; --tint-runners:#4a78e0; }
- :global(:root[data-theme="light"]) .watch-home { --tint-relay:#806600; --tint-turtle:#5f7a45; --tint-flower:#3a9ad6; --tint-runners:#1a3f8f; }
+ /* Hovering an artwork tints it and washes the clouds in the "Naman" arch (via --name-hover) in a trip colour. The watch photo stays as it is. */
+ .watch-home { --tint-relay:#b9ac48; --tint-turtle:#8eaf62; --tint-flower:#8fd4ff; --tint-runners:#4a78e0; --tint-metro:#f08a24; }
+ :global(:root[data-theme="light"]) .watch-home { --tint-relay:#806600; --tint-turtle:#5f7a45; --tint-flower:#3a9ad6; --tint-runners:#1a3f8f; --tint-metro:#c75f0a; }
  .relay,.turtle,.nyc-runners { transition:background-color .25s ease, opacity .25s ease; }
  .globe-flower { transition:color .25s ease, opacity .25s ease; }
  .relay:hover { background:var(--tint-relay); opacity:1; } .turtle:hover { background:var(--tint-turtle); opacity:1; }
  .globe-flower:hover { color:var(--tint-flower); opacity:1; } .nyc-runners:hover { background:var(--tint-runners); opacity:1; }
+ .metro:hover { --metro-colour:var(--tint-metro); } .metro path { transition:stroke .25s ease; }
  .watch-home:has(.relay:hover) { --name-hover:var(--tint-relay); } .watch-home:has(.turtle:hover) { --name-hover:var(--tint-turtle); }
- .watch-home:has(.globe-flower:hover) { --name-hover:var(--tint-flower); } .watch-home:has(.nyc-runners:hover) { --name-hover:var(--tint-runners); }
+ .watch-home:has(.globe-flower:hover) { --name-hover:var(--tint-flower); } .watch-home:has(.nyc-runners:hover) { --name-hover:var(--tint-runners); } .watch-home:has(.metro:hover) { --name-hover:var(--tint-metro); }
 </style>
