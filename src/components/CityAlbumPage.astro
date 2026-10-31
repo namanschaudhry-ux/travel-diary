@@ -3,12 +3,20 @@
 // the distance as the album title and every run's name as the lyrics. On a white sleeve in both themes.
 import Layout from "../layouts/Layout.astro";
 import { allCityRuns } from "../data/city-all-runs";
-import { cityTileLines } from "../data/city-routes";
+import { cityRideRoutes, citySlug, citySwimRoutes, cityTileLines } from "../data/city-routes";
 import RouteOverlay from "./RouteOverlay.astro";
 
 interface Props { city: string }
 const { city } = Astro.props;
 const routes = allCityRuns(city);
+// Width of each name in ems (measured in the heading font), so the title spans the map like the artist name on a cover.
+const titleEms: Record<string, number> = { "San Francisco": 5.551, "New York": 3.791, Melbourne: 4.547, Sydney: 3.044 };
+const slug = citySlug(city);
+const sports = [
+  { label: "run", href: `/moving/${slug}/`, has: true },
+  { label: "cycle", href: `/moving/${slug}/cycle/`, has: (cityRideRoutes[city]?.length ?? 0) > 0 },
+  { label: "swim", href: `/moving/${slug}/swim/`, has: (citySwimRoutes[city]?.length ?? 0) > 0 },
+].filter((sport) => sport.has);
 const km = Math.round(routes.reduce((total, route) => total + route.distanceKm, 0));
 ---
 
@@ -16,10 +24,15 @@ const km = Math.round(routes.reduce((total, route) => total + route.distanceKm, 
   <section class="album-page">
     <div class="album-top">
       <a href="/moving/">← moving</a>
+      {sports.length > 1 ? (
+        <nav class="sport-switch" aria-label="Sport">
+          {sports.map((sport) => <a href={sport.href} aria-current={sport.label === "run" ? "page" : undefined}>{sport.label}</a>)}
+        </nav>
+      ) : null}
     </div>
     <article class="album">
       <div class="album-inner">
-        <h1>{city.toLowerCase()}</h1>
+        <h1 style={`--title-ems: ${titleEms[city]}`}>{city.toLowerCase()}</h1>
         <RouteOverlay routes={routes} backgroundLines={cityTileLines(city).run} album />
         <p class="album-count"><strong>{km} km</strong></p>
       </div>
@@ -29,18 +42,23 @@ const km = Math.round(routes.reduce((total, route) => total + route.distanceKm, 
 
 <style>
   .album-page { max-width: 900px; margin: auto; padding: 32px 24px 72px; }
-  .album-top { margin-bottom: 20px; font: 12px var(--font-sans); letter-spacing: .15em; text-transform: uppercase; color: var(--color-muted-60); }
+  .album-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font: 12px var(--font-sans); letter-spacing: .15em; text-transform: uppercase; color: var(--color-muted-60); }
   .album-top a:hover { color: var(--color-accent); }
+  /* Same look as the switch on the other city pages. */
+  .sport-switch { display: flex; gap: 4px; font: 14px monospace; letter-spacing: .06em; text-transform: none; }
+  .sport-switch a { border-radius: 3px; padding: 3px 7px; color: var(--color-paper); transition: background-color 180ms ease, color 180ms ease; }
+  .sport-switch a[aria-current="page"], .sport-switch a[aria-current="page"]:hover { background: var(--color-accent); color: var(--color-ink); }
   .album { container-type: inline-size; padding: 8px; background: #fff; border-radius: 6px; }
   .album-inner { display: flex; flex-direction: column; padding: 8cqw 9.5cqw 7cqw; border: 1.1cqw solid #000; color: #000; }
-  h1 { margin: 0 0 1.6cqw; font: 800 14.1cqw / 1 "Inter Tight", Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: -.055em; white-space: nowrap; }
+  h1 { margin: 0 0 1.6cqw; font: 800 calc(78.3cqw / var(--title-ems)) / 1 "Inter Tight", Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: -.055em; white-space: nowrap; }
   .album-count { order: 1; display: flex; justify-content: flex-end; align-items: center; margin: 1cqw 0 3.5cqw; }
   .album-count strong { font: 800 14.1cqw / 1 "Inter Tight", Inter, ui-sans-serif, system-ui, sans-serif; letter-spacing: -.055em; }
   .album-inner > :global(.overlay-names) { order: 2; }
   /* Phones: less white around the map, so it and the names get the room. */
   @container (max-width: 500px) {
     .album-inner { padding: 6cqw 5cqw 5cqw; }
-    h1, .album-count strong { font-size: 15.4cqw; }
+    h1 { font-size: calc(85.5cqw / var(--title-ems)); }
+    .album-count strong { font-size: 15.4cqw; }
     .album-inner :global(.overlay-map) { aspect-ratio: 1.25; }
   }
 </style>

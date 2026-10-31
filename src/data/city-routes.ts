@@ -11,7 +11,8 @@
 // at build time. Routes are shown in full, start and finish included.
 //
 // strava-city-runs.json is different: it holds every GPS run in a few cities
-// and only feeds the city map tiles on the Moving page (see cityTileLines).
+// (Melbourne from 2022 onwards) and only feeds the city map tiles on the
+// Moving page and the background lines on those city pages (see cityTileLines).
 // Those runs get no card, name or page of their own.
 import { decodePolyline } from "../lib/polyline";
 import stravaExport from "./strava-export.json";
@@ -90,8 +91,8 @@ export const overlayCities = new Set(["San Francisco", "New York", "Melbourne", 
 
 // Cities whose map tile on the Moving page draws every run recorded there
 // (strava-city-runs.json), not just the hand-picked ones. Their city pages
-// still list only the hand-picked routes. Melbourne is left out for now.
-export const everyRunCities = new Set(["New York", "San Francisco", "Sydney", "Christchurch", "London"]);
+// still list only the hand-picked routes. Melbourne covers runs from 2022 on.
+export const everyRunCities = new Set(["New York", "San Francisco", "Sydney", "Christchurch", "London", "Melbourne"]);
 // Tiles framed on the points within this many km of the city's median point,
 // so one far-off run (Wimbledon, the coast east of Christchurch) can't pull
 // the picture off the centre. Other tiles frame the middle 90% of points.
