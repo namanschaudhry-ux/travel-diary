@@ -76,6 +76,7 @@ const stats = [
     </svg>
   </div>
   <nav class="home-links" aria-label="Explore"><a href="/photos/">photos ↗</a><a href="/moving/">moving ↗</a></nav>
+  <p class="home-tagline">Head in the clouds. Feet on the ground.</p>
 </section>
 <script>
  const watch = document.querySelector<HTMLElement>('.watch-body');
@@ -159,6 +160,9 @@ const stats = [
  @media (prefers-reduced-motion: reduce) { .watch-cap { transition:none; } .watch-cap.pressing { animation-duration:.01s; } }
  .watch-button:focus-visible,.watch-stat:focus-visible { outline:2px solid #65aaa3; outline-offset:3px; }
  .home-links { display:flex; gap:28px; font:12px monospace; color:var(--color-paper-dim); } .home-links a:hover { color:var(--color-accent); }
+ /* Tagline under the links: tiny, light blue (the clouds in the name), in the nav's Inter. */
+ .home-tagline { margin:14px 0 0; font:11px / 1.4 var(--font-sans); letter-spacing:.02em; color:#8fd4ff; }
+ :global(:root[data-theme="light"]) .home-tagline { color:#1a73a8; }
  /* Turtle under the watch: own your slow. Coloured by the theme via a mask. */
  /* One row at every width: 8.61 is the sum of the five artworks' widths as multiples of --h, so the row always fits the screen. */
  .turtle-track { display:flex; justify-content:center; align-items:center; gap:var(--g); width:min(720px,100%); --g:clamp(8px,3vw,22px); --h:min(72px,calc((100vw - 36px - 4 * var(--g)) / 8.61)); }
