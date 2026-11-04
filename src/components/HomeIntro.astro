@@ -1,8 +1,10 @@
 ---
 // Homepage intro: 8 hand-picked large photos from the trips float onto a dark screen, pile up
 // into a collage, "Welcome" appears midway, then the photos drift
-// away and the intro fades to reveal the watch. It cannot be skipped by
-// clicking, scrolling or keys. Plays once per browser
+// away and the intro fades to reveal the watch. It cannot be skipped, but
+// scrolling (trackpad, wheel or a swipe) fast-forwards it: the harder you
+// scroll, the faster it plays, easing back to normal speed when you stop.
+// Plays once per browser
 // session (add ?intro to the URL to replay). Skipped for reduced motion and
 // when JavaScript is off.
 import { getImage } from "astro:assets";
@@ -187,6 +189,35 @@ const tiles = await Promise.all(
     };
 
     window.addEventListener("resize", () => { if (!finished) layout(); });
+
+    // Scroll to fast-forward: each wheel or swipe movement adds speed (up to 10x),
+    // which decays back to normal a frame at a time once the scrolling stops.
+    const MAX_SPEED = 10;
+    let speed = 1;
+    let ticking = false;
+    let lastTouchY: number | null = null;
+    const apply = () => animations.forEach((a) => { a.playbackRate = speed; });
+    const tick = () => {
+      speed = 1 + (speed - 1) * 0.9;
+      if (speed < 1.02) speed = 1;
+      apply();
+      ticking = speed > 1 && !finished;
+      if (ticking) requestAnimationFrame(tick);
+    };
+    const boost = (amount: number) => {
+      if (finished) return;
+      speed = Math.min(MAX_SPEED, speed + Math.abs(amount) / 40);
+      apply();
+      if (!ticking) { ticking = true; requestAnimationFrame(tick); }
+    };
+    window.addEventListener("wheel", (e) => boost(e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY), { passive: true });
+    window.addEventListener("touchstart", (e) => { lastTouchY = e.touches[0]?.clientY ?? null; }, { passive: true });
+    window.addEventListener("touchmove", (e) => {
+      const y = e.touches[0]?.clientY;
+      if (y == null || lastTouchY == null) return;
+      boost((lastTouchY - y) * 1.5);
+      lastTouchY = y;
+    }, { passive: true });
 
     // Wait for the thumbnails (briefly) so photos don't land as empty boxes.
     const ready = Promise.all(tiles.map((img) => img.decode().catch(() => {})));

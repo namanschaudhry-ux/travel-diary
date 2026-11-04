@@ -2,7 +2,10 @@
 // The photos page as an open SD card case (from the "SD card case" mood board card).
 // The dial sits top-left with the case beside it; the case holds one SD card per trip,
 // with a photo of clouds from a plane window in place of its foam. Turning the dial or
-// clicking a card selects that trip and lifts its card; clicking the selected card opens it.
+// clicking a card selects that trip. Each card sits in its own clear plastic case: the
+// selected trip's case is open, and clicking its card opens the trip's photos.
+// On this page the name logo (top left) is chrome, in the colours of the Gallery 42
+// chrome logo (g42-chrome.svg in the Gallery 42 repo).
 import Layout from "../../layouts/Layout.astro";
 import { getImage } from "astro:assets";
 import SdCard from "../../components/SdCard.astro";
@@ -16,14 +19,14 @@ const trips = [
   { href: "/photos/melbourne/", card: { slug: "melbourne", code: "MEL", count: 34, categories: 4, days: 5 }, code: "MEL S", place: "Melbourne", season: "Spring ’26", accent: "#c5e063", title: "#8eaf62" },
   { href: "/photos/san-francisco/", card: { slug: "san-francisco", code: "SFO", count: 8, categories: 5, days: 5 }, code: "SF", place: "San Francisco", season: "Summer ’26", accent: "#ffd60a", title: "#b9ac48" },
   { href: "/photos/new-york/", card: { slug: "new-york", code: "EWR", count: 42, categories: 5, days: 11 }, code: "NYC", place: "New York", season: "Summer ’26", accent: "#ffd60a", title: "#b9ac48" },
-  { href: "/photos/new-zealand/", card: { slug: "new-zealand", code: "NZ", count: 7, categories: 0, days: 3 }, code: "NZ W", place: "New Zealand", season: "Winter ’26", accent: "#8fd4ff", title: "#78a0c2" },
+  { href: "/photos/new-zealand/", card: { slug: "new-zealand", code: "ZQN", count: 7, categories: 0, days: 3 }, code: "NZ W", place: "New Zealand", season: "Winter ’26", accent: "#8fd4ff", title: "#78a0c2" },
   { href: "/photos/melbourne-autumn/", card: { slug: "melbourne-autumn", code: "MEL", count: 24, categories: 4, days: 18 }, code: "MEL A", place: "Melbourne", season: "Autumn ’26", accent: "#f4a259", title: "#af7e45" },
   { href: "/photos/new-zealand-autumn/", card: { slug: "new-zealand-autumn", code: "CHC", count: 37, categories: 6, days: 7 }, code: "NZ A", place: "New Zealand", season: "Autumn ’26", accent: "#f4a259", title: "#af7e45" },
-  { href: "/photos/japan/", card: { slug: "japan", code: "JPN", count: 14, categories: 0, days: 0 }, code: "JPN", place: "Japan", season: "Winter ’25", accent: "#8fd4ff", title: "#78a0c2" },
+  { href: "/photos/japan/", card: { slug: "japan", code: "NRT", count: 14, categories: 0, days: 0 }, code: "JPN", place: "Japan", season: "Winter ’25", accent: "#8fd4ff", title: "#78a0c2" },
   { href: "/photos/new-york-winter/", card: { slug: "new-york-winter", code: "EWR", count: 89, categories: 6, days: 29 }, code: "NYC W", place: "New York", season: "Winter ’24", accent: "#8fd4ff", title: "#78a0c2" },
   { href: "/photos/new-york-summer/", card: { slug: "new-york-summer", code: "JFK", count: 33, categories: 6, days: 8 }, code: "NYC 24", place: "New York", season: "Summer ’24", accent: "#ffd60a", title: "#b9ac48" },
-  { href: "/photos/new-york-spring/", card: { slug: "new-york-spring", code: "NYC", count: 45, categories: 8, days: 15 }, code: "NYC 23", place: "New York", season: "Spring ’23", accent: "#c5e063", title: "#8eaf62" },
-  { href: "/photos/chicago/", card: { slug: "chicago", code: "CHI", count: 20, categories: 6, days: 5 }, code: "CHI", place: "Chicago", season: "Spring ’23", accent: "#c5e063", title: "#8eaf62" },
+  { href: "/photos/new-york-spring/", card: { slug: "new-york-spring", code: "LGA", count: 45, categories: 8, days: 15 }, code: "NYC 23", place: "New York", season: "Spring ’23", accent: "#c5e063", title: "#8eaf62" },
+  { href: "/photos/chicago/", card: { slug: "chicago", code: "ORD", count: 20, categories: 6, days: 5 }, code: "CHI", place: "Chicago", season: "Spring ’23", accent: "#c5e063", title: "#8eaf62" },
 ];
 const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
 ---
@@ -41,34 +44,37 @@ const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
         </div>
         <div class="dial-hub" aria-hidden="true">TRIPS</div>
       </div>
-      {/* The open case: lid on top, base below, joined by the hinge. At least four slots a
-          half, newest trip first; the case widens a slot a half once the trips outgrow it. */}
+      {/* The open case: one sky panel holding two rows of slots. At least four slots a row,
+          newest trip first; the case widens a slot a row once the trips outgrow it. */}
       <div class="sd-case" style={`--slots: ${slotsPerHalf}; --sky: url(${sky.src})`}>
-        <span class="case-latch" aria-hidden="true"></span>
-        {[0, 1].map((halfIndex) => (
-          <>
-            {halfIndex === 1 && <span class="case-hinge" aria-hidden="true"><i></i><i></i></span>}
             <div class="case-half">
-              <div class="micro-slots" aria-hidden="true">{[0, 1, 2, 3].map(() => <span></span>)}</div>
-              {Array.from({ length: slotsPerHalf }, (_, slot) => {
-                const index = halfIndex * slotsPerHalf + slot;
+              {Array.from({ length: slotsPerHalf * 2 }, (_, index) => {
                 const trip = trips[index];
                 return (
                   <div class="slot">
                     {trip && (
                       <a href={trip.href} class:list={["slot-card", { "is-active": index === 0 }]} data-card={index} aria-label={`${trip.place}, ${trip.season}`} aria-pressed={index === 0 ? "true" : "false"}>
+                        <span class="shell-base" aria-hidden="true"></span>
                         <SdCard slug={trip.card.slug} season={trip.season.toLowerCase()} code={trip.card.code} accent={trip.accent} count={trip.card.count} categories={trip.card.categories} days={trip.card.days} />
+                        <span class="shell-lid" aria-hidden="true"></span>
                       </a>
                     )}
                   </div>
                 );
               })}
             </div>
-          </>
-        ))}
       </div>
     </div>
     <p class="selected-label sr-only" aria-live="polite" aria-atomic="true">{trips[0].place} · {trips[0].season}</p>
+    {/* Chrome fill for the name logo, the same stops as the Gallery 42 chrome logo. */}
+    <svg class="chrome-defs" width="0" height="0" aria-hidden="true" focusable="false">
+      <linearGradient id="name-chrome" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fafcfb" /><stop offset=".12" stop-color="#d8dedc" /><stop offset=".29" stop-color="#929d9a" />
+        <stop offset=".41" stop-color="#e3e8e5" /><stop offset=".47" stop-color="#ffffff" /><stop offset=".5" stop-color="#f7faf8" />
+        <stop offset=".535" stop-color="#515e5a" /><stop offset=".58" stop-color="#85918d" /><stop offset=".72" stop-color="#d1d9d5" />
+        <stop offset=".84" stop-color="#f8fbf9" /><stop offset=".93" stop-color="#c3ccc7" /><stop offset="1" stop-color="#788680" />
+      </linearGradient>
+    </svg>
   </section>
 </Layout>
 
@@ -96,7 +102,8 @@ const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
     page.querySelector(".selected-label")!.textContent = stops[next].dataset.label!;
   }
   stops.forEach((stop, i) => stop.addEventListener("click", () => select(i)));
-  // First click on a card picks it out of the case; clicking it again opens the trip.
+  // First click on a card selects it, which opens its plastic case; clicking it again
+  // opens the trip's photos.
   cards.forEach((card, i) => card.addEventListener("click", (event) => {
     if (i === selected) return;
     event.preventDefault();
@@ -121,74 +128,88 @@ const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
 
 <style>
   .case-page { max-width: 1200px; margin: auto; padding: 36px 24px 72px; }
-  /* Dial top-left, the case beside it and set a little lower. */
-  .case-top { display: grid; grid-template-columns: 200px 1fr; align-items: start; gap: 40px; }
-  .case-top .sd-case { margin-top: 96px; }
-  .dial-wrap { position: relative; width: 190px; height: 190px; margin: 5px; }
+  /* Chrome name logo on this page only; a thin dark rim keeps it readable on the light theme. */
+  .chrome-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+  :global(.brand-logo svg.name-logo) { fill: url(#name-chrome); stroke: rgb(40 48 45 / 55%); stroke-width: .8px; vector-effect: non-scaling-stroke; }
+  /* Dial top-left, the case beside it, their tops in line. */
+  .case-top { display: grid; grid-template-columns: 208px 1fr; align-items: start; gap: 40px; }
+  .case-top .sd-case { margin-top: 0; }
+  .dial-wrap { position: relative; width: 190px; height: 190px; margin: 9px; }
   /* Modelled on the Fujifilm FILM dial: a black disc with a knurled rim,
      thick white labels fixed to the disc (they turn with it, so the selected
      trip reads level at the top), the selected one boxed in white, and a
      fixed black hub with a white oval index pointing at it. */
-  .dial-pointer { position: absolute; top: calc(50% - 34px + 7px); left: 50%; z-index: 2; width: 12px; height: 6px; margin-left: -6px; border-radius: 3px; background: #fff; box-shadow: 0 0 0 1px #000; }
+  .dial-pointer { position: absolute; top: calc(50% - 30px + 7px); left: 50%; z-index: 2; width: 12px; height: 6px; margin-left: -6px; border-radius: 3px; background: #fff; box-shadow: 0 0 0 1px #000; }
   .camera-dial { --rotation: 0deg; position: absolute; inset: 0; border-radius: 50%; background: #050505; box-shadow: 0 0 0 1px #000, 0 10px 22px rgba(0,0,0,.6); transform: rotate(var(--rotation)); transition: transform 420ms cubic-bezier(.22,1,.36,1); }
-  /* Outer ring in pebbled dark brown leather, textured like the Instax Mini
-     Evo body (grain drawn with an SVG noise filter). */
+  /* Outer ring in pebbled chocolate leather, like the Instax Mini Evo body: fine rounded
+     grain drawn with an SVG noise filter as one dial-sized tile (no seams), lit from the top left with a soft sheen. */
   .camera-dial::before { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-    background: radial-gradient(closest-side, transparent 88.6%, rgba(0,0,0,.55) 89.4%, transparent 91.5%), url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90'><filter id='p' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='2' seed='7' stitchTiles='stitch'/><feDiffuseLighting surfaceScale='1.3' lighting-color='%23fff'><feDistantLight azimuth='225' elevation='62'/></feDiffuseLighting><feComponentTransfer><feFuncR type='linear' slope='.45' intercept='.6'/><feFuncG type='linear' slope='.45' intercept='.6'/><feFuncB type='linear' slope='.45' intercept='.6'/></feComponentTransfer><feBlend in2='SourceGraphic' mode='multiply'/></filter><rect width='90' height='90' fill='%234a2a1a' filter='url(%23p)'/></svg>") 0 0 / 90px 90px, #45271a;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.45), inset 0 2px 3px rgba(255,220,190,.18);
+    background: radial-gradient(closest-side, transparent 88.6%, rgba(0,0,0,.6) 89.3%, transparent 91%), radial-gradient(closest-side, transparent 96.5%, rgba(0,0,0,.4)), url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='190' height='190'><filter id='p' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='turbulence' baseFrequency='.7' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1.6 0 0 0 1.1'/><feGaussianBlur stdDeviation='.4' result='h'/><feDiffuseLighting in='h' surfaceScale='1.1' lighting-color='%23fff' result='d'><feDistantLight azimuth='235' elevation='65'/></feDiffuseLighting><feSpecularLighting in='h' surfaceScale='1.1' specularConstant='.35' specularExponent='22' lighting-color='%23ffd9b8' result='s'><feDistantLight azimuth='235' elevation='65'/></feSpecularLighting><feComposite in='s' in2='SourceAlpha' operator='in' result='s2'/><feBlend in='SourceGraphic' in2='d' mode='multiply' result='m'/><feComposite in='s2' in2='m' operator='arithmetic' k2='.25' k3='1'/></filter><rect width='190' height='190' fill='%23573322' filter='url(%23p)'/></svg>") 0 0 / 190px 190px, #4e2d1d;
     mask: radial-gradient(closest-side, transparent 88.6%, #000 89%); }
-  /* Polished silver bezel around the leather, like the Instax's metal trim.
+  /* Layered silver bezel, like the stacked metal rings around the Instax lens: a polished
+     outer lip, a knurled band, and a polished inner ring, each separated by a dark groove.
      Fixed (it sits on .dial-wrap), so the sheen stays put while the dial turns. */
-  .dial-wrap::before { content: ""; position: absolute; inset: -5px; border-radius: 50%; pointer-events: none;
-    background: conic-gradient(from 20deg, #f4f4f2, #a3a3a0 12%, #e9e9e6 24%, #8f8f8c 37%, #f7f7f5 50%, #a0a09d 62%, #e4e4e1 75%, #8d8d8a 88%, #f4f4f2);
-    box-shadow: 0 0 0 1px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.35), 0 10px 22px rgba(0,0,0,.55);
-    mask: radial-gradient(closest-side, transparent calc(100% - 5.5px), #000 calc(100% - 5px)); }
+  .dial-wrap::before, .dial-wrap::after { content: ""; position: absolute; inset: -9px; border-radius: 50%; pointer-events: none; }
+  .dial-wrap::before {
+    background:
+      radial-gradient(closest-side, rgba(0,0,0,.85) calc(100% - 9px), rgba(0,0,0,.55) calc(100% - 8.2px), transparent calc(100% - 7.7px), transparent calc(100% - 5.9px), rgba(0,0,0,.75) calc(100% - 5.7px), rgba(0,0,0,.75) calc(100% - 5.1px), rgba(255,255,255,.35) calc(100% - 4.9px), transparent calc(100% - 4.5px), transparent calc(100% - 2.1px), rgba(0,0,0,.75) calc(100% - 1.9px), rgba(0,0,0,.75) calc(100% - 1.3px), rgba(255,255,255,.4) calc(100% - 1.1px), transparent calc(100% - .7px)),
+      linear-gradient(150deg, rgba(255,255,255,.2), transparent 45%, rgba(0,0,0,.28)),
+      conic-gradient(from 20deg, #f4f4f2, #a3a3a0 12%, #e9e9e6 24%, #8f8f8c 37%, #f7f7f5 50%, #a0a09d 62%, #e4e4e1 75%, #8d8d8a 88%, #f4f4f2);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 10px 22px rgba(0,0,0,.55);
+    mask: radial-gradient(closest-side, transparent calc(100% - 9.5px), #000 calc(100% - 9px)); }
+  .dial-wrap::after {
+    background:
+      radial-gradient(closest-side, rgba(0,0,0,.45) calc(100% - 5.1px), transparent calc(100% - 3.6px), rgba(0,0,0,.35) calc(100% - 1.9px)),
+      conic-gradient(from 200deg, #e6e6e3, #8a8a87 15%, #d6d6d3 30%, #7c7c79 45%, #e9e9e6 60%, #888885 75%, #d2d2cf 88%, #e6e6e3),
+      repeating-conic-gradient(#fff 0 .5deg, #555 .7deg 1deg, #fff 1.2deg);
+    background-blend-mode: normal, multiply;
+    mask: radial-gradient(closest-side, transparent calc(100% - 5.1px), #000 calc(100% - 5px), #000 calc(100% - 2px), transparent calc(100% - 1.9px)); }
   .dial-position { position: absolute; inset: 0; transform: rotate(var(--position)); pointer-events: none; }
   /* Labels run along the radius and read outwards, ending at the rim. */
-  .dial-stop { position: absolute; top: 15px; left: calc(50% - 13px); width: 26px; height: 46px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: none; border: 0; pointer-events: auto; cursor: pointer; color: #fff; }
-  .dial-stop span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); padding: 4px 2px 4px 1px; border-radius: 2px; white-space: nowrap; font: 800 12px / 1 "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; letter-spacing: .01em; transition: background-color 200ms ease, color 200ms ease; }
+  .dial-stop { position: absolute; top: 12px; left: calc(50% - 13px); width: 26px; height: 53px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: none; border: 0; pointer-events: auto; cursor: pointer; color: #fff; }
+  .dial-stop span { display: block; writing-mode: vertical-rl; transform: rotate(180deg); padding: 3px 2px 3px 1px; border-radius: 2px; white-space: nowrap; font: 800 12px / 1 "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; letter-spacing: 0; transition: background-color 200ms ease, color 200ms ease; }
   .dial-stop[aria-pressed="true"] span { background: #fff; color: #050505; }
   @media (hover: hover) and (pointer: fine) { .dial-stop:not([aria-pressed="true"]):hover span { box-shadow: inset 0 0 0 1.5px #fff; } }
-  .dial-hub { position: absolute; top: 50%; left: 50%; width: 68px; height: 68px; transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 40% 30%, #161616 0%, #000 65%); border: 1px solid #000; box-shadow: 0 0 0 1px #1a1a1a, 0 3px 8px rgba(0,0,0,.7); font: 800 14px / 1 "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; letter-spacing: .03em; color: #fff; pointer-events: none; }
+  .dial-hub { position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; background: #000; border: 1px solid #000; box-shadow: 0 0 0 1px #1a1a1a; font: 800 14px / 1 "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; letter-spacing: .03em; color: #fff; pointer-events: none; }
 
-  /* The case: moulded black plastic shell, lid above the base, flat foam inside. */
-  .sd-case { position: relative; padding: 20px; border-radius: 30px; background: linear-gradient(#232325, #161618); box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), inset 0 0 0 1px #000, 0 24px 50px rgb(0 0 0 / 55%); }
-  .case-latch { position: absolute; top: -14px; left: 50%; width: 120px; height: 18px; translate: -50% 0; border-radius: 6px 6px 3px 3px; background: linear-gradient(#2c2c2f, #1a1a1c); box-shadow: inset 0 1px 0 rgb(255 255 255 / 10%), 0 0 0 1px #000; }
-  .case-half { display: grid; grid-template-columns: 88px repeat(var(--slots, 4), 1fr); gap: 14px; padding: 18px; border-radius: 18px; background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.32'/></filter><rect width='120' height='120' filter='url(%23f)'/></svg>"), var(--sky) center 35% / cover no-repeat, #0a3c8c; box-shadow: inset 0 3px 10px rgb(0 0 0 / 80%), inset 0 0 0 1px #000; }
-  /* The clouds in place of the foam: sky and horizon in the lid, cloud tops in the base. */
-  .case-hinge + .case-half { background-position: 0 0, center 72%; }
-  .case-hinge { display: flex; justify-content: space-between; height: 14px; margin: 8px 60px; }
-  .case-hinge i { width: 80px; height: 100%; border-radius: 4px; background: linear-gradient(#2a2a2d, #141416); box-shadow: 0 0 0 1px #000, inset 0 1px 0 rgb(255 255 255 / 8%); }
-  /* microSD slots, two by two, as in the reference case (empty: decoration). */
-  .micro-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-content: center; }
-  .micro-slots span { aspect-ratio: 11 / 15; border-radius: 4px; background: #070708; box-shadow: inset 0 2px 4px #000, 0 1px 0 rgb(255 255 255 / 5%); }
-  /* SD slot: a recess in the foam with a round finger notch at the top. */
-  .slot { position: relative; display: grid; place-items: center; padding: 16px 0 10px; border-radius: 10px; background: #070708; box-shadow: inset 0 3px 8px #000, 0 1px 0 rgb(255 255 255 / 5%); }
-  .slot::before { content: ""; position: absolute; top: -6px; left: 50%; width: 34px; height: 20px; translate: -50% 0; border-radius: 0 0 17px 17px; background: #050506; box-shadow: inset 0 -2px 4px #000; }
-  /* .8 up to five slots a half; smaller in step beyond that so six still fit beside the dial. */
-  .slot-card { position: relative; display: block; zoom: min(.8, calc(4 / var(--slots, 4))); transition: transform 320ms cubic-bezier(.22,1,.36,1), filter 320ms; filter: brightness(.72) saturate(.8); text-decoration: none; }
-  .slot-card:hover { filter: none; transform: translateY(-6px); }
-  /* The selected trip's card is pulled up out of its slot. */
-  .slot-card.is-active { filter: drop-shadow(0 14px 18px rgb(0 0 0 / 70%)); transform: translateY(-20px); }
-  button:focus-visible, a:focus-visible { outline: 2px solid var(--active-accent); outline-offset: 5px; }
-  /* Too narrow for the case beside the dial: dial above, case full width, no microSD slots. */
+  /* The case: glossy black plastic shell (a bright top edge, a soft sheen across the upper
+     left, deep black below), flat foam inside. */
+  .sd-case { position: relative; padding: 9px; border-radius: 24px;
+    background: linear-gradient(170deg, rgb(255 255 255 / 16%), rgb(255 255 255 / 4%) 22%, transparent 42%), radial-gradient(ellipse 60% 45% at 18% 0%, rgb(255 255 255 / 12%), transparent 70%), linear-gradient(#0d0d0f, #030304);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 35%), inset 0 -1px 0 rgb(255 255 255 / 8%), inset 0 0 0 1px #000, 0 24px 50px rgb(0 0 0 / 60%); }
+  .case-half { display: grid; grid-template-columns: repeat(var(--slots, 4), 1fr); gap: 26px 14px; padding: 24px 18px 18px; border-radius: 15px; background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.32'/></filter><rect width='120' height='120' filter='url(%23f)'/></svg>"), var(--sky) center 35% / cover no-repeat, #0a3c8c; box-shadow: inset 0 3px 10px rgb(0 0 0 / 80%), inset 0 0 0 1px #000; }
+  /* Slot: just a place in the grid; the sky shows straight through around each plastic case. */
+  .slot { position: relative; display: grid; place-items: center; padding: 30px 0 20px; }
+  /* .8 up to five slots a half; smaller in step beyond that so six still fit beside the dial.
+     Cards never move or light up on hover. */
+  .slot-card { position: relative; display: block; zoom: min(.8, calc(4 / var(--slots, 4))); transition: filter 320ms; filter: brightness(.72) saturate(.8); text-decoration: none; }
+  .slot-card.is-active { filter: drop-shadow(0 8px 12px rgb(0 0 0 / 60%)); }
+  /* Clear plastic case around each card, a little bigger than the card so there is a
+     clear margin all round: a see-through tray behind it and a glossy lid in front, hinged
+     along the top. Only the edges and a light sheen are drawn, so the sky shows through.
+     The selected trip's lid tips back open; the card stays put. */
+  .shell-base, .shell-lid { position: absolute; inset: -14px; border-radius: 14px; pointer-events: none; }
+  .shell-base { background: rgb(230 240 250 / 4%); box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 28%), inset 0 0 0 3px rgb(255 255 255 / 6%), 0 4px 10px rgb(0 0 0 / 18%); }
+  .shell-lid { transform-origin: 50% 0; transition: transform 520ms cubic-bezier(.3,.7,.2,1);
+    background: linear-gradient(118deg, rgb(255 255 255 / 20%) 0%, rgb(255 255 255 / 5%) 16%, transparent 30%, transparent 70%, rgb(255 255 255 / 9%) 82%, transparent 92%);
+    box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 38%), inset 0 2px 0 1px rgb(255 255 255 / 18%); }
+  /* Round thumb tab at the bottom of the lid, opposite the hinge. */
+  .shell-lid::after { content: ""; position: absolute; bottom: -11px; left: 50%; width: 26px; height: 13px; translate: -50% 0; border-radius: 0 0 13px 13px; background: rgb(255 255 255 / 10%); box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 38%); clip-path: inset(1.5px 0 0 0); }
+  .slot-card.is-active .shell-lid { transform: perspective(500px) rotateX(-105deg); }
+  /* No focus ring: the white label and the open case already show the selection. */
+  .dial-stop:focus-visible, .slot-card:focus-visible { outline: none; }
+  /* Too narrow for the case beside the dial: dial above, case full width. */
   @media (max-width: 1100px) {
     .case-top { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 36px; }
     .case-top .sd-case { width: 100%; margin-top: 0; }
-    .case-half { grid-template-columns: repeat(var(--slots, 4), 1fr); }
-    .micro-slots { display: none; }
   }
   @media (max-width: 760px) {
-    .sd-case { padding: 10px; border-radius: 20px; }
+    .sd-case { padding: 5px; border-radius: 16px; }
     /* Six slots across a phone makes the cards too small to read, so each half folds into rows of three. */
-    .case-half { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 6px; padding: 10px; }
-    .micro-slots { display: none; }
-    .case-hinge { margin: 6px 30px; height: 10px; }
-    .case-hinge i { width: 50px; }
-    .slot { padding: 12px 0 6px; }
-    .slot::before { width: 22px; height: 14px; }
+    .case-half { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 6px; padding: 10px; }
+    .slot { padding: 20px 0 12px; }
     .slot-card { zoom: .6; }
-    .slot-card.is-active { transform: translateY(-14px); }
+    .shell-base, .shell-lid { inset: -10px; border-radius: 12px; }
   }
   /* The smallest phones. */
   @media (max-width: 360px) {
