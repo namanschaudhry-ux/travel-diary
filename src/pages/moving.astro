@@ -74,7 +74,9 @@ const filters = ["run", "cycle", "swim"];
 ---
 
 <Layout title="On the move — Naman Chaudhry" description="Kilometres logged by city, pulled from Strava.">
-  <section class="mx-auto flex max-w-6xl justify-center gap-2 px-6 pt-8 pb-8 sm:px-10 sm:pt-10">
+  {/* Sport filters on the left, the running turtle (from the homepage artwork row) on the right. */}
+  <section class="sport-bar mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 pt-8 pb-8 sm:px-10 sm:pt-10">
+    <div class="flex gap-2">
     {
       filters.map((f) => (
         <button
@@ -107,6 +109,8 @@ const filters = ["run", "cycle", "swim"];
         </button>
       ))
     }
+    </div>
+    <span class="moving-turtle" aria-hidden="true"></span>
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pb-8 sm:px-10">
@@ -122,8 +126,8 @@ const filters = ["run", "cycle", "swim"];
           { label: "swim", value: totals.swim },
         ].map((t) => (
           <div class="relative flex-1 p-6 text-center" data-total={t.value} data-sport={t.label} hidden={t.label !== "run"}>
-            <p class="font-sans font-medium tracking-tight text-4xl text-paper">
-              {fmt(t.value)}<span class="font-sans font-normal text-base text-[var(--color-muted-40)]"> km</span>
+            <p class="total-km text-4xl text-paper">
+              {fmt(t.value)}<span class="text-base text-[var(--color-muted-40)]"> km</span>
             </p>
           </div>
         ))
@@ -580,8 +584,11 @@ const filters = ["run", "cycle", "swim"];
     box-shadow: none;
     outline: none;
     padding: 6px 0;
+    /* Bold, tight Inter like the airport codes on the SD cards. */
     font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
     font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -.02em;
     text-align: center;
     color: var(--color-paper);
     cursor: pointer;
@@ -832,6 +839,12 @@ const filters = ["run", "cycle", "swim"];
 <style>
   [data-filter-btn] { display: inline-flex; align-items: center; justify-content: center; min-width: 56px; min-height: 46px; padding: 9px 14px; cursor: pointer; }
   [data-filter-btn]:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  /* Running turtle, the homepage artwork drawn in the theme's text colour. */
+  .moving-turtle { display: block; flex: none; height: 46px; aspect-ratio: 610 / 270; background: var(--color-paper); opacity: .9;
+    -webkit-mask: url('/images/turtle.png') center / contain no-repeat; mask: url('/images/turtle.png') center / contain no-repeat; }
+  /* The total in the same face as the SD card airport codes: Inter, extra bold, tight. */
+  .total-km { font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-weight: 800; letter-spacing: -.04em; }
+  .total-km span { font-weight: 700; letter-spacing: 0; }
 </style>
 
 <style>

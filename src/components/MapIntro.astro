@@ -83,10 +83,13 @@ import "leaflet/dist/leaflet.css";
       }).addTo(map);
       requestAnimationFrame(() => map.invalidateSize());
 
+      // Once the zoom-in finishes the map fades away and is removed, so the gallery sits on
+      // the plain page background like every other trip page (it used to stay behind the
+      // gallery as a dimmed backdrop).
       function showGalleryBackdrop() {
-        el!.classList.add("is-background");
-        tilesEl!.style.transform = "none";
-        map.setZoom(13, { animate: false });
+        el!.style.transition = "opacity 500ms ease";
+        el!.style.opacity = "0";
+        window.setTimeout(() => { map.remove(); el!.remove(); }, reduced ? 0 : 520);
       }
       if (reduced) {
         showGalleryBackdrop();

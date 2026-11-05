@@ -69,10 +69,10 @@ const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
     {/* Chrome fill for the name logo, the same stops as the Gallery 42 chrome logo. */}
     <svg class="chrome-defs" width="0" height="0" aria-hidden="true" focusable="false">
       <linearGradient id="name-chrome" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#fafcfb" /><stop offset=".12" stop-color="#d8dedc" /><stop offset=".29" stop-color="#929d9a" />
-        <stop offset=".41" stop-color="#e3e8e5" /><stop offset=".47" stop-color="#ffffff" /><stop offset=".5" stop-color="#f7faf8" />
-        <stop offset=".535" stop-color="#515e5a" /><stop offset=".58" stop-color="#85918d" /><stop offset=".72" stop-color="#d1d9d5" />
-        <stop offset=".84" stop-color="#f8fbf9" /><stop offset=".93" stop-color="#c3ccc7" /><stop offset="1" stop-color="#788680" />
+        <stop offset="0" stop-color="#fafcfb" /><stop offset=".14" stop-color="#e2e7e5" /><stop offset=".3" stop-color="#b4bdb9" />
+        <stop offset=".44" stop-color="#e9edeb" /><stop offset=".52" stop-color="#f6f8f7" /><stop offset=".64" stop-color="#b9c2be" />
+        <stop offset=".76" stop-color="#dde3e0" /><stop offset=".87" stop-color="#f6f9f7" /><stop offset=".95" stop-color="#cdd4d0" />
+        <stop offset="1" stop-color="#a3ada8" />
       </linearGradient>
     </svg>
   </section>
@@ -172,22 +172,35 @@ const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
   @media (hover: hover) and (pointer: fine) { .dial-stop:not([aria-pressed="true"]):hover span { box-shadow: inset 0 0 0 1.5px #fff; } }
   .dial-hub { position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; background: #000; border: 1px solid #000; box-shadow: 0 0 0 1px #1a1a1a; font: 800 14px / 1 "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; letter-spacing: .03em; color: #fff; pointer-events: none; }
 
-  /* The case: glossy black plastic shell (a bright top edge, a soft sheen across the upper
-     left, deep black below), flat foam inside. */
-  .sd-case { position: relative; padding: 9px; border-radius: 24px;
-    background: linear-gradient(170deg, rgb(255 255 255 / 16%), rgb(255 255 255 / 4%) 22%, transparent 42%), radial-gradient(ellipse 60% 45% at 18% 0%, rgb(255 255 255 / 12%), transparent 70%), linear-gradient(#0d0d0f, #030304);
-    box-shadow: inset 0 1px 0 rgb(255 255 255 / 35%), inset 0 -1px 0 rgb(255 255 255 / 8%), inset 0 0 0 1px #000, 0 24px 50px rgb(0 0 0 / 60%); }
+  /* The case: a knurled frame in the darker grey of the dial bezel's knurled band. The
+     ridges run straight across each edge (upright along the top and bottom, level along
+     the sides), multiplied over the same grey sweep, with a dark groove at the sky panel. */
+  .sd-case { --knurl: #fff 0 .8px, #555 1.1px 1.6px, #fff 1.9px 2.4px; --rim: 9px;
+    position: relative; padding: var(--rim); border-radius: 24px;
+    background:
+      linear-gradient(160deg, rgb(255 255 255 / 14%), transparent 40%, rgb(0 0 0 / 18%)),
+      repeating-linear-gradient(90deg, var(--knurl)) top / 100% var(--rim) no-repeat,
+      repeating-linear-gradient(90deg, var(--knurl)) bottom / 100% var(--rim) no-repeat,
+      repeating-linear-gradient(0deg, var(--knurl)) left / var(--rim) 100% no-repeat,
+      repeating-linear-gradient(0deg, var(--knurl)) right / var(--rim) 100% no-repeat,
+      conic-gradient(from 200deg, #e6e6e3, #8a8a87 15%, #d6d6d3 30%, #7c7c79 45%, #e9e9e6 60%, #888885 75%, #d2d2cf 88%, #e6e6e3);
+    background-blend-mode: normal, multiply, multiply, multiply, multiply, normal;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 55%), inset 0 -1px 0 rgb(0 0 0 / 35%), 0 0 0 1px rgb(0 0 0 / 55%), 0 24px 50px rgb(0 0 0 / 60%); }
+  .sd-case > .case-half { outline: 1.5px solid rgb(0 0 0 / 70%); }
   .case-half { display: grid; grid-template-columns: repeat(var(--slots, 4), 1fr); gap: 26px 14px; padding: 24px 18px 18px; border-radius: 15px; background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.32'/></filter><rect width='120' height='120' filter='url(%23f)'/></svg>"), var(--sky) center 35% / cover no-repeat, #0a3c8c; box-shadow: inset 0 3px 10px rgb(0 0 0 / 80%), inset 0 0 0 1px #000; }
   /* Slot: just a place in the grid; the sky shows straight through around each plastic case. */
-  .slot { position: relative; display: grid; place-items: center; padding: 30px 0 20px; }
+  .slot { position: relative; display: grid; place-items: center; padding: 0 0 20px; }
   /* .8 up to five slots a half; smaller in step beyond that so six still fit beside the dial.
      Cards never move or light up on hover. */
-  .slot-card { position: relative; display: block; zoom: min(.8, calc(4 / var(--slots, 4))); transition: filter 320ms; filter: brightness(.72) saturate(.8); text-decoration: none; }
+  .slot-card { position: relative; display: block; zoom: min(.8, calc(4 / var(--slots, 4))); transition: filter 320ms; filter: brightness(.72) saturate(.8); text-decoration: none;
+    /* Room above every card for its whole lid when it opens (in card units, so it scales with zoom). */
+    margin-top: 76px; }
   .slot-card.is-active { filter: drop-shadow(0 8px 12px rgb(0 0 0 / 60%)); }
   /* Clear plastic case around each card, a little bigger than the card so there is a
      clear margin all round: a see-through tray behind it and a glossy lid in front, hinged
      along the top. Only the edges and a light sheen are drawn, so the sky shows through.
-     The selected trip's lid tips back open; the card stays put. */
+     The selected trip's lid stands up almost upright, tipped slightly back, so the whole lid
+     shows above the card as a narrow strip; the card stays put. */
   .shell-base, .shell-lid { position: absolute; inset: -14px; border-radius: 14px; pointer-events: none; }
   .shell-base { background: rgb(230 240 250 / 4%); box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 28%), inset 0 0 0 3px rgb(255 255 255 / 6%), 0 4px 10px rgb(0 0 0 / 18%); }
   .shell-lid { transform-origin: 50% 0; transition: transform 520ms cubic-bezier(.3,.7,.2,1);
@@ -195,7 +208,7 @@ const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
     box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 38%), inset 0 2px 0 1px rgb(255 255 255 / 18%); }
   /* Round thumb tab at the bottom of the lid, opposite the hinge. */
   .shell-lid::after { content: ""; position: absolute; bottom: -11px; left: 50%; width: 26px; height: 13px; translate: -50% 0; border-radius: 0 0 13px 13px; background: rgb(255 255 255 / 10%); box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 38%); clip-path: inset(1.5px 0 0 0); }
-  .slot-card.is-active .shell-lid { transform: perspective(500px) rotateX(-105deg); }
+  .slot-card.is-active .shell-lid { transform: perspective(420px) rotateX(-112deg); }
   /* No focus ring: the white label and the open case already show the selection. */
   .dial-stop:focus-visible, .slot-card:focus-visible { outline: none; }
   /* Too narrow for the case beside the dial: dial above, case full width. */
@@ -204,10 +217,10 @@ const slotsPerHalf = Math.max(4, Math.ceil(trips.length / 2));
     .case-top .sd-case { width: 100%; margin-top: 0; }
   }
   @media (max-width: 760px) {
-    .sd-case { padding: 5px; border-radius: 16px; }
+    .sd-case { --rim: 5px; border-radius: 16px; }
     /* Six slots across a phone makes the cards too small to read, so each half folds into rows of three. */
     .case-half { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 6px; padding: 10px; }
-    .slot { padding: 20px 0 12px; }
+    .slot { padding: 0 0 12px; }
     .slot-card { zoom: .6; }
     .shell-base, .shell-lid { inset: -10px; border-radius: 12px; }
   }

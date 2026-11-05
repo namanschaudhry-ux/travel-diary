@@ -6,11 +6,11 @@ const images = import.meta.glob(['../assets/photos/**/*.{jpg,jpeg,JPG,JPEG,png,w
 const number = (n: number) => new Intl.NumberFormat('en', { maximumFractionDigits: 1 }).format(n);
 // Distance totals are the same ones shown on the moving page.
 const stats = [
- { label: 'photos uploaded', value: String(Object.keys(images).length), unit: 'frames', href: '/photos/' },
- { label: 'kms run · all time', value: number(totals.run), unit: 'km', href: '/moving/' },
- { label: 'kms cycled · all time', value: number(totals.cycle), unit: 'km', href: '/moving/' },
- { label: 'kms swum · all time', value: number(totals.swim), unit: 'km', href: '/moving/' },
- { label: 'cities visited', value: String(cityActivity.length), unit: 'places', href: '/moving/' },
+ { label: 'photos uploaded', value: String(Object.keys(images).length), unit: '', href: '/photos/' },
+ { label: 'kms run', value: number(totals.run), unit: 'km', href: '/moving/' },
+ { label: 'kms cycled', value: number(totals.cycle), unit: 'km', href: '/moving/' },
+ { label: 'kms swum', value: number(totals.swim), unit: 'km', href: '/moving/' },
+ { label: 'cities visited', value: String(cityActivity.length), unit: '', href: '/moving/' },
 ];
 ---
 <section class="watch-home" aria-label="Naman's watch">
@@ -148,6 +148,7 @@ const stats = [
  .stat-label { font-size:1.5cqw; text-transform:uppercase; letter-spacing:.04em; opacity:.8; }
  .stat-number { font-size:5.2cqw; line-height:1; font-weight:800; font-stretch:condensed; letter-spacing:-.04em; font-variant-numeric:tabular-nums; margin-top:.4cqw; }
  .stat-number :global(small) { font-size:1.6cqw; margin-left:.6cqw; letter-spacing:0; font-weight:700; }
+ .stat-number :global(small:empty) { display:none; }
  .watch-dots { position:absolute; top:37%; left:42%; display:flex; gap:.6cqw;  }
  .watch-dots span { width:.5cqw; height:.5cqw; border-radius:50%; background:#59605a; } .watch-dots .active { background:var(--watch-text,#d3d5d0); }
  .watch-button { position:absolute; z-index:3; padding:0; border:0; background:transparent; cursor:pointer; min-width:34px; min-height:44px; touch-action:manipulation; border-radius:12px; }
