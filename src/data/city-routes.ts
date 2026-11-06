@@ -14,6 +14,8 @@
 // (Melbourne from 2022 onwards) and only feeds the city map tiles on the
 // Moving page and the background lines on those city pages (see cityTileLines).
 // Those runs get no card, name or page of their own.
+// strava-city-rides.json does the same for rides: every outdoor ride in
+// Melbourne and New York, drawn on those cities' cycle map tiles.
 import { decodePolyline } from "../lib/polyline";
 import stravaExport from "./strava-export.json";
 import longRuns from "./strava-runs-over-25km.json";
@@ -23,6 +25,10 @@ import swims from "./strava-swims-melbourne.json";
 import raceRuns from "./strava-race-runs.json";
 import japanRuns from "./strava-japan-2025.json";
 import cityRuns from "./strava-city-runs.json";
+import cityRides from "./strava-city-rides.json";
+// strava-place-runs.json: every GPS run in four smaller places that get a map tile on the
+// Moving page (Lake Forest, Alpine Shire, Naxos, Great Ocean Road).
+import placeRuns from "./strava-place-runs.json";
 
 type ExportActivity = {
   id: string;
@@ -96,9 +102,32 @@ export const everyRunCities = new Set(["New York", "San Francisco", "Sydney", "C
 // Tiles framed on the points within this many km of the city's median point,
 // so one far-off run (Wimbledon, the coast east of Christchurch) can't pull
 // the picture off the centre. Other tiles frame the middle 90% of points.
-export const tileFrameRadiusKm: Record<string, number> = { Christchurch: 4, London: 5 };
+// Tighter framing (zoomed in) for London, Christchurch, Tokyo, San Francisco and Sydney (Nov 2026).
+// Tokyo also needs zoom 13+: Esri's grey canvas has almost no streets for Japan below that.
+export const tileFrameRadiusKm: Record<string, number> = { Christchurch: 1.6, London: 2.5, Tokyo: 2.5, "San Francisco": 3.6, Sydney: 2.8, Naxos: 1.6, "Alpine Shire": 2.5, "Great Ocean Road": 2.5, "Lake Forest": 3.5 };
+// Nudges a run tile's frame across by [km east, km north] after it's framed, to take in
+// more of the running (Christchurch and Sydney sit a little east of their busiest spot).
+export const tileFrameShiftKm: Record<string, [number, number]> = { Christchurch: [0.55, 0], Sydney: [1.2, 0] };
+// Exact opening views for some tiles, per sport: [south, west, north, east]. Taken from
+// Naman's screenshots of the views he wants (6 Nov 2026): Tokyo runs from Yoyogi and
+// Meiji Jingu across to the Imperial Palace and Nihonbashi; Melbourne rides from the
+// CBD and the bay out east past the Dandenong Creek trails.
+export const tileFrameBounds: Record<string, Partial<Record<"run" | "cycle" | "swim", [number, number, number, number]>>> = {
+  Tokyo: { run: [35.6596, 139.6899, 35.7079, 139.7763] },
+  Melbourne: { cycle: [-37.98, 144.84, -37.69, 145.37] },
+};
+// Run maps that open on a fixed spot instead of where the runs bunch up: [lat, lng] and
+// the km to show either side. Melbourne opens on the CBD (Flinders St / Swanston St),
+// close enough for the city grid, wide enough for the inner suburbs around it.
+// Used by the Moving page tile and the city's own page.
+export const cityFrameCenter: Record<string, { center: [number, number]; radiusKm: number }> = {
+  Melbourne: { center: [-37.8150, 144.9650], radiusKm: 3.5 },
+};
 // Cities that get a big map tile at the top of the Moving page's city view.
-export const tileCities = new Set([...overlayCities, ...everyRunCities]);
+// Smaller places that also get a map tile, drawn from strava-place-runs.json (Nov 2026).
+// Lake Forest and Great Ocean Road have their runs in that file too but no tile.
+export const placeRunCities = new Set(["Alpine Shire", "Naxos"]);
+export const tileCities = new Set([...overlayCities, ...everyRunCities, ...placeRunCities]);
 
 const featuredRoutes: Record<string, string[]> = {
   // Each city page lists its routes newest first (sorted in code below).
@@ -186,6 +215,14 @@ const featuredRoutes: Record<string, string[]> = {
   "Gold Coast": [
     "15008799672", // Gold Coast Half Marathon, 5 Jul 2025
   ],
+  "Alpine Shire": [
+    "8323121542", // Morning Run, Bright, 2 Jan 2023
+    "10495297355", // Morning Trail Run, Bright, 5 Jan 2024
+  ],
+  Naxos: [
+    "12211178720", // Morning Trail Run, 22 Aug 2024
+    "12215541775", // Intervalling, 22 Aug 2024
+  ],
   "Great Ocean Road": [
     "9109465613", // Great Ocean Road Half, 21 May 2023
   ],
@@ -205,6 +242,22 @@ const featuredRoutes: Record<string, string[]> = {
 
 // Rides, drawn on their own map per city (/moving/<city>/cycle/).
 const featuredRides: Record<string, string[]> = {
+  // Every ride in New York (all short city rides, 2023 and 2024).
+  "New York": [
+    "12918619153", // E bikes r crazy, 16 Nov 2024
+    "12915100409", // It’s Nach time, 16 Nov 2024
+    "12894896812", // Into Le East Veelage, 13 Nov 2024
+    "12891796932", // Morning Ride, 13 Nov 2024
+    "12870186544", // Prospecting, 9 Nov 2024
+    "12870186033", // Bridge of dreams, 9 Nov 2024
+    "9588842942", // NYC Summer Streets, 5 Aug 2023
+    "8763991499", // Morningside Park, 23 Mar 2023
+    "8760192698", // Queens + Bridge, 22 Mar 2023
+    "8753826862", // Williamsburg Bridge, 21 Mar 2023
+    "8752836346", // Prospect Park, 21 Mar 2023
+    "8748430577", // Central Park, 20 Mar 2023
+    "8746581646", // Brooklyn, 20 Mar 2023
+  ],
   "Mount Fuji": [
     "16700916246", // Fuji Cycling, 10 Dec 2025
   ],
@@ -267,6 +320,8 @@ const activities = [
   ...(swims as { activities: ExportActivity[] }).activities,
   ...(raceRuns as { activities: ExportActivity[] }).activities,
   ...(japanRuns as { activities: ExportActivity[] }).activities,
+  ...(cityRides as { activities: ExportActivity[] }).activities,
+  ...(placeRuns as { activities: ExportActivity[] }).activities,
 ];
 
 const shortDate = (iso: string) =>
@@ -283,7 +338,7 @@ const buildRoutes = (featured: Record<string, string[]>, datedNames = false): Re
         if (!activity?.polyline) return [];
         return [{
           id,
-          name: activity.name,
+          name: activity.name.trim(),
           sport: activity.sport_type,
           date: activity.start_local.slice(0, 10),
           distanceKm: activity.distance_km,
@@ -309,17 +364,24 @@ export const citySwimRoutes = buildRoutes(featuredSwims, true);
 
 // Lines for a city's map tile on the Moving page, per sport, still encoded
 // (the tile decodes them in the browser). Runs are the hand-picked routes
-// plus, for everyRunCities, every other run recorded in that city.
+// plus, for everyRunCities, every other run recorded in that city. Rides are
+// the hand-picked rides plus every other ride in strava-city-rides.json.
 const everyRun = (cityRuns as { activities: (ExportActivity & { city: string })[] }).activities;
+const everyRide = (cityRides as { activities: (ExportActivity & { city: string })[] }).activities;
+const everyPlaceRun = (placeRuns as { activities: (ExportActivity & { city: string })[] }).activities;
 export const cityTileLines = (city: string) => {
   const lines = (ids: string[] = []) => ids.flatMap((id) => activities.find((a) => a.id === id)?.polyline ?? []);
   const picked = new Set(featuredRoutes[city] ?? []);
   const others = everyRunCities.has(city)
     ? everyRun.filter((a) => a.city === city && !picked.has(a.id)).flatMap((a) => a.polyline ?? [])
-    : [];
+    : placeRunCities.has(city)
+      ? everyPlaceRun.filter((a) => a.city === city && !picked.has(a.id)).flatMap((a) => a.polyline ?? [])
+      : [];
+  const pickedRides = new Set(featuredRides[city] ?? []);
+  const otherRides = everyRide.filter((a) => a.city === city && !pickedRides.has(a.id)).flatMap((a) => a.polyline ?? []);
   return {
     run: [...lines(featuredRoutes[city]), ...others],
-    cycle: lines(featuredRides[city]),
+    cycle: [...lines(featuredRides[city]), ...otherRides],
     swim: lines(featuredSwims[city]),
   };
 };

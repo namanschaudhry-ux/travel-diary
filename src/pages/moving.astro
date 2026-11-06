@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { cityActivity, activityTotals as totals } from "../data/activity-summary";
 import "leaflet/dist/leaflet.css";
-import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug, tileCities, cityTileLines, tileFrameRadiusKm } from "../data/city-routes";
+import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug, tileCities, cityTileLines, tileFrameRadiusKm, cityFrameCenter, tileFrameShiftKm, tileFrameBounds } from "../data/city-routes";
 import { cityDays } from "../data/city-days";
 import RouteGrid from "../components/RouteGrid.astro";
 import novablast5WinterSea from "../assets/shoes/novablast-5-winter-sea.png";
@@ -37,8 +37,12 @@ const cities = [...cityActivity]
   .sort((a, b) => b.total - a.total);
 // Cities with a full route map get a big map tile at the top of the city view;
 // the rest stay as small cards below.
-const mapCities = cities.filter((c) => tileCities.has(c.city) && cityRoutes[c.city]?.length);
-const smallCities = cities.filter((c) => !mapCities.includes(c));
+// Alpine Shire's tile is shown as Bright (where the runs are) and comes last, after Naxos.
+const lastTiles = ["Alpine Shire"];
+const mapCities = cities
+  .filter((c) => tileCities.has(c.city) && cityRoutes[c.city]?.length)
+  .sort((a, b) => Number(lastTiles.includes(a.city)) - Number(lastTiles.includes(b.city)));
+const tileName = (city: string) => (city === "Alpine Shire" ? "Bright" : city);
 
 // Every route from every city, newest first, for the "routes" view.
 const allRoutes = Object.entries(cityRoutes)
@@ -74,7 +78,7 @@ const filters = ["run", "cycle", "swim"];
 ---
 
 <Layout title="On the move — Naman Chaudhry" description="Kilometres logged by city, pulled from Strava.">
-  {/* Sport filters on the left, the running turtle (from the homepage artwork row) on the right. */}
+  {/* Sport filters on the left; on the right the hover bar and the running turtle (from the homepage artwork row). */}
   <section class="sport-bar mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 pt-8 pb-8 sm:px-10 sm:pt-10">
     <div class="flex gap-2">
     {
@@ -110,40 +114,51 @@ const filters = ["run", "cycle", "swim"];
       ))
     }
     </div>
-    <span class="moving-turtle" aria-hidden="true"></span>
-  </section>
-
-  <section class="mx-auto max-w-6xl px-6 pb-8 sm:px-10">
-    <div
-      id="top-strip"
-      class="relative isolate flex flex-wrap rounded-[12px] border border-[var(--color-card-border)] overflow-hidden"
-    >
-      <div id="city-fill" aria-hidden="true"></div>
-      {
-        [
-          { label: "run", value: totals.run },
-          { label: "cycle", value: totals.cycle },
-          { label: "swim", value: totals.swim },
-        ].map((t) => (
-          <div class="relative flex-1 p-6 text-center" data-total={t.value} data-sport={t.label} hidden={t.label !== "run"}>
-            <p class="total-km text-4xl text-paper">
-              {fmt(t.value)}<span class="text-base text-[var(--color-muted-40)]"> km</span>
-            </p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
-
-  <div class="mx-auto max-w-6xl px-6 pb-8 sm:px-10" id="view-toggle-wrap">
-    <div class="filter-wheel-wrap mx-auto">
-      <div class="filter-wheel" id="view-wheel" role="tablist" aria-label="City, gear or routes view">
+    {/* The view switcher: the homepage Garmin's face (no strap) as a menu of City, Gear and
+        Routes. Its side buttons step up and down the list; tapping the screen steps on. */}
+    <div class="view-watch" id="view-toggle-wrap" role="group" aria-label="City, gear or routes view">
+      <img class="view-watch-face" src="/images/instinct-face.png" alt="" width="440" height="427" />
+      <button type="button" class="view-watch-screen" aria-label="Next view">
         {["city", "gear", "routes"].map((label) => (
-          <button type="button" class="filter-item" role="tab" data-view={label} aria-selected={label === "city" ? "true" : "false"}>{label}</button>
+          <span class="view-watch-item" data-view={label} aria-current={label === "city" ? "true" : undefined}>{label}</span>
         ))}
-      </div>
+      </button>
+      <button type="button" class="view-watch-button view-watch-up" data-step="-1" aria-label="Previous view" title="Previous view"></button>
+      <button type="button" class="view-watch-button view-watch-down" data-step="1" aria-label="Next view" title="Next view"></button>
+      <button type="button" class="view-watch-button view-watch-back" data-step="1" aria-label="Next view" title="Next view"></button>
     </div>
-  </div>
+    {/* The hover bar (a city's share of the total, painted purple to pink) sits just left of the turtle. */}
+    <div class="sport-meter flex items-center gap-4">
+        <div
+          id="top-strip"
+          class="relative isolate flex overflow-hidden rounded-[10px] border border-[var(--color-card-border)]"
+        >
+          <div id="city-fill" aria-hidden="true"></div>
+          {
+            [
+              { label: "run", value: totals.run },
+              { label: "cycle", value: totals.cycle },
+              { label: "swim", value: totals.swim },
+            ].map((t) => (
+              <div class="relative flex flex-1 items-center justify-center" data-total={t.value} data-sport={t.label} hidden={t.label !== "run"}>
+                {/* The selected sport's total, over the hover paint. */}
+                <p class="total-km text-xl text-paper">
+                  {fmt(t.value)}<span class="text-base text-[var(--color-muted-40)]"> km</span>
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      <span class="moving-turtle" data-art-sports="run swim" aria-hidden="true"></span>
+      {/* On the cycle filter the turtle swaps for the homepage's globe flower (third artwork from the left). */}
+      <svg class="moving-flower" data-art-sports="cycle" hidden viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
+        <g stroke-width="7"><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(0 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(45 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(90 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(135 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(180 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(225 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(270 50 50)"/><ellipse cx="50" cy="19" rx="6" ry="9" transform="rotate(315 50 50)"/></g>
+        <circle cx="50" cy="50" r="17" stroke-width="6"/>
+        <g stroke-width="2"><ellipse cx="50" cy="50" rx="5.5" ry="13"/><path d="M50 37v26M38.5 44h23M37 50h26M38.5 56h23"/></g>
+      </svg>
+    </div>
+  </section>
+
 
   <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="city">
     <div class="city-map-grid">
@@ -161,11 +176,11 @@ const filters = ["run", "cycle", "swim"];
             data-swim-href={links.swim?.href}
             data-sports={typeRows(c).map((r) => r.label).join(" ")}
             hidden={!typeRows(c).some((r) => r.label === "run")}
-            aria-label={`${c.city} routes map`}
+            aria-label={`${tileName(c.city)} routes map`}
           >
-            <div class="city-map" data-routes={JSON.stringify(tileLines)} data-frame-radius={tileFrameRadiusKm[c.city]} data-swim-frame-radius="2" aria-hidden="true"></div>
+            <div class="city-map" data-routes={JSON.stringify(tileLines)} data-frame-radius={tileFrameRadiusKm[c.city]} data-frame-center={cityFrameCenter[c.city] ? `${cityFrameCenter[c.city].center.join(",")},${cityFrameCenter[c.city].radiusKm}` : undefined} data-frame-shift={tileFrameShiftKm[c.city]?.join(",")} data-frame-bounds={tileFrameBounds[c.city] ? JSON.stringify(tileFrameBounds[c.city]) : undefined} data-swim-frame-radius="2" aria-hidden="true"></div>
             {/* Details appear on hover or focus, like the route cards in the routes view. */}
-            <span class="city-map-caption city-map-caption--top"><span class="city-display-name city-outline" aria-label={c.city} set:html={cityOutline(c.city)} /></span>
+            <span class="city-map-caption city-map-caption--top"><span class="city-display-name city-outline" aria-label={tileName(c.city)} set:html={cityOutline(tileName(c.city))} /></span>
             <span class="city-map-caption city-map-caption--bottom">
               <span class="city-map-row">
                 <span class="text-left">
@@ -191,50 +206,6 @@ const filters = ["run", "cycle", "swim"];
           </a>
         );
       })}
-    </div>
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        smallCities.map((c) => {
-          // Cities with routes link to their own map page; the rest stay plain cards.
-          // The script below swaps the link when the sport filter changes.
-          const links = routeLinks(c.city);
-          const CityCard = links.run || links.cycle || links.swim ? "a" : "div";
-          return (
-          <CityCard
-            class="city-card rounded-[12px] border border-[var(--color-card-border)] p-6 text-center"
-            aria-label={c.city}
-            data-city-card
-            href={links.run?.href}
-            data-run-href={links.run?.href}
-            data-cycle-href={links.cycle?.href}
-            data-swim-href={links.swim?.href}
-            tabindex={links.run ? undefined : "0"}
-            data-sports={typeRows(c)
-              .map((r) => r.label)
-              .join(" ")}
-            hidden={!typeRows(c).some((r) => r.label === "run")}
-          >
-            <div class="flex flex-wrap justify-center gap-6">
-              {typeRows(c).map((row) => (
-                <div data-distance={row.value} data-sport={row.label} hidden={row.label !== "run"}>
-                  <p class="font-sans font-medium tracking-tight text-2xl text-paper">
-                    {fmt(row.value)}<span class="font-sans font-normal text-sm text-[var(--color-muted-40)]"> km</span>
-                  </p>
-                </div>
-              ))}
-            </div>
-            {(["run", "cycle", "swim"] as const).map((sport) => {
-              const link = links[sport];
-              return link ? (
-                <p class="route-hint mt-4 font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]" data-route-hint={sport} hidden={sport !== "run"}>
-                  {link.count} {link.count === 1 ? "route" : "routes"} · <span class="route-hint-action">view map →</span>
-                </p>
-              ) : null;
-            })}
-          </CityCard>
-          );
-        })
-      }
     </div>
   </section>
 
@@ -359,6 +330,8 @@ const filters = ["run", "cycle", "swim"];
 
   function applyFilter(filter: string) {
     selectedSport = filter;
+    // The hover paint follows the sport: purple to pink for runs, light to dark blue for rides.
+    if (fill) fill.dataset.paint = filter;
     hoveredCard = null;
     focusedCard = null;
     if (filter === "swim") selectedView = "city";
@@ -371,6 +344,11 @@ const filters = ["run", "cycle", "swim"];
 
     document.querySelectorAll<HTMLElement>("#top-strip [data-sport]").forEach((el) => {
       el.hidden = el.dataset.sport !== filter;
+    });
+    // Turtle for run and swim, globe flower for cycle.
+    document.querySelectorAll<SVGElement | HTMLElement>("[data-art-sports]").forEach((el) => {
+      if (el.dataset.artSports?.split(" ").includes(filter)) el.removeAttribute("hidden");
+      else el.setAttribute("hidden", "");
     });
 
     cityCards.forEach((card) => {
@@ -414,93 +392,53 @@ const filters = ["run", "cycle", "swim"];
     });
   });
 
-  const viewWheel = document.getElementById("view-wheel");
-  let setView: (view: string) => void = () => {};
-  if (viewWheel) {
-    const viewItems = Array.from(viewWheel.querySelectorAll<HTMLButtonElement>(".filter-item"));
-
-    setView = (view: string) => {
-      selectedView = view;
-      viewItems.forEach((item) => item.setAttribute("aria-selected", String(item.dataset.view === view)));
-      updateVisibility();
-    };
-
-    resetViewToCity = () => {
-      const cityItem = viewItems.find((item) => item.dataset.view === "city");
-      cityItem?.scrollIntoView({ behavior: "instant", inline: "center", block: "nearest" });
-      setView("city");
-    };
-
-    const updateActive = () => {
-      const wheelRect = viewWheel.getBoundingClientRect();
-      const center = wheelRect.left + wheelRect.width / 2;
-      let closest: HTMLButtonElement | null = null;
-      let closestDistance = Infinity;
-      viewItems.forEach((item) => {
-        const itemRect = item.getBoundingClientRect();
-        const itemCenter = itemRect.left + itemRect.width / 2;
-        const distance = Math.abs(itemCenter - center);
-        const proximity = Math.max(0, 1 - distance / (wheelRect.width / 2));
-        item.style.opacity = String(0.3 + proximity * 0.7);
-        item.style.transform = `scale(${0.82 + proximity * 0.18})`;
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closest = item;
-        }
-      });
-      if (closest) setView(closest.dataset.view ?? "city");
-    };
-
-    let frame: number | undefined;
-    const scheduleUpdate = () => {
-      if (frame !== undefined) return;
-      frame = requestAnimationFrame(() => {
-        frame = undefined;
-        updateActive();
-      });
-    };
-
-    viewWheel.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-
-    // A vertical page-scroll gesture over this horizontal wheel would otherwise get
-    // redirected into scrollLeft (since the wheel has no vertical overflow of its own),
-    // silently flipping the selected view. Let vertical-dominant gestures pass through
-    // to the page instead.
-    viewWheel.addEventListener(
-      "wheel",
-      (event) => {
-        if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-          event.preventDefault();
-          window.scrollBy({ top: event.deltaY });
-        }
-      },
-      { passive: false }
-    );
-
-    viewItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        item.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-        setView(item.dataset.view ?? "city");
-      });
-    });
-
-    updateActive();
-  }
+  // The watch on the top row picks the view: up / down buttons and the screen step
+  // through City, Gear and Routes, wrapping round.
+  const viewOrder = ["city", "gear", "routes"];
+  const watchItems = Array.from(document.querySelectorAll<HTMLElement>(".view-watch-item"));
+  let setView: (view: string) => void = (view: string) => {
+    selectedView = view;
+    watchItems.forEach((item) => item.toggleAttribute("aria-current", item.dataset.view === view));
+    updateVisibility();
+  };
+  resetViewToCity = () => setView("city");
+  const stepView = (step: number) => {
+    const index = viewOrder.indexOf(selectedView);
+    setView(viewOrder[(index + step + viewOrder.length) % viewOrder.length]);
+  };
+  document.querySelector(".view-watch-screen")?.addEventListener("click", () => stepView(1));
+  document.querySelectorAll<HTMLButtonElement>(".view-watch-button").forEach((button) => {
+    button.addEventListener("click", () => stepView(Number(button.dataset.step ?? 1)));
+  });
 
   updateVisibility();
 </script>
 
 <style>
+  /* Hovering a city paints the box from the left with that city's share of the total, in
+     strong purple-to-pink brush paint (from the painted NYT front page on the mood board):
+     a purple-violet-pink sweep, streaky bristle lines and a little paint grain. The paint is
+     revealed with clip-path rather than stretched, so the brush texture keeps its shape. */
+  #top-strip { width: clamp(140px, 28vw, 300px); height: 46px; }
   #city-fill {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    transform-origin: left center;
-    transform: scaleX(var(--city-share, 0));
-    background: color-mix(in srgb, var(--color-accent) 48%, transparent);
-    border-right: 1px solid color-mix(in srgb, var(--color-accent) 50%, transparent);
-    transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+    clip-path: inset(0 calc((1 - var(--city-share, 0)) * 100%) 0 0 round 0 10px 10px 0);
+    background:
+      repeating-linear-gradient(178deg, rgb(255 255 255 / 10%) 0 1.5px, transparent 1.5px 5px, rgb(60 0 70 / 12%) 5px 6px, transparent 6px 11px),
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='80'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9 .08' numOctaves='2' seed='5'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .35 -.05'/></filter><rect width='160' height='80' filter='url(%23g)'/></svg>"),
+      linear-gradient(100deg, #6f3fe0 0%, #9a5cf0 28%, #c45fd6 55%, #ee5aa6 80%, #ff6f9e 100%);
+    background-blend-mode: soft-light, overlay, normal;
+    transition: clip-path 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* Cycling: the same brush paint in blues, deep navy through to a light sky blue. */
+  #city-fill[data-paint="cycle"] {
+    background:
+      repeating-linear-gradient(178deg, rgb(255 255 255 / 10%) 0 1.5px, transparent 1.5px 5px, rgb(0 20 70 / 14%) 5px 6px, transparent 6px 11px),
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='80'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9 .08' numOctaves='2' seed='5'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .35 -.05'/></filter><rect width='160' height='80' filter='url(%23g)'/></svg>"),
+      linear-gradient(100deg, #13308f 0%, #1f55c8 28%, #3d86ea 55%, #6fb6f6 80%, #a9dcff 100%);
+    background-blend-mode: soft-light, overlay, normal;
   }
 
   .city-card:focus-visible {
@@ -719,7 +657,31 @@ const filters = ["run", "cycle", "swim"];
       if (points.length > 1) L.polyline(points, { color: accent, weight: 2.5, opacity: 0.75, lineCap: "round", interactive: false }).addTo(b.lines);
     });
     const radiusKm = Number(sport === "swim" ? b.target.dataset.swimFrameRadius : sport === "run" ? b.target.dataset.frameRadius : 0);
-    frameCityMap(b.map, b.target, cityMapBounds(all, radiusKm));
+    // Run maps with a fixed spot ("lat,lng,km", e.g. Melbourne's CBD) open on that instead.
+    const [lat, lng, km] = (b.target.dataset.frameCenter ?? "").split(",").map(Number);
+    let bounds = sport === "run" && b.target.dataset.frameCenter ? L.latLng(lat, lng).toBounds(km * 2000) : cityMapBounds(all, radiusKm);
+    // data-frame-shift ("km east,km north") slides the run frame across without changing its size.
+    if (sport === "run" && b.target.dataset.frameShift) {
+      const [east, north] = b.target.dataset.frameShift.split(",").map(Number);
+      const dLat = north / 110.57, dLng = east / (111.32 * Math.cos(bounds.getCenter().lat * Math.PI / 180));
+      bounds = L.latLngBounds([bounds.getSouth() + dLat, bounds.getWest() + dLng], [bounds.getNorth() + dLat, bounds.getEast() + dLng]);
+    }
+    // data-frame-bounds sets an exact view for this sport, overriding the framing above.
+    // frameCityMap leaves room around its bounds (they fill about half the tile's width);
+    // an exact view should fill the tile instead, so it's set directly.
+    const exact = (JSON.parse(b.target.dataset.frameBounds ?? "{}") as Record<string, [number, number, number, number]>)[sport];
+    if (exact) {
+      const view = L.latLngBounds([exact[0], exact[1]], [exact[2], exact[3]]);
+      b.map.invalidateSize();
+      b.map.setMinZoom(0);
+      b.map.setMaxZoom(18);
+      const zoom = b.map.getBoundsZoom(view, false);
+      b.map.setView(view.getCenter(), zoom, { animate: false });
+      b.map.setMinZoom(zoom);
+      b.map.setMaxZoom(zoom);
+      return;
+    }
+    frameCityMap(b.map, b.target, bounds);
   }
 
   document.querySelectorAll<HTMLElement>(".city-map").forEach((target) => {
@@ -839,12 +801,40 @@ const filters = ["run", "cycle", "swim"];
 <style>
   [data-filter-btn] { display: inline-flex; align-items: center; justify-content: center; min-width: 56px; min-height: 46px; padding: 9px 14px; cursor: pointer; }
   [data-filter-btn]:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  /* Top row: sport filters left, the view watch in the middle, hover bar and turtle right. */
+  .sport-bar { display: grid; grid-template-columns: 1fr auto 1fr; }
+  .sport-bar > :first-child { justify-self: start; }
+  .sport-bar > .sport-meter { justify-self: end; }
+  @media (max-width: 760px) {
+    /* Phones: filters, then the bar and artwork on their own row, then the watch. */
+    .sport-bar { grid-template-columns: minmax(0, 1fr); row-gap: 16px; }
+    .sport-bar > .sport-meter { grid-row: 2; justify-self: stretch; min-width: 0; gap: 12px; }
+    .sport-bar > .view-watch { grid-row: 3; justify-self: center; }
+    .sport-meter #top-strip { width: auto; flex: 1 1 auto; min-width: 0; }
+    .sport-meter .moving-turtle, .sport-meter .moving-flower { height: 40px; width: auto; }
+  }
+  /* The watch face (case and bezel from the homepage Garmin, strap removed). The screen
+     shows the three views as a Garmin-style menu, the current one inverted. */
+  .view-watch { position: relative; width: 168px; aspect-ratio: 440 / 427; }
+  .view-watch[hidden] { display: block; visibility: hidden; }
+  .view-watch-face { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 12px rgb(0 0 0 / 45%)); pointer-events: none; user-select: none; }
+  .view-watch-screen { position: absolute; left: 30%; top: 46%; width: 44%; height: 23%; display: flex; flex-direction: column; justify-content: center; gap: 1px; padding: 0; border: 0; background: transparent; cursor: pointer; color: #d3d5d0; }
+  .view-watch-item { display: block; padding: 1px 0; font: 700 11px / 1.15 "Arial Narrow", Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase; text-align: center; opacity: .55; border-radius: 2px; }
+  .view-watch-item[aria-current] { opacity: 1; background: #d3d5d0; color: #0d0e0d; }
+  .view-watch-button { position: absolute; width: 9%; height: 13%; padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: 6px; }
+  .view-watch-up { left: -1%; top: 30%; }
+  .view-watch-down { left: -1%; top: 57%; }
+  .view-watch-back { right: -1%; top: 57%; }
+  .view-watch-button:focus-visible, .view-watch-screen:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
   /* Running turtle, the homepage artwork drawn in the theme's text colour. */
   .moving-turtle { display: block; flex: none; height: 46px; aspect-ratio: 610 / 270; background: var(--color-paper); opacity: .9;
     -webkit-mask: url('/images/turtle.png') center / contain no-repeat; mask: url('/images/turtle.png') center / contain no-repeat; }
+  /* Globe flower, the homepage artwork, shown instead of the turtle on the cycle filter. */
+  .moving-flower { display: block; flex: none; height: 46px; width: auto; aspect-ratio: 1; color: var(--color-paper); opacity: .9; }
+  .moving-turtle[hidden], .moving-flower[hidden] { display: none; }
   /* The total in the same face as the SD card airport codes: Inter, extra bold, tight. */
-  .total-km { font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-weight: 800; letter-spacing: -.04em; }
-  .total-km span { font-weight: 700; letter-spacing: 0; }
+  .total-km { margin: 0; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-weight: 800; letter-spacing: -.04em; white-space: nowrap; text-shadow: 0 1px 2px rgb(0 0 0 / 35%); }
+  .total-km span { font-weight: 700; letter-spacing: 0; color: var(--color-paper); opacity: .8; }
 </style>
 
 <style>

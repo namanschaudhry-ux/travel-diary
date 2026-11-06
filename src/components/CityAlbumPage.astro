@@ -3,7 +3,7 @@
 // the distance as the album title and every run's name as the lyrics. On a white sleeve in both themes.
 import Layout from "../layouts/Layout.astro";
 import { allCityRuns } from "../data/city-all-runs";
-import { cityRideRoutes, citySlug, citySwimRoutes, cityTileLines } from "../data/city-routes";
+import { cityFrameCenter, cityRideRoutes, citySlug, citySwimRoutes, cityTileLines } from "../data/city-routes";
 import RouteOverlay from "./RouteOverlay.astro";
 
 interface Props { city: string }
@@ -11,6 +11,8 @@ const { city } = Astro.props;
 const routes = allCityRuns(city);
 // Width of each name in ems (measured in the heading font), so the title spans the map like the artist name on a cover.
 const titleEms: Record<string, number> = { "San Francisco": 5.551, "New York": 3.791, Melbourne: 4.547, Sydney: 3.044 };
+// Cities whose map opens on a fixed spot (cityFrameCenter), e.g. Melbourne's CBD.
+const fixedFrame = cityFrameCenter[city];
 const slug = citySlug(city);
 const sports = [
   { label: "run", href: `/moving/${slug}/`, has: true },
@@ -33,7 +35,7 @@ const km = Math.round(routes.reduce((total, route) => total + route.distanceKm, 
     <article class="album">
       <div class="album-inner">
         <h1 style={`--title-ems: ${titleEms[city]}`}>{city.toLowerCase()}</h1>
-        <RouteOverlay routes={routes} backgroundLines={cityTileLines(city).run} album />
+        <RouteOverlay routes={routes} backgroundLines={cityTileLines(city).run} album zoomable frameCenter={fixedFrame?.center} frameCenterRadiusKm={fixedFrame?.radiusKm} />
         <p class="album-count"><strong>{km} km</strong></p>
       </div>
     </article>
