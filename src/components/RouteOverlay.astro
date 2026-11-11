@@ -15,9 +15,15 @@ interface Props {
   frameRadiusKm?: number;
   // The album-cover city page: always the dark map, and the names set as lyrics.
   album?: boolean;
+  // Adds zoom buttons, pinch and double-click zoom to the otherwise fixed map.
+  zoomable?: boolean;
+  // Open on a fixed spot instead of where the routes bunch up: [lat, lng] and the
+  // distance in km to show either side of it (for example a city's CBD).
+  frameCenter?: [number, number];
+  frameCenterRadiusKm?: number;
 }
 
-const { routes, frameRadiusKm, backgroundLines, album = false } = Astro.props;
+const { routes, frameRadiusKm, backgroundLines, album = false, zoomable = false, frameCenter, frameCenterRadiusKm = 3 } = Astro.props;
 const routeDate = (iso: string) =>
   new Date(`${iso}T12:00:00`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" });
 const details = routes.map((route) => ({
@@ -30,7 +36,7 @@ const details = routes.map((route) => ({
 }));
 ---
 
-<figure class:list={["overlay-card", { "overlay-card--album": album }]} data-album={album ? "" : undefined} data-overlay-routes={JSON.stringify(details)} data-frame-radius={frameRadiusKm} data-background-lines={backgroundLines ? JSON.stringify(backgroundLines) : undefined}>
+<figure class:list={["overlay-card", { "overlay-card--album": album }]} data-album={album ? "" : undefined} data-zoomable={zoomable ? "" : undefined} data-overlay-routes={JSON.stringify(details)} data-frame-radius={frameRadiusKm} data-frame-center={frameCenter ? `${frameCenter[0]},${frameCenter[1]},${frameCenterRadiusKm}` : undefined} data-background-lines={backgroundLines ? JSON.stringify(backgroundLines) : undefined}>
   <div class="overlay-map" aria-label={backgroundLines ? "Map of recorded routes" : `Map of ${routes.length} routes drawn together`}></div>
   <figcaption class="route-caption route-caption--top" data-caption-name></figcaption>
   <figcaption class="route-caption route-caption--bottom">
@@ -69,12 +75,14 @@ const details = routes.map((route) => ({
       `https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/${theme === "light" ? "World_Light_Gray_Base" : "World_Dark_Gray_Base"}/MapServer/tile/{z}/{y}/{x}`;
     const accent = getComputedStyle(document.documentElement).getPropertyValue("--color-accent").trim() || "#b08968";
 
-    // Fixed zoom: no zoom buttons, scroll, pinch, double-click or keyboard zoom.
+    // Fixed zoom unless data-zoomable: no zoom buttons, scroll, pinch, double-click or keyboard zoom.
+    // The scroll wheel never zooms, so the map can't trap the page's scrolling.
+    const zoomable = "zoomable" in card.dataset;
     const map = L.map(target, {
-      zoomControl: false,
+      zoomControl: zoomable,
       scrollWheelZoom: false,
-      doubleClickZoom: false,
-      touchZoom: false,
+      doubleClickZoom: zoomable,
+      touchZoom: zoomable,
       boxZoom: false,
       keyboard: false,
       zoomSnap: 0,
@@ -201,14 +209,37 @@ const details = routes.map((route) => ({
     // of all route points, or those near the median point (data-frame-radius). A far-off route (a race out of town, say) can run
     // off the edge; choosing it slides the map across to it.
     const allPoints = background ? background.flat() : routes.flatMap(route => route.points);
-    const frameBounds = cityMapBounds(allPoints, Number(card.dataset.frameRadius ?? 0));
-    const frame = () => frameCityMap(map, target, frameBounds);
+    // data-frame-center ("lat,lng,km") overrides that with a fixed square around one spot.
+    const [centerLat, centerLng, centerKm] = (card.dataset.frameCenter ?? "").split(",").map(Number);
+    const frameBounds = card.dataset.frameCenter
+      ? L.latLng(centerLat, centerLng).toBounds(centerKm * 2000)
+      : cityMapBounds(allPoints, Number(card.dataset.frameRadius ?? 0));
+    const frame = () => {
+      frameCityMap(map, target, frameBounds);
+      // The framing locks the zoom; open it back up, as far as the map tiles go.
+      if (zoomable) {
+        map.setMinZoom(map.getZoom() - 2);
+        map.setMaxZoom(16);
+      }
+    };
     frame();
+    // A trackpad pinch arrives as a wheel event with ctrlKey set.
+    if (zoomable) {
+      target.addEventListener("wheel", (event) => {
+        if (!event.ctrlKey) return;
+        event.preventDefault();
+        map.setZoomAround(map.mouseEventToContainerPoint(event), map.getZoom() - event.deltaY * 0.02, { animate: false });
+      }, { passive: false });
+    }
     let resizeTimer: number | undefined;
+    let framedWidth = window.innerWidth;
     window.addEventListener("resize", () => {
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
         map.invalidateSize();
+        // Phones resize the page as the address bar slides; that shouldn't undo the reader's zoom.
+        if (zoomable && window.innerWidth === framedWidth) return;
+        framedWidth = window.innerWidth;
         frame();
       }, 150);
     });

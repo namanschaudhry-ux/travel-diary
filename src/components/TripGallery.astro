@@ -1066,14 +1066,28 @@ const accentCss = `:root { --trip-accent-dark: ${accent.onDark}; --color-accent:
      dark brown pebbled leather rim, fixed silver bezel, bold white icons
      fixed to the disc (they turn with it), the selected one boxed in white,
      and a white oval index on the hub in place of the triangle pointer. */
+  /* Same leather ring and layered silver bezel as the trip dial on /photos/, scaled to this
+     104px dial: pebbled chocolate leather (one dial-sized tile, so no seams), then a 6px bezel
+     of polished outer lip, knurled band and polished inner ring, split by dark grooves. */
   .camera-dial { background: #050505; border: 0; box-shadow: 0 0 0 1px #000, 0 8px 18px rgba(0, 0, 0, 0.55); }
   .camera-dial::before { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
-    background: radial-gradient(closest-side, transparent 86.5%, rgba(0,0,0,.55) 87.5%, transparent 90%), url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90'><filter id='p' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='2' seed='7' stitchTiles='stitch'/><feDiffuseLighting surfaceScale='1.3' lighting-color='%23fff'><feDistantLight azimuth='225' elevation='62'/></feDiffuseLighting><feComponentTransfer><feFuncR type='linear' slope='.45' intercept='.6'/><feFuncG type='linear' slope='.45' intercept='.6'/><feFuncB type='linear' slope='.45' intercept='.6'/></feComponentTransfer><feBlend in2='SourceGraphic' mode='multiply'/></filter><rect width='90' height='90' fill='%234a2a1a' filter='url(%23p)'/></svg>") 0 0 / 90px 90px, #45271a;
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,.45), inset 0 2px 3px rgba(255,220,190,.18);
+    background: radial-gradient(closest-side, transparent 86.5%, rgba(0,0,0,.6) 87.3%, transparent 89.5%), radial-gradient(closest-side, transparent 96%, rgba(0,0,0,.4)), url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='104' height='104'><filter id='p' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='turbulence' baseFrequency='.7' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1.6 0 0 0 1.1'/><feGaussianBlur stdDeviation='.4' result='h'/><feDiffuseLighting in='h' surfaceScale='1.1' lighting-color='%23fff' result='d'><feDistantLight azimuth='235' elevation='65'/></feDiffuseLighting><feSpecularLighting in='h' surfaceScale='1.1' specularConstant='.35' specularExponent='22' lighting-color='%23ffd9b8' result='s'><feDistantLight azimuth='235' elevation='65'/></feSpecularLighting><feComposite in='s' in2='SourceAlpha' operator='in' result='s2'/><feBlend in='SourceGraphic' in2='d' mode='multiply' result='m'/><feComposite in='s2' in2='m' operator='arithmetic' k2='.25' k3='1'/></filter><rect width='104' height='104' fill='%23573322' filter='url(%23p)'/></svg>") 0 0 / 104px 104px, #4e2d1d;
     mask: radial-gradient(closest-side, transparent 86.5%, #000 87%); }
-  .filter-dial-wrap::before { content: ""; position: absolute; left: -3px; top: -3px; width: 110px; height: 110px; border-radius: 50%; pointer-events: none;
-    background: conic-gradient(from 20deg, #f4f4f2, #a3a3a0 12%, #e9e9e6 24%, #8f8f8c 37%, #f7f7f5 50%, #a0a09d 62%, #e4e4e1 75%, #8d8d8a 88%, #f4f4f2);
-    mask: radial-gradient(closest-side, transparent calc(100% - 3.5px), #000 calc(100% - 3px)); }
+  .filter-dial-wrap::before, .filter-dial-wrap::after { content: ""; position: absolute; left: -6px; top: -6px; width: 116px; height: 116px; border-radius: 50%; pointer-events: none; }
+  .filter-dial-wrap::before {
+    background:
+      radial-gradient(closest-side, rgba(0,0,0,.85) calc(100% - 6px), rgba(0,0,0,.55) calc(100% - 5.47px), transparent calc(100% - 5.13px), transparent calc(100% - 3.93px), rgba(0,0,0,.75) calc(100% - 3.8px), rgba(0,0,0,.75) calc(100% - 3.4px), rgba(255,255,255,.35) calc(100% - 3.27px), transparent calc(100% - 3px), transparent calc(100% - 1.4px), rgba(0,0,0,.75) calc(100% - 1.27px), rgba(0,0,0,.75) calc(100% - .87px), rgba(255,255,255,.4) calc(100% - .73px), transparent calc(100% - .47px)),
+      linear-gradient(150deg, rgba(255,255,255,.2), transparent 45%, rgba(0,0,0,.28)),
+      conic-gradient(from 20deg, #f4f4f2, #a3a3a0 12%, #e9e9e6 24%, #8f8f8c 37%, #f7f7f5 50%, #a0a09d 62%, #e4e4e1 75%, #8d8d8a 88%, #f4f4f2);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 8px 18px rgba(0,0,0,.5);
+    mask: radial-gradient(closest-side, transparent calc(100% - 6.4px), #000 calc(100% - 6px)); }
+  .filter-dial-wrap::after {
+    background:
+      radial-gradient(closest-side, rgba(0,0,0,.45) calc(100% - 3.4px), transparent calc(100% - 2.4px), rgba(0,0,0,.35) calc(100% - 1.27px)),
+      conic-gradient(from 200deg, #e6e6e3, #8a8a87 15%, #d6d6d3 30%, #7c7c79 45%, #e9e9e6 60%, #888885 75%, #d2d2cf 88%, #e6e6e3),
+      repeating-conic-gradient(#fff 0 .5deg, #555 .7deg 1deg, #fff 1.2deg);
+    background-blend-mode: normal, multiply;
+    mask: radial-gradient(closest-side, transparent calc(100% - 3.4px), #000 calc(100% - 3.33px), #000 calc(100% - 1.33px), transparent calc(100% - 1.27px)); }
   .camera-dial-label { transform: translateX(-50%); color: #fff; padding: 4px; border-radius: 3px; transition: background-color 200ms ease, color 200ms ease; }
   .filter-dial-wrap .camera-dial-label { top: 10px; }
   .camera-dial-icon { width: 15px; height: 15px; stroke-width: 2.3; }
@@ -1082,7 +1096,7 @@ const accentCss = `:root { --trip-accent-dark: ${accent.onDark}; --color-accent:
     .camera-dial-label:hover { color: #fff; box-shadow: inset 0 0 0 1.5px #fff; }
     .camera-dial-label[aria-selected="true"]:hover { color: #050505; box-shadow: none; }
   }
-  .camera-dial-hub { background: radial-gradient(circle at 40% 30%, #161616 0%, #000 65%); box-shadow: 0 0 0 1px #1a1a1a, 0 2px 6px rgba(0, 0, 0, 0.7); font-family: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; font-size: 9px; font-weight: 800; letter-spacing: .04em; color: #fff; }
+  .camera-dial-hub { background: #000; box-shadow: 0 0 0 1px #1a1a1a; font-family: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif; font-size: 9px; font-weight: 800; letter-spacing: .04em; color: #fff; }
   /* The hub is a button (shows all photos), as on the NYC page. */
   .camera-dial-hub { padding: 0; appearance: none; -webkit-appearance: none; cursor: pointer; pointer-events: auto; z-index: 2; transition: color 200ms ease; }
   .camera-dial-hub[aria-pressed="false"] { color: rgba(255, 255, 255, 0.7); }

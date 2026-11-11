@@ -3,9 +3,18 @@ import { additionalNewYorkPhotos } from "../../data/new-york-additions";
 import PhotoMap from "../../components/PhotoMap.astro";
 import MapIntro from "../../components/MapIntro.astro";
 import LanguageToggle from "../../components/LanguageToggle.astro";
+import SdCard from "../../components/SdCard.astro";
 import { Image } from "astro:assets";
+// The Faith Ringgold tote from the MoMA shop (New York Spring '23, IMG_9894), cut out of its photo.
+import momaTote from "../../assets/photos/new-york/moma-tote.png";
+// The "US Open Fan Week" sign from the US Open Entrance photo (dji_20260830044059_0232),
+// cropped out and straightened.
+import usOpenSign from "../../assets/photos/new-york/us-open-sign.png";
+// The top floors of 173 Avenue B (blue fire escapes and cornice), sky removed.
+import avenueBBuilding from "../../assets/photos/new-york/avenue-b-building.png";
+// WatchHouse Park Ave South's wood-panelled ceiling and wall (IMG_8702), door and couch removed.
+import watchhousePanels from "../../assets/photos/new-york/watchhouse-panels.png";
 import Layout from "../../layouts/Layout.astro";
-import { wordsAttr } from "../../data/i18n";
 import photo0 from "../../assets/photos/new-york/park-arch.jpg";
 import photo1 from "../../assets/photos/new-york/street-corner.jpg";
 import photo2 from "../../assets/photos/new-york/window-view.jpg";
@@ -171,6 +180,8 @@ const dialIcons: Record<string, string> = {
   buildings: `<path d="M3 21V9l5-3v15M8 21V6l5-3v18M13 21V11l5-4v14"/><path d="M3 21h18"/>`,
 };
 const initialCount = photos.filter(photo => photo.tags.includes("buildings")).length;
+// SD card numbers, worked out the same way as on the other trip pages.
+const shootDays = new Set(photos.map((photo) => photo.djiDate).filter(Boolean)).size;
 ---
 
 <Layout title="New York — Naman">
@@ -191,6 +202,26 @@ const initialCount = photos.filter(photo => photo.tags.includes("buildings")).le
       <span class="map-word">map</span>
     </div>
     <p id="image-count" class="image-count" aria-live="polite" aria-atomic="true" data-i18n-en={`${initialCount} ${initialCount === 1 ? "image" : "images"}`} data-i18n-es={`${initialCount} ${initialCount === 1 ? "imagen" : "imágenes"}`} data-i18n-fr={`${initialCount} ${initialCount === 1 ? "image" : "images"}`}>{initialCount} images</p>
+    <div class="trip-soundtrack">
+      <iframe
+        title="Spotify player: Purple Rain by Prince"
+        src="https://open.spotify.com/embed/track/1uvyZBs4IZYRebHIB1747m?utm_source=generator&theme=0"
+        width="100%"
+        height="80"
+        frameborder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+      ></iframe>
+      <p class="soundtrack-note" data-i18n-en="track of the season" data-i18n-es="canción de la temporada" data-i18n-fr="morceau de la saison">track of the season</p>
+    </div>
+    </div>
+    <div class="nyc-keepsakes" aria-hidden="true">
+      <Image class="nyc-sign" src={usOpenSign} alt="" width={160} densities={[1, 2]} loading="eager" />
+      <Image class="nyc-building" src={avenueBBuilding} alt="" width={160} densities={[1, 2]} loading="eager" />
+      <Image class="nyc-tote" src={momaTote} alt="" width={160} densities={[1, 2]} loading="eager" />
+    </div>
+    <div class="nyc-keepsakes nyc-keepsakes--right" aria-hidden="true">
+      <Image class="nyc-panels" src={watchhousePanels} alt="" width={260} densities={[1, 2]} loading="eager" />
     </div>
     <div class="filter-dial-wrap">
       <div class="camera-dial-pointer" aria-hidden="true"></div>
@@ -222,30 +253,16 @@ const initialCount = photos.filter(photo => photo.tags.includes("buildings")).le
       </div>
     </div>
     <div class="title-column">
-      <div class="trip-soundtrack">
-        <iframe
-          title="Spotify player: Purple Rain by Prince"
-          src="https://open.spotify.com/embed/track/1uvyZBs4IZYRebHIB1747m?utm_source=generator&theme=0"
-          width="100%"
-          height="80"
-          frameborder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-        ></iframe>
-        <p class="soundtrack-note" data-i18n-en="track of the season" data-i18n-es="canción de la temporada" data-i18n-fr="morceau de la saison">track of the season</p>
-      </div>
-    <h1 class="city-title" aria-label="Summer ’26 — New York City">
-      <span class="city-season" data-i18n-en="summer ’26" data-i18n-es="verano ’26" data-i18n-fr="été ’26">summer ’26</span>
-      <span
-        class="city-words"
-        data-i18n-words
-        data-i18n-en={wordsAttr("new-york", "en")}
-        data-i18n-es={wordsAttr("new-york", "es")}
-        data-i18n-fr={wordsAttr("new-york", "fr")}
-      >
-        <span>new</span><span>york</span><span>city</span>
-      </span>
-    </h1>
+    <SdCard
+      slug="new-york"
+      season="summer ’26"
+      code="EWR"
+      accent={defaultAccent}
+      count={photos.length}
+      categories={photoCategories.length}
+      days={shootDays}
+      heading
+    />
     </div>
   </div>
 
@@ -891,6 +908,7 @@ const initialCount = photos.filter(photo => photo.tags.includes("buildings")).le
   }
   .top-controls .left-controls {
     grid-column: 1;
+    grid-row: 1;
     justify-self: start;
     display: flex;
     flex-direction: column;
@@ -905,7 +923,10 @@ const initialCount = photos.filter(photo => photo.tags.includes("buildings")).le
   }
   .top-controls .filter-dial-wrap {
     grid-column: 2;
+    grid-row: 1;
     justify-self: center;
+    /* Same size as the dial on the other trip pages (TripGallery). */
+    zoom: 1.3125;
   }
   @media (max-width: 640px) {
     .top-controls {
@@ -918,12 +939,16 @@ const initialCount = photos.filter(photo => photo.tags.includes("buildings")).le
       grid-row: 1;
       justify-self: start;
     }
-    .top-controls .title-column { display: contents; }
-    .top-controls .city-title { grid-column: 2; grid-row: 1; }
-    .top-controls .trip-soundtrack { grid-column: 1 / -1; grid-row: 3; justify-self: stretch; align-items: center; }
-    .top-controls .soundtrack-note { text-align: center; }
+    .top-controls .title-column { grid-column: 2; grid-row: 1; justify-self: end; align-self: start; }
+    /* On phones the sign and tote sit beside the dial on the second row, smaller; the
+       building and the WatchHouse panels don't fit beside it, so they're left out. */
+    .top-controls .nyc-keepsakes { grid-column: 1; grid-row: 2; justify-self: start; gap: 5px; margin: 0; }
+    .top-controls .nyc-tote { width: 44px; }
+    .top-controls .nyc-sign { width: 40px; }
+    .top-controls .nyc-building, .top-controls .nyc-keepsakes--right { display: none; }
     .top-controls .filter-dial-wrap {
       grid-column: 1 / -1;
+      grid-row: 2;
       justify-self: center;
     }
   }
@@ -1114,32 +1139,66 @@ const initialCount = photos.filter(photo => photo.tags.includes("buildings")).le
     .landmark-panel { transition: none; }
   }
 
+  /* SD card as the page heading, top right, as on the other trip pages. */
+  .title-column .sd-card { zoom: .913; }
   .title-column {
     grid-column: 3;
+    grid-row: 1;
     justify-self: end;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 20px;
+    filter: drop-shadow(0 10px 18px rgb(0 0 0 / 35%));
   }
+  /* Scaled down so the player lines up with the gallery switch above it (151px wide).
+     Spotify fixes the player's height, so the whole player is shrunk with zoom instead. */
   .trip-soundtrack {
-    width: min(300px, 100%);
+    width: auto;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 4px;
   }
-  .trip-soundtrack iframe { display: block; width: 100%; height: 80px; border: 0; border-radius: 12px; }
-  .soundtrack-note { margin: 0; font: 11px / 1.4 monospace; letter-spacing: .06em; color: var(--color-paper-dim); text-align: right; }
-  .city-title {
-    grid-column: 3;
+  .trip-soundtrack iframe { display: block; width: 240px; height: 80px; border: 0; border-radius: 12px; zoom: .63; }
+  .soundtrack-note { margin: 0; font: 11px / 1.4 monospace; letter-spacing: .06em; color: var(--color-paper-dim); text-align: left; }
+  /* Keepsakes either side of the dial. Left: the US Open Fan Week sign, the top of 173
+     Avenue B and the MoMA-shop tote. Right: WatchHouse's wood panels. */
+  .nyc-keepsakes {
+    grid-column: 1;
+    grid-row: 1;
     justify-self: end;
-    margin: 0;
-    color: var(--color-paper);
-    font: 17px / 1.2 monospace;
-    letter-spacing: .06em;
-    text-align: right;
+    align-self: center;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-right: 8px;
+    pointer-events: none;
+    user-select: none;
   }
-  .city-title span { display: block; }
-  .city-title .city-season { color: #ffd60a; margin-bottom: 8px; white-space: nowrap; }
+  .nyc-keepsakes--right { grid-column: 3; justify-self: start; margin: 0 0 0 44px; }
+  .nyc-keepsakes img { display: block; height: auto; filter: drop-shadow(0 8px 14px rgb(0 0 0 / 45%)); }
+  .nyc-tote { width: 76px; }
+  .nyc-sign { width: 64px; border-radius: 2px; }
+  .nyc-building { width: 72px; }
+  .nyc-panels { width: 130px; }
+
+  /* Same leather ring and layered silver bezel as the trip dial on /photos/, scaled to this
+     104px dial: pebbled chocolate leather (one dial-sized tile, so no seams), then a 6px bezel
+     of polished outer lip, knurled band and polished inner ring, split by dark grooves. */
+  .camera-dial { background: #050505; border: 0; box-shadow: 0 0 0 1px #000, 0 8px 18px rgba(0, 0, 0, 0.55); }
+  .camera-dial::before { content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(closest-side, transparent 86.5%, rgba(0,0,0,.6) 87.3%, transparent 89.5%), radial-gradient(closest-side, transparent 96%, rgba(0,0,0,.4)), url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='104' height='104'><filter id='p' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='turbulence' baseFrequency='.7' numOctaves='2' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1.6 0 0 0 1.1'/><feGaussianBlur stdDeviation='.4' result='h'/><feDiffuseLighting in='h' surfaceScale='1.1' lighting-color='%23fff' result='d'><feDistantLight azimuth='235' elevation='65'/></feDiffuseLighting><feSpecularLighting in='h' surfaceScale='1.1' specularConstant='.35' specularExponent='22' lighting-color='%23ffd9b8' result='s'><feDistantLight azimuth='235' elevation='65'/></feSpecularLighting><feComposite in='s' in2='SourceAlpha' operator='in' result='s2'/><feBlend in='SourceGraphic' in2='d' mode='multiply' result='m'/><feComposite in='s2' in2='m' operator='arithmetic' k2='.25' k3='1'/></filter><rect width='104' height='104' fill='%23573322' filter='url(%23p)'/></svg>") 0 0 / 104px 104px, #4e2d1d;
+    mask: radial-gradient(closest-side, transparent 86.5%, #000 87%); }
+  .filter-dial-wrap::before, .filter-dial-wrap::after { content: ""; position: absolute; left: -6px; top: -6px; width: 116px; height: 116px; border-radius: 50%; pointer-events: none; }
+  .filter-dial-wrap::before {
+    background:
+      radial-gradient(closest-side, rgba(0,0,0,.85) calc(100% - 6px), rgba(0,0,0,.55) calc(100% - 5.47px), transparent calc(100% - 5.13px), transparent calc(100% - 3.93px), rgba(0,0,0,.75) calc(100% - 3.8px), rgba(0,0,0,.75) calc(100% - 3.4px), rgba(255,255,255,.35) calc(100% - 3.27px), transparent calc(100% - 3px), transparent calc(100% - 1.4px), rgba(0,0,0,.75) calc(100% - 1.27px), rgba(0,0,0,.75) calc(100% - .87px), rgba(255,255,255,.4) calc(100% - .73px), transparent calc(100% - .47px)),
+      linear-gradient(150deg, rgba(255,255,255,.2), transparent 45%, rgba(0,0,0,.28)),
+      conic-gradient(from 20deg, #f4f4f2, #a3a3a0 12%, #e9e9e6 24%, #8f8f8c 37%, #f7f7f5 50%, #a0a09d 62%, #e4e4e1 75%, #8d8d8a 88%, #f4f4f2);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 8px 18px rgba(0,0,0,.5);
+    mask: radial-gradient(closest-side, transparent calc(100% - 6.4px), #000 calc(100% - 6px)); }
+  .filter-dial-wrap::after {
+    background:
+      radial-gradient(closest-side, rgba(0,0,0,.45) calc(100% - 3.4px), transparent calc(100% - 2.4px), rgba(0,0,0,.35) calc(100% - 1.27px)),
+      conic-gradient(from 200deg, #e6e6e3, #8a8a87 15%, #d6d6d3 30%, #7c7c79 45%, #e9e9e6 60%, #888885 75%, #d2d2cf 88%, #e6e6e3),
+      repeating-conic-gradient(#fff 0 .5deg, #555 .7deg 1deg, #fff 1.2deg);
+    background-blend-mode: normal, multiply;
+    mask: radial-gradient(closest-side, transparent calc(100% - 3.4px), #000 calc(100% - 3.33px), #000 calc(100% - 1.33px), transparent calc(100% - 1.27px)); }
 </style>

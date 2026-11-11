@@ -1,0 +1,493 @@
+---
+// A time-lapse of a city's running map: every run draws itself onto the dark
+// map in date order, month by month, until the whole picture is there. The
+// month shows large in the top-right corner. Play / pause / restart and a
+// scrubber sit under the map. With prefers-reduced-motion the finished map
+// shows first and only plays when asked.
+//
+// Add ?render to the page URL to get the bare map filling the window, with
+// window.runTimelapse.seek(seconds) for frame-by-frame video export
+// (scripts/render-timelapse.mjs).
+import "leaflet/dist/leaflet.css";
+import runsFile from "../data/strava-city-runs.json";
+import { decodePolyline } from "../lib/polyline";
+
+interface Props {
+  city: string;
+  // [lat, lng] to centre on and the distance in km to show either side of it,
+  // framed the same way as the city's tile on the Moving page. Without it the
+  // map frames the middle 90% of all route points, like the other city tiles.
+  frameCenter?: [number, number];
+  frameCenterRadiusKm?: number;
+  // Seconds for the whole span of months (a short hold is added at the end).
+  seconds?: number;
+  // With frameCenter: only runs that come within this many km of it are drawn
+  // and counted; the rest would be off the map. The clock starts at the first one.
+  nearKm?: number;
+  // Leave out months with no runs, so a city visited on trips goes straight
+  // from one trip to the next.
+  skipEmptyMonths?: boolean;
+}
+
+const { city, frameCenter, frameCenterRadiusKm = 3.5, seconds = 48, nearKm = 12, skipEmptyMonths = false } = Astro.props;
+type Activity = { city: string; start_local: string; distance_km: number; polyline: string };
+const kmFromCenter = ([lat, lng]: [number, number]) =>
+  frameCenter ? Math.hypot((lat - frameCenter[0]) * 110.57, (lng - frameCenter[1]) * 111.32 * Math.cos((frameCenter[0] * Math.PI) / 180)) : 0;
+const runs = (runsFile.activities as Activity[])
+  .filter((run) => run.city === city && run.polyline && (!frameCenter || decodePolyline(run.polyline).some((point) => kmFromCenter(point) <= nearKm)))
+  .sort((a, b) => a.start_local.localeCompare(b.start_local))
+  .map((run) => [run.start_local.slice(0, 19), Math.round(run.distance_km * 100) / 100, run.polyline]);
+const years = [...new Set(runs.map((run) => String(run[0]).slice(0, 4)))];
+---
+
+<div class="timelapse" data-frame-center={frameCenter ? `${frameCenter.join(",")},${frameCenterRadiusKm}` : undefined} data-seconds={seconds} data-skip-empty={skipEmptyMonths ? "" : undefined}>
+  <figure class="timelapse-card">
+    <div class="timelapse-map" role="img" aria-label={`${city} runs drawn onto the map month by month, ${runs.length} runs in all`}></div>
+    <canvas class="timelapse-canvas" data-layer="base" aria-hidden="true"></canvas>
+    <canvas class="timelapse-canvas" data-layer="live" aria-hidden="true"></canvas>
+    <div class="timelapse-shade" aria-hidden="true"></div>
+    <span class="timelapse-city" aria-hidden="true">{city}</span>
+    <span class="timelapse-month" aria-live="off" data-month></span>
+    <span class="timelapse-stats" aria-hidden="true"><span data-count>0</span> <span data-noun>runs</span> on this map · <span data-km>0</span> km</span>
+  </figure>
+
+  <div class="timelapse-controls">
+    <button type="button" class="timelapse-button" data-play aria-label="Play">
+      <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z" /></svg>
+      <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z" /></svg>
+    </button>
+    <button type="button" class="timelapse-button" data-restart aria-label="Restart">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5a5.5 5.5 0 1 1-5.2 3.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /><path d="M1.6 2.4l1.2 3.8 3.8-1.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </button>
+    <div class="timelapse-scrub">
+      <input type="range" min="0" max="1000" step="1" value="0" data-scrub aria-label="Time-lapse position" />
+      <div class="timelapse-years" aria-hidden="true" data-years>
+        {years.map((year) => <span data-year={year}>{year}</span>)}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-runs set:html={JSON.stringify(runs)} />
+</div>
+
+<script>
+  import L from "leaflet";
+  import { decodePolyline } from "../lib/polyline";
+  import { cityMapBounds, frameCityMap } from "../lib/city-map-frame";
+
+  const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const ACCENT = "#b08968"; // the dark theme's accent; the time-lapse is always on the dark map
+  const HEAD = "#f3e2cd";
+  const REST_ALPHA = 0.75; // matches the Moving page's city tiles
+  const FADE = 0.8; // seconds a finished run stays bright before settling
+  const HOLD = 2; // seconds the finished map holds before the end
+
+  type Run = { monthIndex: number; km: number; t0: number; t1: number; points: [number, number][]; xy: Float32Array; cum: Float32Array };
+
+  const root = document.querySelector<HTMLElement>(".timelapse");
+  if (root) setup(root);
+
+  function setup(root: HTMLElement) {
+    const card = root.querySelector<HTMLElement>(".timelapse-card")!;
+    const target = root.querySelector<HTMLElement>(".timelapse-map")!;
+    const base = root.querySelector<HTMLCanvasElement>('[data-layer="base"]')!;
+    const live = root.querySelector<HTMLCanvasElement>('[data-layer="live"]')!;
+    const monthEl = root.querySelector<HTMLElement>("[data-month]")!;
+    const countEl = root.querySelector<HTMLElement>("[data-count]")!;
+    const kmEl = root.querySelector<HTMLElement>("[data-km]")!;
+    const nounEl = root.querySelector<HTMLElement>("[data-noun]")!;
+    const playBtn = root.querySelector<HTMLButtonElement>("[data-play]")!;
+    const restartBtn = root.querySelector<HTMLButtonElement>("[data-restart]")!;
+    const scrub = root.querySelector<HTMLInputElement>("[data-scrub]")!;
+    const render = new URLSearchParams(location.search).has("render");
+    if (render) root.classList.add("is-render");
+
+    // ---- Timeline: every month gets the same share of time; each run starts
+    // at its point within its month and takes longer to draw the longer it is.
+    const raw: [string, number, string][] = JSON.parse(root.querySelector("[data-runs]")?.textContent ?? "[]");
+    if (!raw.length) return;
+    const monthOf = (iso: string) => Number(iso.slice(0, 4)) * 12 + Number(iso.slice(5, 7)) - 1;
+    const firstMonth = monthOf(raw[0][0]);
+    const lastMonth = monthOf(raw[raw.length - 1][0]);
+    // The months on the clock, as absolute month numbers (year * 12 + month).
+    const months = "skipEmpty" in root.dataset
+      ? [...new Set(raw.map(([iso]) => monthOf(iso)))].sort((a, b) => a - b)
+      : Array.from({ length: lastMonth - firstMonth + 1 }, (_, i) => firstMonth + i);
+    const slotOf = new Map(months.map((month, slot) => [month, slot]));
+    const monthCount = months.length;
+    const perMonth = Number(root.dataset.seconds ?? 48) / monthCount;
+    const runs: Run[] = raw.map(([iso, km, encoded]) => {
+      const year = Number(iso.slice(0, 4));
+      const month = Number(iso.slice(5, 7)) - 1;
+      const days = new Date(year, month + 1, 0).getDate();
+      const dayFrac = (Number(iso.slice(8, 10)) - 1 + (Number(iso.slice(11, 13)) + Number(iso.slice(14, 16)) / 60) / 24) / days;
+      const monthIndex = slotOf.get(monthOf(iso))!;
+      const t0 = (monthIndex + dayFrac) * perMonth;
+      const draw = Math.min(1.8, 0.4 + km * 0.07);
+      return { monthIndex, km, t0, t1: t0 + draw, points: decodePolyline(encoded), xy: new Float32Array(), cum: new Float32Array() };
+    });
+    const lastEnd = Math.max(monthCount * perMonth, ...runs.map((run) => run.t1 + FADE));
+    const duration = lastEnd + HOLD;
+
+    // Year labels under the scrubber, at the first month of each year on the clock.
+    const yearEls = Array.from(root.querySelectorAll<HTMLElement>("[data-year]"));
+    yearEls.forEach((el) => {
+      const slot = months.findIndex((month) => month >= Number(el.dataset.year) * 12);
+      el.style.left = `${(Math.max(0, slot) * perMonth / duration) * 100}%`;
+    });
+    // Hide a year that would run into the one before it (close trips, narrow screens).
+    function spaceYears() {
+      let right = -Infinity;
+      for (const el of yearEls) {
+        el.style.visibility = "";
+        const box = el.getBoundingClientRect();
+        if (box.left < right + 8) el.style.visibility = "hidden";
+        else right = box.right;
+      }
+    }
+
+    // ---- Map: the dark tiles, fixed, framed like the city's tile on the Moving page.
+    const map = L.map(target, {
+      zoomControl: false, attributionControl: true, dragging: false, scrollWheelZoom: false, doubleClickZoom: false,
+      touchZoom: false, boxZoom: false, keyboard: false, zoomSnap: 0, fadeAnimation: false, zoomAnimation: false,
+    });
+    const tiles = L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 16, attribution: "Tiles &copy; Esri", crossOrigin: true,
+    }).addTo(map);
+    const [lat, lng, km] = (root.dataset.frameCenter ?? "").split(",").map(Number);
+    const frameBounds = root.dataset.frameCenter
+      ? L.latLng(lat, lng).toBounds(km * 2000)
+      : cityMapBounds(runs.flatMap((run) => run.points));
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    const baseCtx = base.getContext("2d")!;
+    const liveCtx = live.getContext("2d")!;
+    const done = new Uint8Array(runs.length);
+
+    function layout() {
+      frameCityMap(map, target, frameBounds);
+      width = target.clientWidth;
+      height = target.clientHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      for (const canvas of [base, live]) {
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+      }
+      // Project every run to pixels once, dropping points under half a pixel apart.
+      for (const run of runs) {
+        const xy: number[] = [];
+        const cum: number[] = [];
+        let total = 0;
+        for (const point of run.points) {
+          const p = map.latLngToContainerPoint(point);
+          const n = xy.length;
+          if (n) {
+            const d = Math.hypot(p.x - xy[n - 2], p.y - xy[n - 1]);
+            if (d < 0.5) continue;
+            total += d;
+          }
+          xy.push(p.x, p.y);
+          cum.push(total);
+        }
+        run.xy = Float32Array.from(xy);
+        run.cum = Float32Array.from(cum);
+      }
+      resetBase();
+      spaceYears();
+    }
+
+    function style(ctx: CanvasRenderingContext2D) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = ACCENT;
+    }
+
+    function resetBase() {
+      done.fill(0);
+      baseCtx.setTransform(1, 0, 0, 1, 0, 0);
+      baseCtx.clearRect(0, 0, base.width, base.height);
+    }
+
+    // Strokes the first `frac` of a run's length; returns where the line has got to.
+    function stroke(ctx: CanvasRenderingContext2D, run: Run, frac: number): [number, number] | null {
+      const { xy, cum } = run;
+      if (xy.length < 4) return null;
+      const goal = cum[cum.length - 1] * Math.min(1, frac);
+      ctx.beginPath();
+      ctx.moveTo(xy[0], xy[1]);
+      let head: [number, number] = [xy[0], xy[1]];
+      for (let i = 1; i < cum.length; i++) {
+        if (cum[i] <= goal) {
+          ctx.lineTo(xy[2 * i], xy[2 * i + 1]);
+          head = [xy[2 * i], xy[2 * i + 1]];
+          continue;
+        }
+        const seg = cum[i] - cum[i - 1];
+        const k = seg > 0 ? (goal - cum[i - 1]) / seg : 0;
+        head = [xy[2 * i - 2] + (xy[2 * i] - xy[2 * i - 2]) * k, xy[2 * i - 1] + (xy[2 * i + 1] - xy[2 * i - 1]) * k];
+        ctx.lineTo(head[0], head[1]);
+        break;
+      }
+      ctx.stroke();
+      return head;
+    }
+
+    let lastDrawn = -1;
+    function draw(t: number) {
+      if (t < lastDrawn) resetBase();
+      lastDrawn = t;
+      style(baseCtx);
+      baseCtx.globalAlpha = REST_ALPHA;
+      liveCtx.setTransform(1, 0, 0, 1, 0, 0);
+      liveCtx.clearRect(0, 0, live.width, live.height);
+      style(liveCtx);
+      const heads: [number, number][] = [];
+      let count = 0;
+      let kmSoFar = 0;
+      for (let i = 0; i < runs.length; i++) {
+        const run = runs[i];
+        if (run.t0 > t) break; // runs are in date order
+        count++;
+        const frac = (t - run.t0) / (run.t1 - run.t0);
+        kmSoFar += run.km * Math.min(1, frac);
+        if (done[i]) continue;
+        if (t >= run.t1 + FADE) {
+          stroke(baseCtx, run, 1);
+          done[i] = 1;
+          continue;
+        }
+        // Still drawing, or just finished and settling from bright to the map's tone.
+        liveCtx.globalAlpha = frac < 1 ? 1 : 1 - (1 - REST_ALPHA) * Math.min(1, (t - run.t1) / FADE);
+        const head = stroke(liveCtx, run, frac);
+        if (head && frac < 1) heads.push(head);
+      }
+      // A small bright point at the front of each line being drawn.
+      liveCtx.globalAlpha = 1;
+      liveCtx.fillStyle = HEAD;
+      liveCtx.shadowColor = ACCENT;
+      liveCtx.shadowBlur = 10;
+      for (const [x, y] of heads) {
+        liveCtx.beginPath();
+        liveCtx.arc(x, y, 2.6, 0, Math.PI * 2);
+        liveCtx.fill();
+      }
+      liveCtx.shadowBlur = 0;
+
+      const monthIndex = Math.min(monthCount - 1, Math.max(0, Math.floor(t / perMonth)));
+      const absolute = months[monthIndex];
+      const label = `${MONTHS[absolute % 12]} ${Math.floor(absolute / 12)}`;
+      if (monthEl.textContent !== label) monthEl.textContent = label;
+      countEl.textContent = count.toLocaleString("en-AU");
+      nounEl.textContent = count === 1 ? "run" : "runs";
+      kmEl.textContent = Math.round(kmSoFar).toLocaleString("en-AU");
+      scrub.value = String(Math.round((t / duration) * 1000));
+    }
+
+    // ---- Playback
+    let time = 0;
+    let playing = false;
+    let wallStart = 0;
+    let timeStart = 0;
+    let frame = 0;
+
+    function tick(now: number) {
+      time = Math.min(duration, timeStart + (now - wallStart) / 1000);
+      draw(time);
+      if (time >= duration) return setPlaying(false);
+      frame = requestAnimationFrame(tick);
+    }
+    function setPlaying(on: boolean) {
+      playing = on;
+      cancelAnimationFrame(frame);
+      root!.classList.toggle("is-playing", on);
+      playBtn.setAttribute("aria-label", on ? "Pause" : time >= duration ? "Play again" : "Play");
+      if (!on) return;
+      if (time >= duration) time = 0;
+      timeStart = time;
+      wallStart = performance.now();
+      frame = requestAnimationFrame(tick);
+    }
+    function seek(t: number) {
+      time = Math.max(0, Math.min(duration, t));
+      timeStart = time;
+      wallStart = performance.now();
+      draw(time);
+    }
+
+    playBtn.addEventListener("click", () => setPlaying(!playing));
+    restartBtn.addEventListener("click", () => { seek(0); setPlaying(true); });
+    scrub.addEventListener("input", () => seek((Number(scrub.value) / 1000) * duration));
+
+    layout();
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Reduced motion: the finished map, still, with the play button ready.
+    seek(reduced || render ? (render ? 0 : duration) : 0);
+
+    let resizeTimer: number | undefined;
+    let laidOutWidth = window.innerWidth;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        // Phones resize as the address bar slides; only re-frame on a real width change.
+        if (window.innerWidth === laidOutWidth && target.clientHeight === height) return;
+        laidOutWidth = window.innerWidth;
+        map.invalidateSize();
+        layout();
+        draw(time);
+      }, 150);
+    });
+
+    if (render) {
+      // For the video export: seek(t) draws the frame at t seconds; ready resolves once tiles have loaded.
+      const ready = new Promise<void>((resolve) => {
+        tiles.once("load", () => resolve());
+        setTimeout(resolve, 15000);
+      });
+      (window as any).runTimelapse = { duration, seek: (t: number) => seek(t), ready };
+      return;
+    }
+
+    // Start playing the first time most of the map is on screen.
+    if (!reduced) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          observer.disconnect();
+          setPlaying(true);
+        }
+      }, { threshold: 0.5 });
+      observer.observe(card);
+    }
+  }
+</script>
+
+<style>
+  .timelapse { --tl-accent: #b08968; }
+  .timelapse-card {
+    position: relative;
+    margin: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--color-card-border);
+    background: #161616;
+  }
+  .timelapse-map {
+    height: min(68vh, 680px);
+    min-height: 420px;
+    z-index: 0;
+    background: #161616;
+  }
+  .timelapse-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 400;
+    pointer-events: none;
+  }
+  .timelapse-shade {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 160px;
+    z-index: 450;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgb(0 0 0 / 55%), transparent);
+  }
+  .timelapse-month {
+    position: absolute;
+    top: clamp(14px, 3vw, 28px);
+    right: clamp(16px, 3.4vw, 32px);
+    z-index: 500;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(32px, 7.5vw, 76px);
+    line-height: .9;
+    letter-spacing: -.035em;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+  .timelapse-city {
+    position: absolute;
+    top: clamp(18px, 3.4vw, 34px);
+    left: clamp(16px, 3.4vw, 32px);
+    z-index: 500;
+    font: 600 12px var(--font-sans);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--tl-accent);
+    pointer-events: none;
+  }
+  .timelapse-stats {
+    position: absolute;
+    left: clamp(16px, 3.4vw, 32px);
+    bottom: clamp(16px, 3vw, 28px);
+    z-index: 500;
+    padding: 4px 8px;
+    border-radius: 3px;
+    background: rgb(0 0 0 / 45%);
+    font: 12px / 1.4 monospace;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 80%);
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+  .timelapse-map :global(.leaflet-control-attribution) { font-size: 10px; background: rgb(0 0 0 / 35%); color: rgb(255 255 255 / 70%); }
+  .timelapse-map :global(.leaflet-control-attribution a) { color: inherit; }
+
+  .timelapse-controls {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .timelapse-button {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--color-accent);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-accent);
+    cursor: pointer;
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+  .timelapse-button:hover { background: var(--color-accent); color: var(--color-ink); }
+  .timelapse-button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  .timelapse-button svg { width: 14px; height: 14px; fill: currentColor; }
+  .timelapse .icon-pause, .timelapse.is-playing .icon-play { display: none; }
+  .timelapse.is-playing .icon-pause { display: block; }
+
+  .timelapse-scrub { position: relative; flex: 1; padding-top: 9px; }
+  .timelapse-scrub input {
+    width: 100%;
+    margin: 0;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+  }
+  .timelapse-years { position: relative; height: 16px; margin-top: 4px; font: 10px / 1 monospace; letter-spacing: .06em; color: var(--color-muted-60); }
+  .timelapse-years span { position: absolute; top: 0; transform: translateX(-2px); }
+
+  @media (max-width: 520px) {
+    .timelapse-map { height: min(72vh, 560px); min-height: 380px; }
+  }
+
+  /* ?render: the bare map filling the window, for recording the video. */
+  .timelapse.is-render { position: fixed; inset: 0; z-index: 9999; background: #161616; }
+  .timelapse.is-render .timelapse-card { height: 100%; border: 0; border-radius: 0; }
+  .timelapse.is-render .timelapse-map { height: 100%; min-height: 0; }
+  .timelapse.is-render .timelapse-controls { display: none; }
+  .timelapse.is-render .timelapse-month { font-size: 92px; top: 40px; right: 44px; }
+  .timelapse.is-render .timelapse-city { font-size: 16px; top: 48px; left: 44px; }
+  .timelapse.is-render .timelapse-stats { font-size: 16px; left: 44px; bottom: 40px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .timelapse-button { transition: none; }
+  }
+</style>

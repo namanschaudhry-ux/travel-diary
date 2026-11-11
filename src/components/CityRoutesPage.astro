@@ -51,7 +51,7 @@ const noun = { run: "routes", cycle: "rides", swim: "swims" }[sport];
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pt-8 pb-16 sm:px-10">
-    {usesCityMap ? <RouteOverlay routes={routes} backgroundLines={mapLines} frameRadiusKm={sport === "swim" ? 2 : sport === "run" ? tileFrameRadiusKm[city] : undefined} /> : <RouteGrid routes={routes} />}
+    {usesCityMap ? <RouteOverlay routes={routes} backgroundLines={mapLines} zoomable={sport !== "swim"} frameRadiusKm={sport === "swim" ? 2 : sport === "run" ? tileFrameRadiusKm[city] : undefined} /> : <RouteGrid routes={routes} />}
   </section>
 </Layout>
 
