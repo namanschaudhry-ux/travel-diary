@@ -369,6 +369,29 @@ export const citySwimRoutes = buildRoutes(featuredSwims, true);
 const everyRun = (cityRuns as { activities: (ExportActivity & { city: string })[] }).activities;
 const everyRide = (cityRides as { activities: (ExportActivity & { city: string })[] }).activities;
 const everyPlaceRun = (placeRuns as { activities: (ExportActivity & { city: string })[] }).activities;
+// Every run, ride or swim the site holds for a city, for the Moving page tiles: the
+// all-runs and all-rides exports, the smaller places' runs and the hand-picked routes.
+// Runs are all-time, so a tile's run count and km match its city page. Rides and swims
+// are counted from 2023 on, the same span as their km (strava-since-2023.json).
+const countSince = "2023-01-01";
+const cityActivities = (city: string, sport: "run" | "cycle" | "swim") => {
+  const since = sport === "run" ? "" : countSince;
+  const found = new Map<string, ExportActivity>();
+  const addAll = (list: (ExportActivity & { city: string })[]) =>
+    list.forEach((a) => { if (a.city === city && a.start_local >= since) found.set(a.id, a); });
+  const addPicked = (picked: string[] = []) => picked.forEach((id) => {
+    const a = activities.find((x) => x.id === id);
+    if (a && a.start_local >= since && !found.has(id)) found.set(id, a);
+  });
+  if (sport === "run") { addAll(everyRun); addAll(everyPlaceRun); addPicked(featuredRoutes[city]); }
+  else if (sport === "cycle") { addAll(everyRide); addPicked(featuredRides[city]); }
+  else addPicked(featuredSwims[city]);
+  return [...found.values()];
+};
+export const cityActivityCount = (city: string, sport: "run" | "cycle" | "swim") => cityActivities(city, sport).length;
+// All-time run km for a city's tile, from the same runs as cityActivityCount.
+export const cityRunKm = (city: string) => cityActivities(city, "run").reduce((total, a) => total + a.distance_km, 0);
+
 export const cityTileLines = (city: string) => {
   const lines = (ids: string[] = []) => ids.flatMap((id) => activities.find((a) => a.id === id)?.polyline ?? []);
   const picked = new Set(featuredRoutes[city] ?? []);

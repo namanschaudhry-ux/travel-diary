@@ -2,8 +2,9 @@
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import { cityActivity, activityTotals as totals } from "../data/activity-summary";
+import { runLifetime } from "../data/run-lifetime";
 import "leaflet/dist/leaflet.css";
-import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug, tileCities, cityTileLines, tileFrameRadiusKm, cityFrameCenter, tileFrameShiftKm, tileFrameBounds } from "../data/city-routes";
+import { cityRoutes, cityRideRoutes, citySwimRoutes, citySlug, tileCities, cityTileLines, tileFrameRadiusKm, cityFrameCenter, tileFrameShiftKm, tileFrameBounds, cityActivityCount, cityRunKm } from "../data/city-routes";
 import { cityDays } from "../data/city-days";
 import RouteGrid from "../components/RouteGrid.astro";
 import novablast5WinterSea from "../assets/shoes/novablast-5-winter-sea.png";
@@ -48,6 +49,10 @@ const tileName = (city: string) => (city === "Alpine Shire" ? "Bright" : city);
 const allRoutes = Object.entries(cityRoutes)
   .flatMap(([city, routes]) => routes.map((route) => ({ ...route, city })))
   .sort((a, b) => b.date.localeCompare(a.date));
+// Cities in the routes view's city filter, most routes first (Alpine Shire shown as Bright).
+const routeCities = Object.entries(allRoutes.reduce<Record<string, number>>((n, r) => ({ ...n, [r.city]: (n[r.city] ?? 0) + 1 }), {}))
+  .sort((a, b) => b[1] - a[1])
+  .map(([city]) => city);
 const allRides = Object.entries(cityRideRoutes)
   .flatMap(([city, routes]) => routes.map((route) => ({ ...route, city })))
   .sort((a, b) => b.date.localeCompare(a.date));
@@ -65,9 +70,11 @@ const fmt = (n: number) => n.toLocaleString("en-US", { maximumFractionDigits: 1 
 // A city shows under a sport if it has 10 km or more of it, or any mapped routes for it.
 const hasRoutes = (city: string, sport: string) =>
   ((sport === "run" ? cityRoutes : sport === "cycle" ? cityRideRoutes : citySwimRoutes)[city]?.length ?? 0) > 0;
+// Map tiles show all-time run km (every GPS run the site holds, as on the city page);
+// everything else is from the 2023-on summary.
 const typeRows = (c: (typeof cities)[number]) =>
   [
-    { label: "run", value: c.run },
+    { label: "run", value: tileCities.has(c.city) ? Math.round(cityRunKm(c.city)) : c.run },
     { label: "cycle", value: c.cycle },
     { label: "swim", value: c.swim },
   ].filter((row) => row.value >= 10 || hasRoutes(c.city, row.label));
@@ -78,6 +85,8 @@ const filters = ["run", "cycle", "swim"];
 ---
 
 <Layout title="On the move — Naman Chaudhry" description="Kilometres logged by city, pulled from Strava.">
+  {/* Handwriting for the top bar total; loaded here because the stylesheet @import of Google Fonts is dropped by Tailwind. */}
+  <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Waiting+for+the+Sunrise&display=swap" />
   {/* Sport filters on the left; on the right the hover bar and the running turtle (from the homepage artwork row). */}
   <section class="sport-bar mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 pt-8 pb-8 sm:px-10 sm:pt-10">
     <div class="flex gap-2">
@@ -96,18 +105,37 @@ const filters = ["run", "cycle", "swim"];
               : "border-[var(--color-card-border)] text-[var(--color-muted-60)] hover:border-[var(--color-muted-40)] hover:text-paper",
           ]}
         >
-          <svg width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <svg width={f === "swim" ? 30 : 34} height={f === "swim" ? 30 : 34} viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            {/* Running: a winged shoe (Hermes-style, after the Nike running badges on the mood
+                board), the wings sweeping back from the bottom of the heel. */}
             {f === "run" && <>
-              <circle cx="20" cy="5.5" r="2.5" />
-              <path d="m11 13 5-4 5 4 5 1M16 9l-3 9 6 4-1 7M13 18l-4 7H3M13 18l7-5" />
+              <path d="M10.6 21V15.4q0-1.2 1.1-1.4l2.1-.3 1.4 1.1 2.2-3.5h1.6l5.6 4.6q3.4 1.2 4.4 2.6.6.9.3 2.5z" />
+              <path d="M10.6 22.8h17q2.3 0 2.7-1.7" />
+              <path d="M18.4 13.2l1.4 1.3M17.4 14.8l1.5 1.2M13.2 19.1q6.2.7 11.4-1.9" />
+              <path d="M10.5 21.5C7.5 21.3 4.6 22.4 2.2 24.8c2.6.3 5.3-.4 7.6-2.1" />
+              <path d="M10.6 22.4c-2.4.9-4.4 2.6-5.6 5 2.4-.4 4.5-1.6 6-3.5" />
+              <path d="M10.5 19.6c-2.4-.9-5-.9-7.4.1 1.9 1 4.2 1.3 6.4.7" />
             </>}
+            {/* Cycling: an outline drivetrain, as in the gear-set drawing on the mood board: a toothed
+                chainring with its crank and pedal, the chain, and a small rear cassette. */}
             {f === "cycle" && <>
-              <circle cx="7" cy="23" r="5" /><circle cx="25" cy="23" r="5" />
-              <path d="m7 23 6-12 7 12H7l9-8h6M10 11h6M25 23 21 8h-4" />
+              <circle cx="20.5" cy="18" r="7" />
+              <circle cx="20.5" cy="18" r="8.6" stroke-width="1.6" stroke-dasharray="1.15 1.2" />
+              <circle cx="20.5" cy="18" r="1.6" />
+              <path d="M20.5 18l6.2-7.4M25.2 10.2h3" />
+              <circle cx="5.5" cy="18" r="3" />
+              <circle cx="5.5" cy="18" r="4.3" stroke-width="1.4" stroke-dasharray=".9 1" />
+              <path d="M5.5 13.7l15-4.3M5.5 22.3l15 4.3" stroke-dasharray="1.3 1" />
             </>}
+            {/* Swimming: racing goggles in three-quarter view, after the FORZA goggles on the
+                mood board: two lenses with their rims, the nose bridge and the strap behind. */}
             {f === "swim" && <>
-              <circle cx="24" cy="13" r="2.5" />
-              <path d="m6 17 9-6-5-5-5 3M15 11l5 7M2 22q3-3 6 0t6 0 6 0 6 0 4 0M2 28q3-3 6 0t6 0 6 0 6 0 4 0" />
+              <path d="M15.2 17.6c-.2-2.6 2.4-4.7 6-4.9 3.8-.2 7 1.4 7.2 3.8.2 2.6-2.5 4.7-6.1 4.9-3.8.2-6.9-1.3-7.1-3.8z" />
+              <path d="M17.6 17.4c0-1.5 1.7-2.7 3.9-2.8 2.4-.1 4.4.8 4.5 2.3.1 1.6-1.6 2.8-3.9 2.9-2.4.1-4.4-.9-4.5-2.4z" stroke-width="1.2" />
+              <path d="M3.3 15.9c0-1.9 1.6-3.3 3.6-3.3 2.2 0 4 1.4 4 3.3s-1.7 3.4-3.8 3.4c-2.1 0-3.8-1.5-3.8-3.4z" />
+              <path d="M11 15.4q2.3-.9 4.4.7" />
+              <path d="M28.3 15.6c1.6-.9 2.4-2.4 1.8-3.6-.7-1.5-3.3-2.1-6.9-2.1H8.9c-2.7 0-4.6.8-5.3 2" />
+              <path d="M19 15.6l1.4-.6" stroke-width="1.2" />
             </>}
           </svg>
         </button>
@@ -136,14 +164,16 @@ const filters = ["run", "cycle", "swim"];
           <div id="city-fill" aria-hidden="true"></div>
           {
             [
-              { label: "run", value: totals.run },
+              { label: "run", value: runLifetime.km, count: runLifetime.runs, noun: "runs" },
               { label: "cycle", value: totals.cycle },
               { label: "swim", value: totals.swim },
             ].map((t) => (
               <div class="relative flex flex-1 items-center justify-center" data-total={t.value} data-sport={t.label} hidden={t.label !== "run"}>
-                {/* The selected sport's total, over the hover paint. */}
-                <p class="total-km text-xl text-paper">
-                  {fmt(t.value)}<span class="text-base text-[var(--color-muted-40)]"> km</span>
+                {/* The selected sport's total, over the hover paint, handwritten (the font closest to
+                    Naman's own hand). Runs are all-time and add the run count on a second line. */}
+                <p class="total-km text-paper" aria-label={`${fmt(Math.round(t.value))} km${t.count ? `, ${fmt(t.count)} ${t.noun}` : ""}`}>
+                  <span class="total-line">{fmt(Math.round(t.value))} km</span>
+                  {t.count ? <span class="total-line">{fmt(t.count)} {t.noun}</span> : null}
                 </p>
               </div>
             ))
@@ -179,25 +209,22 @@ const filters = ["run", "cycle", "swim"];
             aria-label={`${tileName(c.city)} routes map`}
           >
             <div class="city-map" data-routes={JSON.stringify(tileLines)} data-frame-radius={tileFrameRadiusKm[c.city]} data-frame-center={cityFrameCenter[c.city] ? `${cityFrameCenter[c.city].center.join(",")},${cityFrameCenter[c.city].radiusKm}` : undefined} data-frame-shift={tileFrameShiftKm[c.city]?.join(",")} data-frame-bounds={tileFrameBounds[c.city] ? JSON.stringify(tileFrameBounds[c.city]) : undefined} data-swim-frame-radius="2" aria-hidden="true"></div>
-            {/* Details appear on hover or focus, like the route cards in the routes view. */}
-            <span class="city-map-caption city-map-caption--top"><span class="city-display-name city-outline" aria-label={tileName(c.city)} set:html={cityOutline(tileName(c.city))} /></span>
+            {/* Always shown: the city name (in the style of the Moving page's NAMAN wordmark) at the
+                top, and the kilometres with the number of runs (or rides, swims) bottom left.
+                Hover adds only "view map" and the corner marks. */}
+            <span class="city-map-caption city-map-caption--top"><span class="city-wordmark">{tileName(c.city)}</span></span>
             <span class="city-map-caption city-map-caption--bottom">
-              <span class="city-map-row">
-                <span class="text-left">
-                  {(["run", "cycle", "swim"] as const).map((sport) => {
-                    const link = links[sport];
-                    const count = sport === "run" ? (cityRoutes[c.city] ?? []).filter(route => route.distanceKm >= 19.95).length : link?.count ?? 0;
-                    const noun = "route";
-                    return link ? <span data-route-hint={sport} hidden={sport !== "run"}>{count} {count === 1 ? noun : `${noun}s`}</span> : null;
-                  })}
-                </span>
-                <span class="text-center">
-                  {typeRows(c).map((row) => (
-                    <span data-distance={row.value} data-sport={row.label} hidden={row.label !== "run"}>{fmt(row.value)} km</span>
-                  ))}
-                </span>
-                <span class="text-right">{cityDays[c.city] ? `${cityDays[c.city]} days` : "view map →"}</span>
+              <span class="tile-stats">
+                {typeRows(c).map((row) => (
+                  <span class="tile-km" data-distance={row.value} data-sport={row.label} hidden={row.label !== "run"}>{fmt(row.value)} km</span>
+                ))}
+                {(["run", "cycle", "swim"] as const).map((sport) => {
+                  const count = cityActivityCount(c.city, sport);
+                  const noun = sport === "run" ? "run" : sport === "cycle" ? "ride" : "swim";
+                  return count > 0 ? <span class="tile-count" data-route-hint={sport} hidden={sport !== "run"}>{fmt(count)} {count === 1 ? noun : `${noun}s`}</span> : null;
+                })}
               </span>
+              <span class="tile-view-map">view map →</span>
             </span>
             <span class="viewfinder-corner viewfinder-corner--tl" aria-hidden="true"></span>
             <span class="viewfinder-corner viewfinder-corner--tr" aria-hidden="true"></span>
@@ -210,7 +237,7 @@ const filters = ["run", "cycle", "swim"];
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pb-16 sm:px-10" data-view-section="routes" data-sport-section="run" hidden>
-    {/* Two filters that combine: distance, and all routes or races only. Each
+    {/* Three filters that combine: distance, all routes or races only, and city. Each
         works like the language toggle: click, or focus the row and use the arrow keys. */}
     <div class="route-filter" role="radiogroup" aria-label="Filter routes by distance" data-filter-group="distance">
       <button type="button" role="radio" aria-checked="true" tabindex="0" data-filter-value="all">all</button>
@@ -222,6 +249,12 @@ const filters = ["run", "cycle", "swim"];
     <div class="route-filter" role="radiogroup" aria-label="Show all routes or races only" data-filter-group="type">
       <button type="button" role="radio" aria-checked="true" tabindex="0" data-filter-value="all">all</button>
       <button type="button" role="radio" aria-checked="false" tabindex="-1" data-filter-value="races">races</button>
+    </div>
+    <div class="route-filter" role="radiogroup" aria-label="Filter routes by city" data-filter-group="city">
+      <button type="button" role="radio" aria-checked="true" tabindex="0" data-filter-value="all">all</button>
+      {routeCities.map((city) => (
+        <button type="button" role="radio" aria-checked="false" tabindex="-1" data-filter-value={city}>{tileName(city).toLowerCase()}</button>
+      ))}
     </div>
     <p id="route-count" class="mb-6 text-center font-sans text-[11px] uppercase tracking-[0.15em] text-[var(--color-muted-40)]">
       {allRoutes.length} routes
@@ -325,7 +358,8 @@ const filters = ["run", "cycle", "swim"];
       const sportMatches = !el.dataset.sportSection || el.dataset.sportSection === selectedSport;
       el.hidden = el.dataset.viewSection !== selectedView || !sportMatches;
     });
-    if (viewToggleWrap) viewToggleWrap.hidden = selectedSport === "swim";
+    // Swim has only the city view: the watch stays, with Gear and Routes greyed out.
+    if (viewToggleWrap) viewToggleWrap.toggleAttribute("data-city-only", selectedSport === "swim");
   }
 
   function applyFilter(filter: string) {
@@ -403,12 +437,33 @@ const filters = ["run", "cycle", "swim"];
   };
   resetViewToCity = () => setView("city");
   const stepView = (step: number) => {
+    if (selectedSport === "swim") return;
     const index = viewOrder.indexOf(selectedView);
     setView(viewOrder[(index + step + viewOrder.length) % viewOrder.length]);
   };
   document.querySelector(".view-watch-screen")?.addEventListener("click", () => stepView(1));
   document.querySelectorAll<HTMLButtonElement>(".view-watch-button").forEach((button) => {
     button.addEventListener("click", () => stepView(Number(button.dataset.step ?? 1)));
+  });
+  // Arrow keys from anywhere on the page: up / down step through City, Gear and Routes
+  // (swim has only the city view), left / right through the sports. Left alone in the
+  // route filters and text fields, where the arrows already do something.
+  document.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+    const target = event.target;
+    if (target instanceof Element && target.closest("input, textarea, select, [contenteditable], [role='radiogroup']")) return;
+    event.preventDefault();
+    // Left / right: the sport (run, cycle, swim), the same as the sport buttons' own arrow keys.
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      const sportButtons = Array.from(buttons);
+      const index = sportButtons.findIndex((btn) => btn.dataset.filterBtn === selectedSport);
+      const step = event.key === "ArrowRight" ? 1 : -1;
+      sportButtons[(index + step + sportButtons.length) % sportButtons.length]?.click();
+      return;
+    }
+    // Up / down: the view on the watch (City, Gear, Routes), like its up and down buttons.
+    stepView(event.key === "ArrowDown" ? 1 : -1);
   });
 
   updateVisibility();
@@ -419,7 +474,7 @@ const filters = ["run", "cycle", "swim"];
      strong purple-to-pink brush paint (from the painted NYT front page on the mood board):
      a purple-violet-pink sweep, streaky bristle lines and a little paint grain. The paint is
      revealed with clip-path rather than stretched, so the brush texture keeps its shape. */
-  #top-strip { width: clamp(140px, 28vw, 300px); height: 46px; }
+  #top-strip { width: clamp(140px, 28vw, 300px); height: 64px; }
   #city-fill {
     position: absolute;
     inset: 0;
@@ -556,11 +611,11 @@ const filters = ["run", "cycle", "swim"];
 </style>
 
 <script>
-  // Routes view filters. Distance (all, marathons, 30k+, 25k+, 20k+) and type
-  // (all or races only) combine. Distances are compared as shown on the cards,
+  // Routes view filters. Distance (all, marathons, 30k+, 25k+, 20k+), type
+  // (all or races only) and city combine. Distances are compared as shown on the cards,
   // to one decimal place, so a 19.98 km run counts as 20k+.
   const MARATHON_KM = 42;
-  const filters: Record<string, string> = { distance: "all", type: "all" };
+  const filters: Record<string, string> = { distance: "all", type: "all", city: "all" };
   const routeCount = document.getElementById("route-count");
   const routeCards = Array.from(document.querySelectorAll<HTMLElement>('[data-view-section="routes"][data-sport-section="run"] .route-card'));
 
@@ -569,7 +624,7 @@ const filters = ["run", "cycle", "swim"];
     routeCards.forEach((card) => {
       const km = Math.round(Number(card.dataset.km ?? 0) * 10) / 10;
       const minKm = filters.distance === "all" ? 0 : filters.distance === "marathon" ? MARATHON_KM : Number(filters.distance);
-      const visible = km >= minKm && (filters.type !== "races" || card.dataset.race === "true");
+      const visible = km >= minKm && (filters.type !== "races" || card.dataset.race === "true") && (filters.city === "all" || card.dataset.city === filters.city);
       card.hidden = !visible;
       if (visible) shown += 1;
     });
@@ -780,8 +835,17 @@ const filters = ["run", "cycle", "swim"];
   .city-map-card .viewfinder-corner--tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
   .city-map-card .viewfinder-corner--bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
   .city-map-card .viewfinder-corner--br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
-  .city-map-card:hover .city-map-caption,
-  .city-map-card:focus-visible .city-map-caption { opacity: 1; transform: none; }
+  /* Name and numbers are always shown; hover adds "view map" and the corner marks. */
+  .city-map-card .city-map-caption { opacity: 1; transform: none; }
+  .city-map-caption--bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .tile-stats { display: flex; flex-direction: column; gap: 2px; }
+  .tile-stats [hidden] { display: none; }
+  .tile-km { font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -.03em; color: #fff; line-height: 1.1; }
+  .tile-count { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgb(255 255 255 / 75%); }
+  .tile-view-map { opacity: 0; transform: translateY(4px); transition: opacity 200ms ease, transform 200ms ease; }
+  .city-map-card:hover .tile-view-map,
+  .city-map-card:focus-visible .tile-view-map { opacity: 1; transform: none; }
+  .city-map-card:not([href]) .tile-view-map { display: none; }
   .city-map-card:hover .viewfinder-corner,
   .city-map-card:focus-visible .viewfinder-corner { opacity: 1; }
   .city-map-card:focus-visible { outline: none; }
@@ -816,7 +880,8 @@ const filters = ["run", "cycle", "swim"];
   /* The watch face (case and bezel from the homepage Garmin, strap removed). The screen
      shows the three views as a Garmin-style menu, the current one inverted. */
   .view-watch { position: relative; width: 168px; aspect-ratio: 440 / 427; }
-  .view-watch[hidden] { display: block; visibility: hidden; }
+  .view-watch[data-city-only] .view-watch-item:not([data-view="city"]) { opacity: .18; }
+  .view-watch[data-city-only] .view-watch-screen, .view-watch[data-city-only] .view-watch-button { cursor: default; }
   .view-watch-face { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 12px rgb(0 0 0 / 45%)); pointer-events: none; user-select: none; }
   .view-watch-screen { position: absolute; left: 30%; top: 46%; width: 44%; height: 23%; display: flex; flex-direction: column; justify-content: center; gap: 1px; padding: 0; border: 0; background: transparent; cursor: pointer; color: #d3d5d0; }
   .view-watch-item { display: block; padding: 1px 0; font: 700 11px / 1.15 "Arial Narrow", Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase; text-align: center; opacity: .55; border-radius: 2px; }
@@ -832,20 +897,31 @@ const filters = ["run", "cycle", "swim"];
   /* Globe flower, the homepage artwork, shown instead of the turtle on the cycle filter. */
   .moving-flower { display: block; flex: none; height: 46px; width: auto; aspect-ratio: 1; color: var(--color-paper); opacity: .9; }
   .moving-turtle[hidden], .moving-flower[hidden] { display: none; }
-  /* The total in the same face as the SD card airport codes: Inter, extra bold, tight. */
-  .total-km { margin: 0; font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-weight: 800; letter-spacing: -.04em; white-space: nowrap; text-shadow: 0 1px 2px rgb(0 0 0 / 35%); }
-  .total-km span { font-weight: 700; letter-spacing: 0; color: var(--color-paper); opacity: .8; }
+  /* The total, handwritten like Naman's own note ("7000 km / 35 runs"): two short lines,
+     the km above the run count, in Waiting for the Sunrise. */
+  .total-km { margin: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 0; font: 400 32px / .95 "Waiting for the Sunrise", "Caveat", cursive; letter-spacing: .02em; white-space: nowrap; text-shadow: 0 1px 2px rgb(0 0 0 / 35%); }
+  .total-line { display: block; }
+  .total-line + .total-line { margin-top: 2px; font-size: 26px; padding-left: .5em; }
 </style>
 
 <style>
   .city-display-name { display: block; font-family: "Bagel Fat One", sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 400; line-height: 1.1; letter-spacing: -.025em; text-transform: none; text-wrap: balance; }
   .city-display-country { display: block; font-family: "Bagel Fat One", sans-serif; font-size: 16px; font-weight: 400; line-height: 1.3; letter-spacing: .015em; margin-top: 4px; }
-  .city-map-caption--top { padding-bottom: 64px; background: linear-gradient(to bottom, rgb(0 0 0 / 80%), transparent); text-shadow: 0 2px 10px rgb(0 0 0 / 50%); }
+  /* Name small and top left, numbers bottom left, with no dark wash or glow behind them. */
+  .city-map-card .city-map-caption--top { padding: 18px 22px; text-align: left; background: none; text-shadow: none; }
+  .city-map-card .city-map-caption--bottom { padding: 18px 22px; background: none; text-shadow: none; }
   .city-map-caption--top .city-display-country { color: rgb(255 255 255 / 80%); }
   .city-card:not(.city-map-card) .city-display-name { font-size: clamp(26px, 3vw, 34px); }
 </style>
 
 <style>
+  /* City names in the spirit of the Moving page's NAMAN wordmark: a wide, high-contrast
+     serif in capitals over fine horizontal rules, with a hairline orbit swept round it. */
+  .city-wordmark { position: relative; display: inline-block; padding: 3px 9px; font-family: "Bodoni Moda", "Bodoni 72", Didot, serif; font-variation-settings: "opsz" 96; font-size: 17px; font-weight: 600; line-height: 1; letter-spacing: .07em; text-transform: uppercase; color: #fff; white-space: nowrap; }
+  .city-wordmark::before { content: ""; position: absolute; inset: -6px -14px; z-index: -1; background: repeating-linear-gradient(to bottom, rgb(255 255 255 / 30%) 0 1px, transparent 1px 7px);
+    -webkit-mask: radial-gradient(closest-side, #000 55%, transparent); mask: radial-gradient(closest-side, #000 55%, transparent); }
+  .city-wordmark::after { content: ""; position: absolute; inset: -6px -11px; border-radius: 50%; border: 1px solid transparent; border-top-color: rgb(255 255 255 / 85%); border-bottom-color: rgb(255 255 255 / 85%); transform: rotate(-5deg);
+    -webkit-mask: linear-gradient(100deg, #000 0 30%, transparent 45% 55%, #000 70%); mask: linear-gradient(100deg, #000 0 30%, transparent 45% 55%, #000 70%); pointer-events: none; }
   .city-outline { width: min(100%, 400px); margin-inline: auto; }
   .city-outline :global(svg) { display: block; width: 100%; height: 66px; overflow: visible; }
   .city-card:not(.city-map-card) .city-outline :global(svg) { height: 46px; }

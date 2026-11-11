@@ -23,6 +23,7 @@ const {
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <slot name="head" />
     <script is:inline>
       (function () {
         try {
